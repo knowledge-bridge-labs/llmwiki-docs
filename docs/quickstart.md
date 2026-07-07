@@ -45,6 +45,15 @@ want a known-good smoke before pointing at private or larger content.
 
 Fixture paths are relative to the `llmwiki-serve` checkout.
 
+::: tip Compiler output quickstart
+If you are starting from raw sources instead of an existing Markdown wiki, run
+your upstream compiler, authoring, or ingest workflow first. Point
+`llmwiki-serve` at the generated Markdown wiki folder after the compile step
+writes pages, frontmatter, links, tags, source references, or graph sidecars.
+`llmwiki-serve` projects the generated Markdown; it does not run that upstream
+workflow.
+:::
+
 ## Start `llmwiki-serve`
 
 Create a workspace for sibling checkouts:
@@ -341,6 +350,7 @@ running.
 | Goal | Page |
 | --- | --- |
 | See representative JSON output and copyable transcripts | [Examples](/examples) |
+| Understand raw sources to compiler output to served projection | [Data Flow](/data-flow) |
 | Check exact command behavior and failures | [CLI Reference](/cli-reference) |
 | Understand source folder shape | [Knowledge Source Format](/knowledge-source-format) |
 | Choose direct source vs bridge vs chat | [Architecture](/architecture) and [Runtime Adapters](/runtime-adapters) |

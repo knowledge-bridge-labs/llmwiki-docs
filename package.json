@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "GitHub Pages documentation portal for an independent LLM Wiki-style cross-repo toolchain.",
+  "description": "GitHub Pages documentation portal for wiki Knowledge Source components used by agents.",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -30,8 +30,10 @@
     "!docs/oss-open-readiness.md",
     "!docs/package-publication.md",
     "docs/public/**/*",
+    "!docs/public/demo/**/*.gif",
     "docs/.vitepress/config.mts",
     "docs/.vitepress/theme/**/*",
+    "scripts/demo/**/*",
     "README.md",
     "CHANGELOG.md",
     "CODE_OF_CONDUCT.md",
@@ -56,6 +58,7 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs --host 127.0.0.1",
     "check": "npm run licenses:check && vitepress build docs",
+    "demo:first-run": "node scripts/demo/render-first-run.mjs",
     "licenses:generate": "node scripts/generate-third-party-licenses.mjs all docs/public/third-party-licenses.txt",
     "licenses:check": "node scripts/generate-third-party-licenses.mjs all docs/public/third-party-licenses.txt --check",
     "pack:dry-run": "npm pack --dry-run --json --ignore-scripts",
@@ -92,6 +95,7 @@
   },
   "devDependencies": {
     "mermaid": "^11.16.0",
+    "playwright-core": "^1.61.1",
     "vitepress": "^1.6.4"
   }
 }

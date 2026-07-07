@@ -5,7 +5,7 @@ const repoUrl = `https://github.com/${targetOrg}/llmwiki-docs`;
 const docsUrl = `https://${targetOrg}.github.io/llmwiki-docs/`;
 
 export default defineConfig({
-  title: 'LLM Wiki Toolchain',
+  title: 'Wiki Knowledge Sources for Agents',
   description:
     'Public-preview documentation for serving existing LLMWiki, Markdown, and Obsidian folders as agent-readable Knowledge Sources.',
   base: '/llmwiki-docs/',
@@ -41,7 +41,7 @@ export default defineConfig({
     ['link', { rel: 'icon', type: 'image/svg+xml', href: '/llmwiki-docs/mark.svg' }],
     ['meta', { name: 'theme-color', content: '#0f766e' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'LLM Wiki Toolchain' }],
+    ['meta', { property: 'og:title', content: 'Wiki Knowledge Sources for Agents' }],
     ['meta', { name: 'twitter:card', content: 'summary' }],
     [
       'meta',
@@ -53,8 +53,8 @@ export default defineConfig({
     ]
   ],
   themeConfig: {
-    logo: { src: '/mark.svg', alt: 'LLM Wiki Toolchain Docs' },
-    siteTitle: 'LLM Wiki Toolchain',
+    logo: { src: '/mark.svg', alt: 'Wiki Knowledge Sources for Agents' },
+    siteTitle: 'Wiki Sources for Agents',
     outline: {
       level: [2, 3],
       label: 'On this page'
@@ -69,6 +69,8 @@ export default defineConfig({
         text: 'Learn',
         items: [
           { text: 'Core Concepts', link: '/core-concepts' },
+          { text: 'Demo', link: '/demo' },
+          { text: 'Data Flow', link: '/data-flow' },
           { text: 'Positioning', link: '/positioning' },
           { text: 'Architecture', link: '/architecture' },
           { text: 'Examples', link: '/examples' }
@@ -119,6 +121,7 @@ export default defineConfig({
         text: 'Start Here',
         items: [
           { text: 'Overview', link: '/' },
+          { text: 'Demo', link: '/demo' },
           { text: 'First 10-Minute Path', link: '/quickstart' },
           { text: 'Examples', link: '/examples' },
           { text: 'Release Status & Compatibility', link: '/status' }
@@ -128,6 +131,8 @@ export default defineConfig({
         text: 'Understand the Layer',
         items: [
           { text: 'Core Concepts', link: '/core-concepts' },
+          { text: 'Demo', link: '/demo' },
+          { text: 'Data Flow', link: '/data-flow' },
           { text: 'Positioning', link: '/positioning' },
           { text: 'Architecture', link: '/architecture' }
         ]
@@ -177,7 +182,7 @@ export default defineConfig({
     },
     footer: {
       message:
-        'Public-preview documentation for the planned Knowledge Bridge Labs LLM Wiki-style toolchain.',
+        'Public-preview documentation for Knowledge Bridge Labs wiki Knowledge Source components.',
       copyright: 'Released under the Apache-2.0 License.'
     }
   }

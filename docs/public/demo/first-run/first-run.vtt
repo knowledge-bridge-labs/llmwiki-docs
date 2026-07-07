@@ -1,0 +1,20 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:04.300
+Start with real project material. Raw files are not served directly.
+
+00:00:04.300 --> 00:00:08.600
+Your upstream compiler, authoring tool, script, or CI job creates Markdown before llmwiki-serve starts.
+
+00:00:08.600 --> 00:00:12.900
+llmwiki-serve reads the Markdown folder read-only and exposes projection APIs.
+
+00:00:12.900 --> 00:00:17.200
+Agents can retrieve evidence directly over HTTP or MCP.
+
+00:00:17.200 --> 00:00:21.500
+llmwiki-chat visualizes the same served source with pages, graph, evidence, and trace.
+
+00:00:21.500 --> 00:00:25.800
+The bridge is optional for multi-source fan-out or runtime-backed answer artifacts.
+

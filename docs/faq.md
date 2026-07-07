@@ -75,6 +75,35 @@ No. `llmwiki-serve` is a read-only projection layer. Ingestion, compilation,
 and authoring remain owned by the wiki variant or workflow that creates the
 Markdown folder and sidecar artifacts.
 
+## What is a projection?
+
+A projection is a read-only view derived from your Markdown wiki files.
+`llmwiki-serve` parses pages, metadata, links, tags, source references, and
+optional sidecars, then exposes that derived view through APIs for agents and
+tools. The Markdown folder remains the source of truth.
+
+## Does `llmwiki-serve` run my ingest or compiler workflow?
+
+No. Run your upstream ingest, authoring, or compiler workflow before starting
+or querying `llmwiki-serve`. The server picks up compatible Markdown pages and
+sidecar files after they exist on disk; it does not fetch raw sources, run an
+upstream compiler, or rewrite generated Markdown output.
+
+## How is this different from Obsidian graph view?
+
+Obsidian graph view is a human editor feature for browsing links in a vault.
+The `llmwiki-serve` graph projection is an agent-facing API view derived from
+Markdown links, tags, headings, source references, and optional sidecar facts.
+They can describe the same files, but Obsidian owns authoring while
+`llmwiki-serve` owns read-only retrieval surfaces.
+
+## What happens after a wiki is projected?
+
+Agents and scripts can call `llmwiki-serve` directly and own their own answer
+loop. `llmwiki-agent-bridge` can gather evidence from selected sources and
+optionally call a runtime. `llmwiki-chat` can inspect sources, graph context,
+citations, and bridge traces in a browser.
+
 ## Can one server expose multiple knowledge graphs?
 
 The recommended public-preview default is one Knowledge Source server per

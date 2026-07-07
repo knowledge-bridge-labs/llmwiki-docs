@@ -2,7 +2,7 @@
 layout: home
 
 hero:
-  name: LLMWiki Toolchain
+  name: Wiki Knowledge Sources for Agents
   text: Make project wikis readable by coding agents.
   tagline: Run llmwiki-serve beside an existing LLMWiki, Markdown, or Obsidian folder. Agents retrieve project context over HTTP and MCP. Bridge and chat stay optional.
   actions:
@@ -13,8 +13,8 @@ hero:
       text: Use with coding agents
       link: /direct-agent-integrations
     - theme: alt
-      text: Do I need bridge or chat?
-      link: /#when-to-add-bridge-or-chat
+      text: Watch the demo
+      link: /demo
 
 features:
   - title: Use the folder you already have
@@ -33,14 +33,14 @@ features:
     <p class="section-kicker">Public preview for AX and coding-agent workflows</p>
     <h2>Turn scattered project wikis into local Knowledge Sources.</h2>
     <p>
-      This toolchain is for teams that already have project knowledge spread across
+      These components are for teams that already have project knowledge spread across
       LLMWiki, Markdown, or Obsidian folders. Instead of combining everything into
       one large RAG application, run a small source server beside each folder and
       let the coding agent retrieve the context it needs.
     </p>
     <p>
       The default path is intentionally small: serve one folder, verify the
-      projection, and connect it to Codex, Claude Code, Copilot-style agents, IDE
+      served view, and connect it to Codex, Claude Code, Copilot-style agents, IDE
       extensions, or scripts. Bridge and chat are optional layers for multi-source
       evidence, runtime delegation, and human inspection.
     </p>
@@ -71,6 +71,14 @@ features:
   </div>
 </div>
 
+<div class="demo-strip">
+  <div>
+    <strong>Not sure how the pieces map?</strong>
+    <span>Watch the short demo: upstream workflows create Markdown, <code>llmwiki-serve</code> projects it read-only, and agents, bridge, or chat consume the served source.</span>
+  </div>
+  <a href="./demo">Watch demo</a>
+</div>
+
 ## First Run At A Glance
 
 <div class="quickstart-track">
@@ -81,7 +89,7 @@ features:
   </a>
   <a class="quickstart-step" href="./quickstart#query-it-directly">
     <span>Step 2</span>
-    <strong>Verify projection</strong>
+    <strong>Verify served view</strong>
     <p>Call <code>/health</code>, <code>/manifest</code>, and <code>/query</code>. Stop here if direct retrieval is enough.</p>
   </a>
   <a class="quickstart-step" href="./quickstart#optional-agent-bridge">
@@ -182,6 +190,7 @@ flowchart LR
 | Goal | Page |
 | --- | --- |
 | Run the first local path | [Quickstart](/quickstart) |
+| Understand the data flow | [Demo](/demo) and [Data Flow](/data-flow) |
 | Understand the vocabulary | [Core Concepts](/core-concepts) |
 | Decide direct source vs bridge vs chat | [Architecture](/architecture) and [Runtime Adapters](/runtime-adapters) |
 | Connect Codex, Claude Code, Copilot-style IDE agents, or scripts | [Direct Agent Integrations](/direct-agent-integrations) and [AI Tool Support](/ai-tools) |
