@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { delimiter, dirname, resolve } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import { delimiter, dirname, isAbsolute, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { releaseRepos as repos } from './release-repos.mjs';
 
@@ -104,13 +104,11 @@ function readOption(name) {
 }
 
 function run(command, args, options = {}) {
-  const [executable, executableArgs] =
-    process.platform === 'win32' && command === 'npm'
-      ? ['cmd.exe', ['/d', '/s', '/c', ['npm', ...args].map(cmdQuote).join(' ')]]
-      : [command, args];
+  const [executable, executableArgs] = resolveSpawnCommand(command, args, options.env);
   const result = spawnSync(executable, executableArgs, {
     encoding: 'utf8',
-    ...options
+    ...options,
+    shell: false
   });
   return {
     ok: result.status === 0,
@@ -120,8 +118,45 @@ function run(command, args, options = {}) {
   };
 }
 
-function cmdQuote(value) {
-  return /[\s"&|<>^]/.test(value) ? `"${value.replaceAll('"', '\\"')}"` : value;
+function resolveSpawnCommand(command, args, env = process.env) {
+  if (process.platform === 'win32' && command === 'npm') {
+    return [process.execPath, [resolveWindowsNpmCli(env), ...args]];
+  }
+
+  return [command, args];
+}
+
+function resolveWindowsNpmCli(env) {
+  const candidates = [
+    env?.npm_execpath,
+    env?.NPM_EXECPATH,
+    resolve(dirname(process.execPath), 'node_modules', 'npm', 'bin', 'npm-cli.js')
+  ];
+
+  for (const candidate of candidates) {
+    const trustedPath = trustedNpmCliPath(candidate);
+    if (trustedPath) return trustedPath;
+  }
+
+  throw new Error('Could not locate a trusted npm CLI entrypoint for shell-free Windows execution.');
+}
+
+function trustedNpmCliPath(candidate) {
+  if (typeof candidate !== 'string') return '';
+
+  const path = candidate.trim();
+  if (!isAbsolute(path)) return '';
+
+  try {
+    const realPath = realpathSync(path);
+    return isNpmCliPath(realPath) ? realPath : '';
+  } catch {
+    return '';
+  }
+}
+
+function isNpmCliPath(path) {
+  return path.replaceAll('\\', '/').toLowerCase().endsWith('/node_modules/npm/bin/npm-cli.js');
 }
 
 function pass(label, details = 'ok') {
