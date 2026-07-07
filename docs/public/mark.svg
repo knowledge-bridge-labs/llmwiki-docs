@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-labelledby="title">
+  <title id="title">LLM Wiki Toolchain Docs mark</title>
+  <rect width="32" height="32" rx="6" fill="#0f766e"/>
+  <path d="M8 8h10.5c3.1 0 5.5 2.3 5.5 5.4 0 2.1-1.1 3.8-2.9 4.7l3 5.9h-4.3l-2.5-5.1h-5.2V24H8V8Zm4.1 3.4v4.2h5.9c1.2 0 2-.8 2-2.1s-.8-2.1-2-2.1h-5.9Z" fill="#ffffff"/>
+  <path d="M8 25h16v2H8v-2Z" fill="#b9f3e9"/>
+</svg>

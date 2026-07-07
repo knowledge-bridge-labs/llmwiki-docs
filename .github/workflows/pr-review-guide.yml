@@ -1,0 +1,135 @@
+name: pr-review-guide
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review-guide:
+    name: review guide
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Post contributor review guide
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          files="$(gh api "repos/$REPO/pulls/$PR_NUMBER/files" --paginate --jq '.[].filename')"
+
+          content=false
+          quickstart=false
+          reference=false
+          operations=false
+          site=false
+          scripts=false
+          workflow=false
+          security=false
+          packaging=false
+
+          while IFS= read -r file; do
+            case "$file" in
+              docs/index.md|docs/quickstart.md|docs/examples.md|README.md)
+                quickstart=true
+                content=true
+                ;;
+              docs/architecture.md|docs/protocols.md|docs/api-reference.md|docs/runtime-adapters.md|docs/direct-agent-integrations.md|docs/cli-reference.md|docs/ai-tools.md|docs/faq.md)
+                reference=true
+                content=true
+                ;;
+              docs/deployment.md|docs/network-security.md|docs/status.md|docs/organization-setup.md|docs/package-publication.md|docs/operations-release-checklist.md|docs/troubleshooting.md)
+                operations=true
+                content=true
+                ;;
+              docs/.vitepress/*|docs/.vitepress/**/*|docs/public/*)
+                site=true
+                ;;
+              scripts/*)
+                scripts=true
+                ;;
+              .github/*|.github/workflows/*)
+                workflow=true
+                ;;
+              package.json|package-lock.json)
+                packaging=true
+                ;;
+              SECURITY.md|SUPPORT.md|CODE_OF_CONDUCT.md|CONTRIBUTING.md|LICENSE|THIRD_PARTY_NOTICES.md|docs/legal-notices.md|docs/third-party-licenses.md|docs/public/third-party-licenses.txt)
+                security=true
+                ;;
+            esac
+          done <<< "$files"
+
+          {
+            echo "<!-- llmwiki-docs-pr-review-guide -->"
+            echo "## Automated Review Guide"
+            echo
+            echo "This is a contributor aid, not a maintainer approval. It is generated from changed paths and points reviewers at the checks that usually matter for this repo."
+            echo
+            echo "Changed files:"
+            echo
+            printf '%s\n' "$files" | sed 's/^/    /'
+            echo
+            echo "Review focus:"
+            if [ "$quickstart" = true ]; then
+              echo "- First-run path: verify the first 10 minutes still works from source checkouts and keeps planned public URLs clearly marked before transfer."
+            fi
+            if [ "$reference" = true ]; then
+              echo "- Reference docs: keep HTTP, MCP-style, A2A-style, CLI, AI tool, and runtime-support claims conservative and cross-linked."
+            fi
+            if [ "$operations" = true ]; then
+              echo "- Operations/release docs: check org transfer, Pages, branch protection, CODEOWNERS, registry, package, and verification steps against the automation scripts."
+            fi
+            if [ "$site" = true ]; then
+              echo "- VitePress site: verify navigation, sidebar, local search, generated Pages output, asset paths, and responsive layout."
+            fi
+            if [ "$scripts" = true ]; then
+              echo "- Release automation scripts: check dry-run safety, explicit apply gates, GitHub API error handling, org/repo visibility assumptions, and missing-token messages."
+            fi
+            if [ "$workflow" = true ]; then
+              echo "- GitHub workflows: avoid privileged execution of untrusted PR code and keep Pages/preflight/dependency checks least-privilege."
+            fi
+            if [ "$packaging" = true ]; then
+              echo "- Package metadata: keep the docs package private, verify dependency/license updates, and confirm pack dry-runs do not include generated caches."
+            fi
+            if [ "$security" = true ]; then
+              echo "- Legal/security/support docs: check Apache-2.0 posture, third-party notices, private disclosure, and sensitive data guidance."
+            fi
+            if [ "$content" = true ]; then
+              echo "- Cross-repo consistency: verify serve, agent-bridge, chat, and docs status language stays aligned."
+            fi
+            echo
+            echo "Contributor checklist:"
+            echo "- Fill in the PR template's audience, link/status impact, validation, and sensitive-data sections."
+            echo "- Link new pages from the nav, sidebar, index, or README as appropriate."
+            echo "- Run npm run check, or explain skipped checks."
+            echo "- Call out any generated or AI-assisted implementation area that deserves closer human review."
+          } > review-guide.md
+
+          comment_id="$(
+            gh api "repos/$REPO/issues/$PR_NUMBER/comments" \
+              --paginate \
+              --jq '.[] | select(.body | contains("llmwiki-docs-pr-review-guide")) | .id' \
+              | head -n 1 \
+              || true
+          )"
+
+          if [ -n "$comment_id" ]; then
+            if ! gh api -X PATCH "repos/$REPO/issues/comments/$comment_id" -F body=@review-guide.md >/dev/null; then
+              echo "::warning::Unable to update automated review guide comment."
+            fi
+          else
+            if ! gh api -X POST "repos/$REPO/issues/$PR_NUMBER/comments" -F body=@review-guide.md >/dev/null; then
+              echo "::warning::Unable to post automated review guide comment."
+            fi
+          fi

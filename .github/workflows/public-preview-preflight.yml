@@ -1,0 +1,144 @@
+name: Public Preview Preflight
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_org:
+        description: GitHub organization that owns the llmwiki-* repositories.
+        required: true
+        default: knowledge-bridge-labs
+      mode:
+        description: Preflight strictness and registry expectation.
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - private-staging
+          - private-staging:branch-policy
+          - strict
+          - public-unpublished
+          - published
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-preview-preflight-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    name: Cross-repo public-preview preflight
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      LLMWIKI_TARGET_ORG: ${{ inputs.target_org }}
+    steps:
+      - name: Checkout docs
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ inputs.target_org }}/llmwiki-docs
+          path: llmwiki-docs
+          token: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+          persist-credentials: false
+
+      - name: Checkout serve
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ inputs.target_org }}/llmwiki-serve
+          path: llmwiki-serve
+          token: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+          persist-credentials: false
+
+      - name: Checkout agent bridge
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ inputs.target_org }}/llmwiki-agent-bridge
+          path: llmwiki-agent-bridge
+          token: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+          persist-credentials: false
+
+      - name: Checkout chat
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ inputs.target_org }}/llmwiki-chat
+          path: llmwiki-chat
+          token: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '22.12'
+          cache: npm
+          cache-dependency-path: |
+            llmwiki-docs/package-lock.json
+            llmwiki-agent-bridge/package-lock.json
+            llmwiki-chat/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: python -m pip install uv
+
+      - name: Install docs dependencies
+        working-directory: llmwiki-docs
+        run: npm ci
+
+      - name: Install bridge dependencies
+        working-directory: llmwiki-agent-bridge
+        run: npm ci
+
+      - name: Install chat dependencies
+        working-directory: llmwiki-chat
+        run: npm ci
+
+      - name: Install serve dependencies
+        working-directory: llmwiki-serve
+        run: uv sync --extra dev --locked
+
+      - name: Run staging preflight
+        if: ${{ inputs.mode == 'staging' }}
+        working-directory: llmwiki-docs
+        env:
+          GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+        run: npm run release:preflight:staging
+
+      - name: Run strict preflight
+        if: ${{ inputs.mode == 'strict' }}
+        working-directory: llmwiki-docs
+        env:
+          GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+        run: npm run release:preflight
+
+      - name: Run private-staging preflight
+        if: ${{ inputs.mode == 'private-staging' }}
+        working-directory: llmwiki-docs
+        env:
+          GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+        run: npm run release:preflight:private-staging
+
+      - name: Run private-staging preflight with branch policy
+        if: ${{ inputs.mode == 'private-staging:branch-policy' }}
+        working-directory: llmwiki-docs
+        env:
+          GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+        run: npm run release:preflight:private-staging:branch-policy
+
+      - name: Run public-unpublished preflight
+        if: ${{ inputs.mode == 'public-unpublished' }}
+        working-directory: llmwiki-docs
+        env:
+          GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+        run: npm run release:preflight:public-unpublished
+
+      - name: Run published-version preflight
+        if: ${{ inputs.mode == 'published' }}
+        working-directory: llmwiki-docs
+        env:
+          GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+        run: npm run release:preflight:published

@@ -1,0 +1,71 @@
+name: Documentation issue
+description: Report unclear, stale, or missing documentation.
+title: "docs: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public documentation problems. For suspected security vulnerabilities, follow SECURITY.md instead of opening a public issue.
+  - type: textarea
+    id: page
+    attributes:
+      label: Page or topic
+      description: Link the page, heading, or workflow that needs attention.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Documentation area
+      options:
+        - Quickstart or examples
+        - Architecture or concepts
+        - API or protocol reference
+        - Runtime adapters or direct integrations
+        - Network, deployment, or security
+        - Package publication or release operations
+        - Organization transfer or GitHub Pages
+        - Legal notices or licensing
+        - Other or not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: reader
+    attributes:
+      label: Reader path
+      options:
+        - New local user
+        - Agent/runtime integrator
+        - Maintainer or release owner
+        - Security reviewer
+        - Contributor
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Explain what is confusing, incorrect, stale, or missing.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected documentation
+      description: Describe the content or correction you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence or version context
+      description: Link the current page, command output, package metadata, CI run, or repo state that shows the docs are stale. Redact private URLs and logs.
+  - type: checkboxes
+    id: data_safety
+    attributes:
+      label: Data safety
+      options:
+        - label: This report does not include credentials, tokens, private endpoint URLs, raw sensitive wiki content, or private infrastructure details.
+          required: true
