@@ -3,35 +3,63 @@ layout: home
 
 hero:
   name: LLMWiki Toolchain
-  text: Serve local wiki knowledge to agents.
-  tagline: A small, local-first protocol layer for Markdown and LLMWiki-style knowledge folders. Serve an existing graph or bundled sample first, then add a bridge or chat workbench only when that path needs them.
+  text: Make project wikis readable by coding agents.
+  tagline: Run llmwiki-serve beside an existing LLMWiki, Markdown, or Obsidian folder. Agents retrieve project context over HTTP and MCP. Bridge and chat stay optional.
   actions:
     - theme: brand
-      text: Start in 10 minutes
+      text: Serve a folder in 10 minutes
       link: /quickstart
     - theme: alt
-      text: Understand the modules
-      link: /#module-map
+      text: Use with coding agents
+      link: /direct-agent-integrations
     - theme: alt
-      text: Check release status
-      link: /status
+      text: Do I need bridge or chat?
+      link: /#when-to-add-bridge-or-chat
 
 features:
-  - title: Source first
-    details: llmwiki-serve projects one existing Markdown/wiki folder into read-only context, search, page, graph, HTTP, and MCP tool surfaces.
+  - title: Use the folder you already have
+    details: Keep project knowledge in its current LLMWiki, Markdown, or Obsidian folder. Serve it read-only instead of migrating it into a hosted RAG app.
     link: /quickstart
-  - title: Bridge only when needed
-    details: llmwiki-agent-bridge gathers evidence from selected sources and can run evidence-only, delegated-runtime, or hybrid answer loops.
-    link: /runtime-adapters
-  - title: Inspect before trusting
-    details: llmwiki-chat lets humans test sources, choose a bridge, ask, and inspect citations, graph context, artifacts, and run details.
+  - title: Let agents pull focused context
+    details: Coding agents and scripts can query page, search, context, graph, HTTP, and MCP surfaces before planning edits or answering.
+    link: /direct-agent-integrations
+  - title: Add orchestration only when needed
+    details: Use the bridge for multi-source evidence and runtime-backed answers. Use chat to test connections, citations, traces, and graph context.
     link: /quickstart#optional-chat-workbench
 ---
+
+<section class="purpose-panel" id="what-this-is">
+  <div>
+    <p class="section-kicker">Public preview for AX and coding-agent workflows</p>
+    <h2>Turn scattered project wikis into local Knowledge Sources.</h2>
+    <p>
+      This toolchain is for teams that already have project knowledge spread across
+      LLMWiki, Markdown, or Obsidian folders. Instead of combining everything into
+      one large RAG application, run a small source server beside each folder and
+      let the coding agent retrieve the context it needs.
+    </p>
+    <p>
+      The default path is intentionally small: serve one folder, verify the
+      projection, and connect it to Codex, Claude Code, Copilot-style agents, IDE
+      extensions, or scripts. Bridge and chat are optional layers for multi-source
+      evidence, runtime delegation, and human inspection.
+    </p>
+  </div>
+  <div class="purpose-card">
+    <strong>Use it when you want to...</strong>
+    <ul>
+      <li>Reuse an existing project wiki without moving the files.</li>
+      <li>Give a coding agent project-specific memory on demand.</li>
+      <li>Keep evidence, citations, and graph context visible during agent work.</li>
+      <li>Connect several wiki folders only when one workflow needs them together.</li>
+    </ul>
+  </div>
+</section>
 
 <div class="preview-panel">
   <div>
     <strong>Minimum useful path</strong>
-    <span>Run <code>llmwiki-serve</code> on your graph or <code>./examples/sample-wiki</code>, then query <code>/query</code>. Chat and model runtimes are optional.</span>
+    <span>Run <code>llmwiki-serve</code> on your own wiki folder or <code>./examples/sample-wiki</code>, then query <code>/query</code>. Stop there if direct retrieval is enough.</span>
   </div>
   <div>
     <strong>Public-preview install</strong>
@@ -39,9 +67,64 @@ features:
   </div>
   <div>
     <strong>Protocol posture</strong>
-    <span>HTTP and MCP source access first; A2A source compatibility is opt-in. The bridge offers A2A and MCP runtime-facing surfaces.</span>
+    <span>Source access is HTTP/MCP first. A2A source compatibility is opt-in, and bridge runtime surfaces are described as A2A-style and MCP-style compatibility.</span>
   </div>
 </div>
+
+## First Run At A Glance
+
+<div class="quickstart-track">
+  <a class="quickstart-step" href="./quickstart#start-llmwiki-serve">
+    <span>Step 1</span>
+    <strong>Start your source</strong>
+    <p>Serve an existing wiki folder, or use <code>./examples/sample-wiki</code> for a known-good smoke.</p>
+  </a>
+  <a class="quickstart-step" href="./quickstart#query-it-directly">
+    <span>Step 2</span>
+    <strong>Verify projection</strong>
+    <p>Call <code>/health</code>, <code>/manifest</code>, and <code>/query</code>. Stop here if direct retrieval is enough.</p>
+  </a>
+  <a class="quickstart-step" href="./quickstart#optional-agent-bridge">
+    <span>Optional</span>
+    <strong>Start the bridge</strong>
+    <p>Use evidence-only source fan-out first. Connect a runtime only when the bridge should synthesize answers.</p>
+  </a>
+  <a class="quickstart-step" href="./quickstart#optional-chat-workbench">
+    <span>Optional</span>
+    <strong>Open chat</strong>
+    <p>Test the source and bridge, ask a question, then inspect citations, graph context, artifacts, and run details.</p>
+  </a>
+</div>
+
+## Repositories
+
+<div class="repo-grid">
+  <a class="repo-card" href="https://github.com/knowledge-bridge-labs/llmwiki-serve">
+    <span>Knowledge Source</span>
+    <strong>llmwiki-serve</strong>
+    <p>Serves one existing LLMWiki, Markdown, or Obsidian folder as read-only HTTP/MCP context, search, page, graph, and manifest APIs.</p>
+  </a>
+  <a class="repo-card" href="https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge">
+    <span>Optional coordinator</span>
+    <strong>llmwiki-agent-bridge</strong>
+    <p>Connects one or more sources, gathers cited evidence, optionally delegates synthesis to a runtime, and returns normalized artifacts.</p>
+  </a>
+  <a class="repo-card" href="https://github.com/knowledge-bridge-labs/llmwiki-chat">
+    <span>Optional workbench</span>
+    <strong>llmwiki-chat</strong>
+    <p>Lets humans configure sources and bridge runtimes, ask questions, and inspect citations, graph context, artifacts, and traces.</p>
+  </a>
+</div>
+
+## When To Add Bridge Or Chat
+
+| Need | Recommended path |
+| --- | --- |
+| One coding agent should read one wiki folder while it works | Run `llmwiki-serve` and connect the agent directly. |
+| Several wiki folders must be searched together | Run one `llmwiki-serve` per folder and connect them through `llmwiki-agent-bridge`. |
+| A service should gather evidence and call a model runtime for a cited answer | Use `llmwiki-agent-bridge` in delegated-runtime or hybrid mode. |
+| A human needs to test setup, inspect evidence, or debug traces | Open `llmwiki-chat` as the browser workbench. |
+| You only need package status, release support, or protocol details | Read [Release Status](/status), [Protocols](/protocols), and [API Reference](/api-reference). |
 
 ## Module Map
 
@@ -91,31 +174,6 @@ flowchart LR
     <span>Private or team network</span>
     <strong>Check exposure boundaries</strong>
     <p>Review loopback defaults, private HTTP, CORS, source policy, bearer tokens, and TLS before sharing endpoints.</p>
-  </a>
-</div>
-
-## First Run At A Glance
-
-<div class="quickstart-track">
-  <a class="quickstart-step" href="./quickstart#start-llmwiki-serve">
-    <span>Step 1</span>
-    <strong>Start your source</strong>
-    <p>Serve an existing wiki folder, or use <code>./examples/sample-wiki</code> for a known-good smoke.</p>
-  </a>
-  <a class="quickstart-step" href="./quickstart#query-it-directly">
-    <span>Step 2</span>
-    <strong>Verify projection</strong>
-    <p>Call <code>/health</code>, <code>/manifest</code>, and <code>/query</code>. Stop here if direct retrieval is enough.</p>
-  </a>
-  <a class="quickstart-step" href="./quickstart#optional-agent-bridge">
-    <span>Optional</span>
-    <strong>Start the bridge</strong>
-    <p>Use evidence-only source fan-out first. Connect a runtime only when the bridge should synthesize answers.</p>
-  </a>
-  <a class="quickstart-step" href="./quickstart#optional-chat-workbench">
-    <span>Optional</span>
-    <strong>Open chat</strong>
-    <p>Test the source and bridge, ask a question, then inspect citations, graph context, artifacts, and run details.</p>
   </a>
 </div>
 

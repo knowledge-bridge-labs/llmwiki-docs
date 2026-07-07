@@ -7,7 +7,7 @@ const docsUrl = `https://${targetOrg}.github.io/llmwiki-docs/`;
 export default defineConfig({
   title: 'LLM Wiki Toolchain',
   description:
-    'Public-preview documentation for serving LLM Wiki-style knowledge folders through small protocol surfaces.',
+    'Public-preview documentation for serving existing LLMWiki, Markdown, and Obsidian folders as agent-readable Knowledge Sources.',
   base: '/llmwiki-docs/',
   cleanUrls: true,
   lastUpdated: true,
@@ -77,9 +77,9 @@ export default defineConfig({
       {
         text: 'Connect',
         items: [
+          { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' },
           { text: 'Runtime Adapters', link: '/runtime-adapters' },
-          { text: 'AI Tool Support', link: '/ai-tools' },
-          { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' }
+          { text: 'AI Tool Support', link: '/ai-tools' }
         ]
       },
       {
@@ -135,9 +135,9 @@ export default defineConfig({
       {
         text: 'Connect Tools',
         items: [
+          { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' },
           { text: 'Runtime Adapters', link: '/runtime-adapters' },
-          { text: 'AI Tool Support', link: '/ai-tools' },
-          { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' }
+          { text: 'AI Tool Support', link: '/ai-tools' }
         ]
       },
       {
