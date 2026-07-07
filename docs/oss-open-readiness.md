@@ -431,9 +431,9 @@ Local verification after these fixes:
   warnings: missing `admin:org` scope and branch-policy APIs unavailable while
   the repositories are private on the current plan.
 - `npm run launch-copy:check:public-unpublished`: intentionally failed while
-  the current status page still says `private org staging` and while
-  `llmwiki-docs` Pages are still described as pending in status/CLI reference.
-  This is the desired blocker before the public launch copy flip.
+  the then-current status page still described pre-public staging and while
+  `llmwiki-docs` Pages were still described as pending in status/CLI reference.
+  This was the desired blocker before the public launch copy flip.
 - `npm run public:launch:dry-run`: intentionally stopped at the same
   launch-copy gate after a successful docs build, before previewing or applying
   mutating visibility, Pages, or branch-policy operations.
@@ -522,19 +522,19 @@ After PR #7 merged, the current private-staging copy was rechecked against the
 public-launch gate:
 
 - `npm run launch-copy:check:public-unpublished`: intentionally failed only for
-  current `llmwiki-docs` private-staging copy:
-  - `docs/status.md` still marks `private org staging` as current.
-  - `docs/status.md` still marks GitHub Pages publication as pending.
-  - `docs/cli-reference.md` still marks `llmwiki-docs` Pages publication as
-    pending until the Pages gate passes.
+  the then-current `llmwiki-docs` pre-public launch copy:
+  - `docs/status.md` still marked the pre-public staging phase as current.
+  - `docs/status.md` still marked GitHub Pages publication as pending.
+  - `docs/cli-reference.md` still marked `llmwiki-docs` Pages publication as
+    pending until the Pages gate passed.
 - `npm run public:launch:dry-run`: built docs successfully, then intentionally
   stopped at the same launch-copy gate before previewing visibility, Pages, or
   branch-policy mutations.
 
-Interpretation: this is the correct owner-approval boundary. The current docs
-must keep private-staging wording until the release owner approves the public
-visibility and Pages transition. The copy flip should be a deliberate launch PR,
-not an incidental readiness-doc update.
+Interpretation at that time: this was the correct owner-approval boundary. The
+docs had to keep pre-public staging wording until the release owner approved the
+public visibility and Pages transition. The copy flip had to be a deliberate
+launch PR, not an incidental readiness-doc update.
 
 ### R11 Fresh High-Port Quickstart Audit
 
@@ -584,9 +584,9 @@ staging`. Follow-up PRs aligned the copy:
 
 | Repository | PR | Main commit | Result |
 | --- | --- | --- | --- |
-| `llmwiki-serve` | #12 | `afb2ade` | README now says prepared for public preview and currently private org staging until the public-unpublished gate passes. |
-| `llmwiki-agent-bridge` | #13 | `b132948` | README now says prepared for public preview and currently private org staging until the public-unpublished gate passes. |
-| `llmwiki-chat` | #26 | `556cdd8` | README now says prepared for public preview and currently private org staging until the public-unpublished gate passes. |
+| `llmwiki-serve` | #12 | `afb2ade` | README was aligned to the pre-public staging gate used at that point in the launch process. |
+| `llmwiki-agent-bridge` | #13 | `b132948` | README was aligned to the pre-public staging gate used at that point in the launch process. |
+| `llmwiki-chat` | #26 | `556cdd8` | README was aligned to the pre-public staging gate used at that point in the launch process. |
 
 Interpretation: the dry-run path is coherent for the current phase. The next
 state transition is not a code change; it requires release-owner approval,
@@ -621,8 +621,8 @@ pre-merge worktrees:
 
 The same round found and fixed docs contradictions:
 
-- Status now says the current launch phase is `private org staging`, not public
-  preview or public unpublished.
+- Status clarified that the launch was still in pre-public staging at that time,
+  not public preview or public unpublished.
 - Bridge docs now distinguish evidence-only, delegated-runtime, and hybrid
   modes; only runtime-backed modes call an OpenAI-compatible runtime.
 - The release checklist no longer requires live provider keys for minimum
@@ -682,12 +682,12 @@ Resolved post-merge issues:
 
 ## Next Round
 
-1. Wait for release-owner approval of public visibility, Pages publication, and
-   monitored private security/conduct report routes.
-2. Run the public-launch copy flip so status pages no
-   longer describe the launch as private staging or Pages as pending.
-3. Apply visibility, Pages, and branch-policy runbooks, then rerun
-   `npm run release:preflight:public-unpublished`.
-4. Repeat the quickstart from fresh public clones after repositories and Pages
-   are public.
-5. Run package publication gates only after the public-unpublished gate passes.
+1. Public visibility, Pages publication, branch protection, CODEOWNERS, and
+   public-unpublished preflight have now passed for the clean public repositories.
+2. Keep source-checkout quickstart as the supported first-run path until package
+   publication is intentionally approved.
+3. Before package publication, update [Release Status & Compatibility](/status)
+   with exact package versions, registry state, protocol caveats, and validation
+   commands.
+4. Run package publication gates only after the release owner approves the
+   registry publication step.
