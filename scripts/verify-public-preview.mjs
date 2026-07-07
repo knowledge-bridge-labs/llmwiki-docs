@@ -433,7 +433,8 @@ function assertNpmPack(repo) {
   const artifact = pack[0];
   const files = artifact.files.map((file) => file.path).sort();
   const allowedSpecs = ['package.json', ...(pkg.files ?? [])];
-  const missingSpecs = (pkg.files ?? []).filter(
+  const positiveFileSpecs = (pkg.files ?? []).filter((spec) => !spec.startsWith('!'));
+  const missingSpecs = positiveFileSpecs.filter(
     (spec) => !files.some((filePath) => pathMatchesSpec(filePath, spec))
   );
   const unexpected = files.filter(

@@ -28,7 +28,7 @@ Use these runtime baselines:
 | `llmwiki-serve` | `uv sync --extra dev` from `llmwiki-serve` | PyPI publication pending. Use package commands only after the package gate passes. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` | npm publication pending. Source checkout is the supported local path. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm publication pending. The browser workbench is run from source today. |
-| `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages publication pending until the Pages gate passes. |
+| `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
 Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. After
 the first package publication, the matching install-smoke commands should also
