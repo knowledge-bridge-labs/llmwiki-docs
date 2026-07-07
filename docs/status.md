@@ -14,7 +14,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | Channel | Status | Use it when |
 | --- | --- | --- |
 | Source checkouts | Supported preview path | You want to run `llmwiki-serve`, the optional bridge, chat, or docs locally today. |
-| GitHub Pages docs | Prepared public documentation path | You want the rendered docs site once Pages is enabled for the docs repository. |
+| GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
 | PyPI/npm packages | Pending first publication | Wait for package publication before relying on package-manager install commands. |
 
 ## First-Run Roles
