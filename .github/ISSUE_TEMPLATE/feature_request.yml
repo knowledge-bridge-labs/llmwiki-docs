@@ -1,0 +1,58 @@
+name: Documentation request
+description: Request a new guide, integration note, or reference page.
+title: "docs: "
+labels: ["documentation", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for public documentation requests. For security-sensitive guidance, avoid posting exploit details or private deployment information.
+  - type: textarea
+    id: workflow
+    attributes:
+      label: Workflow or audience
+      description: Who needs this and what are they trying to do?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Proposed area
+      options:
+        - Quickstart or examples
+        - Architecture or concepts
+        - API or protocol reference
+        - Runtime adapters or direct integrations
+        - Network, deployment, or security
+        - Package publication or release operations
+        - Organization transfer or GitHub Pages
+        - Legal notices or licensing
+        - Other or not sure
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed coverage
+      description: What should the docs explain?
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: Success criteria
+      description: What should a reader be able to do after this documentation exists?
+    validations:
+      required: true
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Link related issues, docs pages, commands, package metadata, or public examples. Do not include private endpoints or logs.
+  - type: checkboxes
+    id: data_safety
+    attributes:
+      label: Data safety
+      options:
+        - label: This request does not include credentials, tokens, private endpoint URLs, raw sensitive wiki content, or private infrastructure details.
+          required: true

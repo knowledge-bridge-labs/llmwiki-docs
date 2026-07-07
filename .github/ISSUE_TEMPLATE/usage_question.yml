@@ -1,0 +1,42 @@
+name: Usage question
+description: Ask a documentation, quickstart, deployment, or release-process question.
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for non-sensitive docs and setup questions. For suspected security vulnerabilities, follow SECURITY.md instead of opening a public issue.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Quickstart
+        - Architecture or positioning
+        - Protocol reference
+        - Runtime or direct-agent integration
+        - Deployment or network guidance
+        - Release or org-transfer process
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Describe what you are trying to understand or where the docs are unclear.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Include the page URL or file path, repo/version context, command output, and sanitized environment details when relevant.
+  - type: checkboxes
+    id: data_safety
+    attributes:
+      label: Data safety
+      options:
+        - label: This question does not include credentials, tokens, private endpoint URLs, private wiki content, or unredacted logs.
+          required: true

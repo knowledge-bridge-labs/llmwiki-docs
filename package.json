@@ -1,0 +1,97 @@
+{
+  "name": "llmwiki-docs",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "GitHub Pages documentation portal for an independent LLM Wiki-style cross-repo toolchain.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/knowledge-bridge-labs/llmwiki-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/knowledge-bridge-labs/llmwiki-docs/issues"
+  },
+  "homepage": "https://knowledge-bridge-labs.github.io/llmwiki-docs/",
+  "keywords": [
+    "llmwiki",
+    "documentation",
+    "vitepress",
+    "mcp",
+    "a2a",
+    "knowledge-source",
+    "agent-runtime"
+  ],
+  "files": [
+    "docs/**/*.md",
+    "!docs/dev/**",
+    "!docs/organization-setup.md",
+    "!docs/operations-release-checklist.md",
+    "!docs/oss-open-readiness.md",
+    "!docs/package-publication.md",
+    "docs/public/**/*",
+    "docs/.vitepress/config.mts",
+    "docs/.vitepress/theme/**/*",
+    "README.md",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "LICENSE",
+    "SECURITY.md",
+    "SUPPORT.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "publication": {
+    "status": "prepared for the knowledge-bridge-labs organization",
+    "targetRepository": "knowledge-bridge-labs/llmwiki-docs",
+    "targetPagesUrl": "https://knowledge-bridge-labs.github.io/llmwiki-docs/"
+  },
+  "engines": {
+    "node": ">=22.12",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10.9.7",
+  "scripts": {
+    "dev": "vitepress dev docs --host 127.0.0.1",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs --host 127.0.0.1",
+    "check": "npm run licenses:check && vitepress build docs",
+    "licenses:generate": "node scripts/generate-third-party-licenses.mjs all docs/public/third-party-licenses.txt",
+    "licenses:check": "node scripts/generate-third-party-licenses.mjs all docs/public/third-party-licenses.txt --check",
+    "pack:dry-run": "npm pack --dry-run --json --ignore-scripts",
+    "org:configure:dry-run": "node scripts/configure-org.mjs",
+    "org:configure:apply": "node scripts/configure-org.mjs --apply",
+    "org:configure:pages:dry-run": "node scripts/configure-org.mjs --public-launch --enable-pages",
+    "org:configure:pages:apply": "node scripts/configure-org.mjs --apply --public-launch --enable-pages",
+    "pages:publish:dry-run": "node scripts/wait-pages.mjs --dry-run",
+    "pages:publish:wait": "node scripts/wait-pages.mjs",
+    "pages:publish:dispatch": "node scripts/wait-pages.mjs --dispatch",
+    "visibility:public:dry-run": "node scripts/configure-visibility.mjs --public-launch",
+    "visibility:public:apply": "node scripts/configure-visibility.mjs --apply --public-launch --accept-public-visibility",
+    "public:launch:dry-run": "node scripts/public-launch.mjs",
+    "public:launch:apply": "node scripts/public-launch.mjs --apply",
+    "branch-policy:dry-run": "node scripts/configure-branch-policy.mjs --public-launch",
+    "branch-policy:apply": "node scripts/configure-branch-policy.mjs --apply --public-launch",
+    "release:preflight": "node scripts/verify-public-preview.mjs --strict",
+    "release:preflight:staging": "node scripts/verify-public-preview.mjs",
+    "release:preflight:private-staging": "node scripts/verify-public-preview.mjs --strict --expect-unpublished --expect-private-repos --expect-pages-missing",
+    "release:preflight:private-staging:branch-policy": "node scripts/verify-public-preview.mjs --strict --expect-unpublished --expect-private-repos --expect-pages-missing --strict-branch-policy",
+    "release:preflight:public-unpublished": "node scripts/verify-public-preview.mjs --strict --expect-unpublished --expect-public-repos --require-pages",
+    "release:preflight:published": "node scripts/verify-public-preview.mjs --strict --expect-published --expect-public-repos --require-pages",
+    "launch-copy:check:public-unpublished": "node scripts/verify-public-preview.mjs --strict --expect-unpublished --expect-public-repos --only-launch-copy",
+    "launch-copy:check:published": "node scripts/verify-public-preview.mjs --strict --expect-published --only-launch-copy",
+    "transfer:dry-run": "node scripts/transfer-to-org.mjs",
+    "transfer:apply": "node scripts/transfer-to-org.mjs --apply",
+    "transfer:verify": "node scripts/verify-org-transfer.mjs",
+    "transfer:verify:public": "node scripts/verify-org-transfer.mjs --public-launch --require-pages",
+    "codeowners:dry-run": "node scripts/sync-codeowners.mjs",
+    "codeowners:apply": "node scripts/sync-codeowners.mjs --apply"
+  },
+  "overrides": {
+    "vite": "6.4.3"
+  },
+  "devDependencies": {
+    "mermaid": "^11.16.0",
+    "vitepress": "^1.6.4"
+  }
+}
