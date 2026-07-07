@@ -15,18 +15,59 @@ hero:
     - theme: alt
       text: Watch the demo
       link: /demo
-
-features:
-  - title: Use the folder you already have
-    details: Keep project knowledge in its current LLMWiki, Markdown, or Obsidian folder. Serve it read-only instead of migrating it into a hosted RAG app.
-    link: /quickstart
-  - title: Let agents pull focused context
-    details: Coding agents and scripts can query page, search, context, graph, HTTP, and MCP surfaces before planning edits or answering.
-    link: /direct-agent-integrations
-  - title: Add orchestration only when needed
-    details: Use the bridge for multi-source evidence and runtime-backed answers. Use chat to test connections, citations, traces, and graph context.
-    link: /quickstart#optional-chat-workbench
 ---
+
+<script setup>
+import { withBase } from 'vitepress'
+</script>
+
+<section class="home-demo">
+  <div>
+    <p class="section-kicker">60-second demo</p>
+    <h2>See the folder-to-agent flow before you install.</h2>
+    <p>
+      Upstream workflows create compatible Markdown or wiki files.
+      <code>llmwiki-serve</code> projects that folder read-only, and agents,
+      bridge, or chat consume the served Knowledge Source.
+    </p>
+    <a href="./demo">Open the full demo notes</a>
+  </div>
+  <div class="home-demo-video">
+    <video
+      controls
+      muted
+      playsinline
+      preload="metadata"
+      :poster="withBase('/demo/first-run/first-run-poster.png')"
+    >
+      <source :src="withBase('/demo/first-run/first-run.webm')" type="video/webm" />
+      <track
+        :src="withBase('/demo/first-run/first-run.vtt')"
+        kind="captions"
+        srclang="en"
+        label="English"
+        default
+      />
+      Download the demo video from
+      <a :href="withBase('/demo/first-run/first-run.webm')">first-run.webm</a>.
+    </video>
+  </div>
+</section>
+
+<div class="intro-feature-grid">
+  <a href="./quickstart">
+    <strong>Use the folder you already have</strong>
+    <span>Keep project knowledge in its current LLMWiki, Markdown, or Obsidian folder. Serve it read-only instead of migrating it into a hosted RAG app.</span>
+  </a>
+  <a href="./direct-agent-integrations">
+    <strong>Let agents pull focused context</strong>
+    <span>Coding agents and scripts can query page, search, context, graph, HTTP, and MCP surfaces before planning edits or answering.</span>
+  </a>
+  <a href="./quickstart#optional-chat-workbench">
+    <strong>Add orchestration only when needed</strong>
+    <span>Use the bridge for multi-source evidence and runtime-backed answers. Use chat to test connections, citations, traces, and graph context.</span>
+  </a>
+</div>
 
 <section class="purpose-panel" id="what-this-is">
   <div>
@@ -69,14 +110,6 @@ features:
     <strong>Protocol posture</strong>
     <span>Source access is HTTP/MCP first. A2A source compatibility is opt-in, and bridge runtime surfaces are described as A2A-style and MCP-style compatibility.</span>
   </div>
-</div>
-
-<div class="demo-strip">
-  <div>
-    <strong>Not sure how the pieces map?</strong>
-    <span>Watch the short demo: upstream workflows create Markdown, <code>llmwiki-serve</code> projects it read-only, and agents, bridge, or chat consume the served source.</span>
-  </div>
-  <a href="./demo">Watch demo</a>
 </div>
 
 ## First Run At A Glance
