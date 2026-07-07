@@ -281,6 +281,63 @@
   line-height: 1.55;
 }
 
+.demo-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  margin: 24px 0 34px;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  background: var(--vp-c-bg-alt);
+}
+
+.demo-strip strong {
+  display: block;
+  color: var(--vp-c-text-1);
+  font-size: 15px;
+}
+
+.demo-strip span {
+  display: block;
+  margin-top: 4px;
+  color: var(--vp-c-text-2);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.demo-strip a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  border-radius: 7px;
+  padding: 0 14px;
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+
+.demo-video-panel {
+  margin: 22px 0 28px;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 8px;
+  padding: 12px;
+  background: var(--vp-c-bg-alt);
+  overflow: hidden;
+}
+
+.demo-video-panel video {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 7px;
+  background: #0f1716;
+}
+
 .status-strip {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -485,17 +542,25 @@
   .VPHero .name,
   .VPHero .text,
   .VPHero .tagline,
+  .VPDoc,
+  .VPDoc .container,
   .VPFeature,
   .VPDoc .content,
   .VPDoc .content-container,
   .vp-doc {
-    max-width: calc(100vw - 48px);
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
   }
 
   .VPHero .name,
   .VPHero .text,
   .VPHero .tagline,
   .VPFeature,
+  .VPDoc,
+  .VPDoc .container,
+  .VPDoc .content,
+  .VPDoc .content-container,
   .vp-doc {
     overflow-wrap: break-word;
   }
@@ -532,15 +597,32 @@
     overflow-x: auto;
   }
 
+  .vp-doc th,
+  .vp-doc td {
+    min-width: 160px;
+    overflow-wrap: anywhere;
+  }
+
+  .demo-video-panel {
+    margin-right: 0;
+    margin-left: 0;
+    padding: 8px;
+  }
+
   .portal-row,
   .purpose-panel,
   .preview-panel,
+  .demo-strip,
   .status-strip,
   .repo-grid,
   .route-grid,
   .quickstart-track,
   .posture-grid {
     grid-template-columns: 1fr;
+  }
+
+  .demo-strip a {
+    width: 100%;
   }
 
   .route-card,

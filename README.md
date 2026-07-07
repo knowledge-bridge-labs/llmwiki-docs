@@ -1,12 +1,12 @@
-# LLMWiki Toolchain Docs
+# Wiki Knowledge Sources for Agents
 
 [![Public preview preflight](https://github.com/knowledge-bridge-labs/llmwiki-docs/actions/workflows/public-preview-preflight.yml/badge.svg)](https://github.com/knowledge-bridge-labs/llmwiki-docs/actions/workflows/public-preview-preflight.yml)
 [![Pages build](https://github.com/knowledge-bridge-labs/llmwiki-docs/actions/workflows/pages.yml/badge.svg)](https://github.com/knowledge-bridge-labs/llmwiki-docs/actions/workflows/pages.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 [![Node.js >=22.12](https://img.shields.io/badge/node-%3E%3D22.12-339933.svg)](https://nodejs.org/)
 
-This repository is the GitHub Pages documentation portal for the independent
-LLMWiki-style toolchain:
+This repository is the GitHub Pages documentation portal for serving
+LLMWiki-style Markdown folders as agent-readable Knowledge Sources:
 
 - `llmwiki-serve`: read-only Knowledge Source server for one Markdown/wiki folder.
 - `llmwiki-agent-bridge`: optional runtime companion that gathers source evidence and returns one cited answer artifact.
@@ -19,7 +19,9 @@ implementation details in the owning repo README or docs directory.
 ## Start Here
 
 - [Overview](docs/index.md)
+- [Demo](docs/demo.md)
 - [Quickstart](docs/quickstart.md)
+- [Data Flow](docs/data-flow.md)
 - [Architecture](docs/architecture.md)
 - [Runtime Adapters](docs/runtime-adapters.md)
 - [Network & Security](docs/network-security.md)
@@ -87,8 +89,8 @@ are enabled.
 
 | Area | Pages |
 | --- | --- |
-| Start | `docs/index.md`, `docs/quickstart.md`, `docs/examples.md` |
-| Understand | `docs/core-concepts.md`, `docs/architecture.md`, `docs/positioning.md` |
+| Start | `docs/index.md`, `docs/demo.md`, `docs/quickstart.md`, `docs/examples.md` |
+| Understand | `docs/core-concepts.md`, `docs/data-flow.md`, `docs/architecture.md`, `docs/positioning.md` |
 | Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |
 | Operate | `docs/network-security.md`, `docs/deployment.md`, `docs/troubleshooting.md`, `docs/faq.md` |

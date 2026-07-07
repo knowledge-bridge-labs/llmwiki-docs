@@ -4,6 +4,9 @@ This toolchain is a serving and integration layer for existing Markdown or
 LLM Wiki-style knowledge folders. It does not own authoring, ingestion,
 compilation, model serving, or long-term memory storage.
 
+For the end-to-end path from raw sources to agent-facing context, see
+[Data Flow](/data-flow).
+
 ## Knowledge Source
 
 A Knowledge Source is a read-only endpoint that exposes a wiki folder to agents
@@ -57,11 +60,30 @@ snapshot, heading, and line or byte range that produced returned evidence.
 Public deployments may redact private path details, but should keep enough
 origin information for audits and tests.
 
+## Projection
+
+A projection is a read-only view derived from source files. In plain English:
+`llmwiki-serve` looks at a Markdown wiki folder, builds API responses from its
+pages and metadata, and serves those responses without becoming the owner of the
+folder.
+
+The Markdown wiki remains the durable source of truth. The projection is
+derived state: it can be refreshed, rebuilt, cached, inspected, or discarded
+without changing the upstream raw sources, compiler output, or authoring
+workflow.
+
 ## Graph Projection
 
-The graph is a projection of pages, links, tags, references, and optional
-sidecar facts. It is rebuilt from files on disk and should be treated as
-derived state. The Markdown folder remains the durable source of truth.
+The graph projection is the part of the read-only projection that describes
+relationships among pages, headings, links, tags, source references, and
+optional sidecar facts. It is rebuilt from files on disk and should be treated
+as derived state.
+
+This is distinct from Obsidian's graph view. Obsidian's graph view is an editor
+feature for humans browsing a vault. `llmwiki-serve`'s graph projection is an
+agent-facing API view for retrieval, citations, bridge traces, tests, and
+workbench inspection. They may come from the same Markdown files, but they have
+different owners and purposes.
 
 Retrieval should become graph-aware: search and context calls can return graph
 hints, read calls can resolve opaque handles, and graph calls can expand
