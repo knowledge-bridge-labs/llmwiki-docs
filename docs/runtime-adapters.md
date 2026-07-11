@@ -77,6 +77,13 @@ The settings page guides first-time setup:
 2. Register Knowledge Sources through `GET/PUT /settings/sources.json`.
 3. Verify Bridge by sending `POST /message:send` from the page. Evidence-only verification does not require a model runtime.
 
+After the bridge is ready, chat asks the bridge for registered Knowledge
+Sources through the bridge MCP `llmwiki_list_sources` tool. Sources returned by
+the bridge are displayed in chat as bridge-managed, read-only source cards.
+Edit or remove those sources in bridge settings. Use direct source cards in
+chat only when you want to test or debug a `llmwiki-serve` endpoint without
+going through a bridge.
+
 Diagnostics/advanced contains network, auth, CORS, timeout, source-policy, and
 bind controls. Host and port changes are saved for the next bridge start, so
 they require a restart before chat should reconnect to the new address.

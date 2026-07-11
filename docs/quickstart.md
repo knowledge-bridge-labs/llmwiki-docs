@@ -275,16 +275,25 @@ npm ci
 npm run dev
 ```
 
-Open the Vite URL printed by the command. The default Knowledge Source URL is
-`http://127.0.0.1:8765`.
+Open the Vite URL printed by the command. The default direct Knowledge Source
+URL is `http://127.0.0.1:8765`.
 
 First-run flow:
 
-1. Confirm the sample Knowledge Source is `ready`, or add your source URL and click `Test source`.
-2. Inspect the Knowledge map, Pages, and Details panels before asking.
-3. If the bridge is running, select `Local Agent Bridge (A2A)` or `Local Agent Bridge (MCP)`, confirm the bridge URL, and click `Test bridge`.
-4. If no bridge or model runtime is running, switch to `Local Development Runtime` for deterministic UI, citation, trace, and graph smoke tests.
-5. Ask a small question, then review the answer, citations, graph context, artifacts, and run details.
+1. Choose the connection path you want to test.
+2. For direct source testing, confirm the sample Knowledge Source is `ready`,
+   or add your source URL and click `Test source`.
+3. For bridge testing, select `Local Agent Bridge (A2A)` or `Local Agent Bridge
+   (MCP)`, confirm the bridge URL, and click `Test bridge`.
+4. When a bridge is ready, chat discovers the bridge's registered Knowledge
+   Sources and shows them as bridge-managed, read-only source cards. Edit those
+   sources in the bridge settings page; direct source cards in chat remain
+   separate for standalone `llmwiki-serve` testing and debugging.
+5. Inspect the Knowledge map, Pages, and Details panels before asking.
+6. If no bridge or model runtime is running, switch to `Local Development
+   Runtime` for deterministic UI, citation, trace, and graph smoke tests.
+7. Ask a small question, then review the answer, citations, graph context,
+   artifacts, and run details.
 
 If the default Vite port is busy:
 

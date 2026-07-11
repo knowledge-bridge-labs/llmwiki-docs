@@ -140,6 +140,12 @@ source's `/read/{page}` endpoint or MCP `llmwiki_read` tool and renders it for
 inspection. Links in and out are clickable page navigation, not separate answer
 citations.
 
+Chat can connect to a `llmwiki-serve` endpoint directly for source testing, or
+it can connect to `llmwiki-agent-bridge` and display the bridge's registered
+Knowledge Sources as bridge-managed, read-only source cards. Direct source
+cards stay local to chat; bridge-managed source cards are edited from the
+bridge settings page.
+
 ## Host-Owned Surface RAG
 
 Host-owned surface RAG is the application or workflow layer that presents
