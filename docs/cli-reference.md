@@ -354,10 +354,13 @@ Default local flow:
 
 1. Start `llmwiki-serve` on `http://127.0.0.1:8765`.
 2. Start `llmwiki-chat` with `npm run dev`.
-3. Confirm the default Knowledge Source is ready.
+3. For direct source testing, confirm the default Knowledge Source is ready.
 4. Select the local Agent Bridge at `http://127.0.0.1:8788` when a bridge is
    running, choose A2A or MCP mode, and run `Test bridge`.
-5. Use `Local Development Runtime` only for deterministic UI checks when no
+5. When the bridge is ready, its registered Knowledge Sources appear as
+   bridge-managed, read-only source cards. Manage those sources in the bridge
+   settings page; keep chat direct sources for standalone source testing.
+6. Use `Local Development Runtime` only for deterministic UI checks when no
    bridge or model runtime is available.
 
 Hermes, DeepAgents, and generic OpenAI-compatible bridge workflows use the
@@ -371,6 +374,7 @@ Common failures:
 | Source status is not ready | The source URL is wrong, blocked by CORS, or the source server is down. | Check `/health` and `/manifest` in the browser or with `curl`. |
 | Bridge says URL is required | A bridge card was selected before a bridge URL was configured. | Open bridge setup, enter the URL, and run `Test bridge`. |
 | Bridge URL policy error | External bridge URLs must be public HTTPS, or loopback HTTP(S) for local development unless the local dev private-network override is set. | For private bridge URLs in local dev, set `VITE_LLMWIKI_CHAT_ALLOW_PRIVATE_AGENT_RUNTIME_URLS=true`. |
+| Bridge source does not appear in chat | The bridge is not ready, the bridge does not expose `llmwiki_list_sources`, or no sources are saved in bridge settings. | Open bridge settings, verify saved sources, then run `Test bridge` again. |
 | Ask button remains unavailable | The selected bridge/runtime is not ready or source selection changed during a run. | Test the bridge again, or switch to `Local Development Runtime` for UI-only testing. |
 
 ## Repository Checks

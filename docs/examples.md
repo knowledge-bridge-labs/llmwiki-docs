@@ -362,7 +362,8 @@ profile only when the bridge should synthesize the final answer.
 ## Chat Workbench
 
 `llmwiki-chat` does not require a separate example fixture. Start the sample
-wiki server, run the chat client, and use the default Knowledge Source URL:
+wiki server, run the chat client, and use the default direct Knowledge Source
+URL:
 
 ```sh
 cd ../llmwiki-chat
@@ -370,18 +371,19 @@ npm ci
 npm run dev
 ```
 
-The default source URL is `http://127.0.0.1:8765`.
+The default direct source URL is `http://127.0.0.1:8765`.
 
 In the browser workbench:
 
 1. Open the Vite URL printed by `npm run dev`.
-2. Confirm the Knowledge Source reports `ready`.
+2. For direct source testing, confirm the Knowledge Source reports `ready`.
 3. Use the Knowledge map, Pages, and Details panels to inspect graph context,
    source refs, and page details before asking.
 4. Select a page to lazy-load its full markdown and navigate linked pages from
    the Details panel.
 5. Select the local Agent Bridge and choose A2A or MCP mode when the bridge is
-   already running.
+   already running. Registered bridge sources appear as bridge-managed,
+   read-only cards and should be edited from bridge settings.
 6. Use `Local Development Runtime` only for deterministic UI and source-flow
    testing without a model runtime.
 7. Review the answer citations, artifacts, graph context, and trace steps before
