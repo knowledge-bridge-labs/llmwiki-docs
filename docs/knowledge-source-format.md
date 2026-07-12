@@ -191,6 +191,15 @@ adapter configuration files, marker directories, relevant source-root
 directories, file size, modification time, and content digests for files that
 affect the projection.
 
+The `serve` command's local-performance option
+`--refresh-interval-seconds` controls how often a running server checks that
+signature. The default is `0.0`, which keeps strict per-request freshness: each
+request checks whether the source changed before serving the current projection.
+A positive interval opts into reusing the in-memory projection between checks.
+That can reduce repeated filesystem scans for larger local graphs, but source
+updates may be invisible until the interval expires. For immediate validation,
+keep the default, wait for the interval to pass, or restart the process.
+
 This means common authoring flows are reflected without restarting the server:
 
 - Editing Markdown page body or frontmatter.

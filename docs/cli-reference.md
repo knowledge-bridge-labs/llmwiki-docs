@@ -178,7 +178,7 @@ uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
 Command shape:
 
 ```text
-llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...]
+llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--refresh-interval-seconds <seconds>]
 ```
 
 Options:
@@ -190,6 +190,14 @@ Options:
 | `--port` | `8765` | HTTP port for the source endpoint. |
 | `--allow-drafts` | disabled | Allows `include_drafts` requests to return draft or unpublished pages. Keep disabled unless a trusted local workflow needs it. |
 | `--cors-origin` | local browser allowlist | Replaces the default local browser CORS allowlist. Repeat for multiple explicit origins. |
+| `--refresh-interval-seconds` | `0.0` | Local-performance knob for projection freshness. `0.0` checks the source signature on every request. Positive values reuse the in-memory projection between checks. |
+
+The default `0.0` is the strict freshness path for local authoring and exact
+tests: edits are checked before each served response. A positive refresh
+interval can improve repeated requests against larger local graphs, but updates
+may be invisible until the interval expires. Use the default, wait for the
+interval, or restart the process when you need immediate visibility of a source
+change.
 
 Readiness checks:
 
@@ -219,6 +227,7 @@ Common failures:
 | Port bind failure from Uvicorn | The requested port is already in use. | Pick another `--port` and update clients. |
 | HTTP `422` with `wiki_root_unsupported` | The source folder has no supported pages at request time. | Confirm source contents or rerun after compile output appears. |
 | HTTP `404` with `wiki_root_missing` | The source root was removed or never existed. | Restore the folder or restart with the correct path. |
+| Recent source edit is not visible | A positive `--refresh-interval-seconds` value is reusing the in-memory projection between checks. | Keep the default `0.0` for strict freshness, wait for the interval, or restart the process. |
 | Browser preflight fails | The browser origin is not allowed. | Add the exact origin with `--cors-origin` or use a local default origin. |
 | Draft page is still hidden | The server was not started with `--allow-drafts`, or the request did not set `include_drafts`. | Enable both only in a trusted local workflow. |
 
@@ -290,6 +299,12 @@ Advanced network, auth, CORS, timeout, source-policy, and bind controls live
 under diagnostics/advanced. Runtime and policy changes apply to the running
 bridge. Host and port edits are saved but require a restart before the listener
 moves.
+
+For multi-source requests, the current source-checkout bridge uses bounded
+concurrency for source fan-out rather than unbounded parallel requests.
+Responses are normalized back to the selected source order for citations, graph
+data, source bundles, trace steps, and per-source failures, so clients can keep
+a stable evidence order even when source calls complete at different times.
 
 Readiness checks:
 
@@ -397,6 +412,13 @@ npm run build
 # llmwiki-docs
 npm run check
 ```
+
+Exact live tests in the component repositories may override the public
+quickstart defaults with non-default ports, pre-registered bridge sources, or
+runtime environment variables. Treat those as test harness details. The public
+quickstart defaults still use `llmwiki-serve` on `127.0.0.1:8765`,
+`llmwiki-agent-bridge` on `127.0.0.1:8788`, and evidence-only bridge smoke
+without a runtime.
 
 For package and Pages publication status, see
 [Release Status & Compatibility](/status). Public users normally do not need
