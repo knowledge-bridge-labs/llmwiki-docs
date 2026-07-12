@@ -76,6 +76,13 @@ filtering, the response is HTTP 200 with:
 }
 ```
 
+`llmwiki-serve serve` defaults to strict per-request source freshness. The
+`--refresh-interval-seconds` option defaults to `0.0`, which checks the source
+signature before each request and refreshes the in-memory projection when the
+source changed. Positive values are a local-performance optimization: the server
+can reuse the current projection between checks, so source edits may not be
+visible until the interval expires or the process is restarted.
+
 ## Context Pack
 
 `/query`, MCP `llmwiki_context`, and A2A `llmwiki_context` artifacts return the
@@ -361,6 +368,12 @@ normalized result artifact.
 
 Only sources with `status: "ready"`, a supported protocol, a URL, and
 `selected !== false` are queried.
+
+Bridge source fan-out uses bounded concurrency for local performance and source
+protection. The bridge normalizes results back to selected source order before
+building citations, graph data, source bundles, trace steps, and per-source
+failure records. Clients should preserve those returned arrays instead of
+sorting by source completion time.
 
 Bridge response artifact:
 

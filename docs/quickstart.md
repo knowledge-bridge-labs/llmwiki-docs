@@ -81,6 +81,11 @@ uv run llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 
 Leave this terminal running. Use one `llmwiki-serve` process per source folder
 when different graphs have different lifecycle, draft, or network policies.
+By default, `llmwiki-serve` checks source freshness on every request. For large
+local graphs, source-checkout builds also expose
+`--refresh-interval-seconds <seconds>` as an opt-in local-performance knob. A
+positive value reuses the in-memory projection between checks, so recent edits
+may not appear until the interval expires or the process restarts.
 
 If port `8765` is busy, choose another loopback port and use that URL everywhere
 below:
@@ -227,7 +232,11 @@ Bridge success means the returned `llmwiki_agent_result` has:
 - no `runtime-chat-completions` step
 
 The bridge calls `llmwiki-serve` through the selected source URL. It does not
-read your wiki files directly or store the served source bundle.
+read your wiki files directly or store the served source bundle. For
+multi-source requests, bridge fan-out uses bounded concurrency and the returned
+citations, graph data, source bundles, trace steps, and per-source failures
+preserve the selected source order even when individual source calls finish out
+of order.
 
 ## Optional Runtime-Backed Bridge
 
@@ -352,7 +361,9 @@ npm run check
 
 Some live E2E tests require running source or runtime processes. Treat skipped
 live tests as expected only when the prerequisite service is intentionally not
-running.
+running. Exact repository tests may use non-default ports, pre-registered
+bridge sources, or runtime environment variables; those overrides do not change
+the public quickstart defaults shown above.
 
 ## Next
 

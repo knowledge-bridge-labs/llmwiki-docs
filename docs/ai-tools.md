@@ -117,6 +117,11 @@ selected sources and returns a normalized artifact. Use evidence-only mode when
 you want source proof without a model runtime; use runtime-backed mode when the
 bridge should call an OpenAI-compatible runtime.
 
+Bridge source fan-out uses bounded concurrency in current source-checkout
+workflows, but the artifact is still ordered by the selected source list. Keep
+returned citations, graph data, source bundles, trace steps, and per-source
+failures in that order when rendering evidence or feeding another runtime.
+
 Start the bridge for evidence-only source fan-out:
 
 ```sh
@@ -373,6 +378,12 @@ Before wiring a tool into an AI workflow:
    returns a `llmwiki_agent_result` artifact.
 7. If using `llmwiki-chat`, the source and selected bridge/runtime both show ready
    before asking.
+
+Some exact live tests use non-default ports, saved bridge source registration,
+or runtime environment variables to isolate test processes. Those requirements
+belong to the test harness; the public quickstart defaults remain the loopback
+source on `127.0.0.1:8765`, bridge on `127.0.0.1:8788`, and evidence-only
+bridge smoke before configuring a runtime.
 
 ## Compatibility Posture
 
