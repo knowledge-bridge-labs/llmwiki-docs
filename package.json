@@ -55,9 +55,9 @@
   "packageManager": "npm@10.9.7",
   "scripts": {
     "dev": "vitepress dev docs --host 127.0.0.1",
-    "build": "vitepress build docs",
+    "build": "vitepress build docs && node scripts/create-trailing-slash-redirects.mjs",
     "preview": "vitepress preview docs --host 127.0.0.1",
-    "check": "npm run licenses:check && vitepress build docs",
+    "check": "npm run licenses:check && npm run build",
     "demo:first-run": "node scripts/demo/render-first-run.mjs",
     "licenses:generate": "node scripts/generate-third-party-licenses.mjs all docs/public/third-party-licenses.txt",
     "licenses:check": "node scripts/generate-third-party-licenses.mjs all docs/public/third-party-licenses.txt --check",
