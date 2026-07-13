@@ -39,6 +39,7 @@ want a known-good smoke before pointing at private or larger content.
 | Graph path | Use when | Notes |
 | --- | --- | --- |
 | `/path/to/your/wiki` | You already have a Markdown, Obsidian, or LLMWiki-style graph. | Replace the sample path in the commands below. The server treats the folder as read-only input. |
+| `/path/to/repo` with `openwiki/quickstart.md` | You generated repository documentation with OpenWiki. | Point at the repo root or directly at `openwiki/`; `quickstart.md` is served as the index entrypoint. |
 | `./examples/sample-wiki` | You want the fastest known-good first run. | Stable public sample in the `llmwiki-serve` checkout; includes approved pages, links, source refs, and one withheld draft. |
 | `./tests/fixtures/obsidian-vault` | You want to smoke an Obsidian-shaped vault. | Source-checkout fixture for preview validation. |
 | `./tests/fixtures/llmwiki-compiler-output` | You want to smoke compiler-style topic wiki output. | Source-checkout fixture for preview validation. |

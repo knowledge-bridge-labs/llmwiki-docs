@@ -28,6 +28,11 @@ One `llmwiki-serve` process is usually best matched to one Knowledge Source.
 Run multiple server processes when you want to expose several unrelated wiki
 folders with independent network, draft, or token policies.
 
+When the configured root is a repository that contains generated OpenWiki
+documentation under `openwiki/`, the native Markdown adapter treats that
+`openwiki/` folder as the served source root. You can also point directly at the
+`openwiki/` folder.
+
 ## Supported Folder Shapes
 
 `llmwiki-serve` auto-detects the first matching adapter for the configured
@@ -35,7 +40,7 @@ root. Detection is based on files and marker directories under that root.
 
 | Shape | Detection signal | Parsed content |
 | --- | --- | --- |
-| Native LLMWiki Markdown | `wiki/` with hub pages or typed topic directories, a root-level hub plus typed directories, or `.wiki-compiler.json` | Markdown pages below the source root |
+| Native LLMWiki Markdown | `wiki/` or `openwiki/` with hub pages or typed topic directories, a root-level hub plus typed directories, `quickstart.md` in an OpenWiki source root, or `.wiki-compiler.json` | Markdown pages below the source root |
 | Generic Markdown | Any supported Markdown files under the root | Markdown pages below the root |
 | Obsidian | `.obsidian/` plus Markdown files | Markdown, YAML frontmatter, wikilinks, and tags |
 | Foam | `.foam/` or a VS Code extension hint for Foam | Markdown workspace pages and wikilinks |
@@ -75,8 +80,8 @@ Supported public-preview fields:
 | --- | --- |
 | `id` or `object_id` | Stable page identifier. Falls back to the relative file path without `.md` or `.org`. |
 | `title` | Display title. Falls back to the first heading, then the file stem. |
-| `wiki_title` | Wiki title when present on `index.md` or `overview.md`. |
-| `description` | Wiki description when present on `index.md` or `overview.md`. |
+| `wiki_title` | Wiki title when present on `index.md`, `overview.md`, or OpenWiki `quickstart.md`. |
+| `description` | Wiki description when present on `index.md`, `overview.md`, or OpenWiki `quickstart.md`. |
 | `source_refs` or `sources` | Citation/source labels projected as source reference graph nodes. |
 | `tags` | Tags projected as graph nodes. Inline hashtags are also extracted from the body. |
 | `review_state` or `state` | Review state used by draft filtering. |
@@ -85,7 +90,9 @@ Supported public-preview fields:
 | `updated_at` or `last_updated` | Optional timestamp carried on the parsed page. |
 
 Top-level `hot.md`, `index.md`, and `overview.md` files receive special roles.
-Other Markdown files are projected as topic pages.
+Top-level `quickstart.md` is treated as an `index` role for OpenWiki-generated
+documentation, where that file is the entrypoint and navigation page. Other
+Markdown files are projected as topic pages.
 
 Frontmatter must parse as a YAML mapping. Invalid or non-mapping frontmatter is
 ignored instead of failing the server startup path.
@@ -158,7 +165,7 @@ graph/graph.json
 For adapters with a nested source root, the root-level sidecar and the source
 root sidecar are both considered when they are inside the configured root. For
 native nested LLMWiki folders, `<source_root>/graph/graph.json` is usually
-`wiki/graph/graph.json`.
+`wiki/graph/graph.json` or `openwiki/graph/graph.json`.
 
 The sidecar can be a JSON array of edges or an object with an `edges` array:
 

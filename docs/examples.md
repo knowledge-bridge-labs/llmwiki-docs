@@ -13,6 +13,7 @@ transcript. The canonical shortest path remains:
 | Graph path | Use when | Expected adapter |
 | --- | --- | --- |
 | `/path/to/your/wiki` | You already have a Markdown, Obsidian, or LLMWiki-style graph. | Detected from the folder layout. |
+| `/path/to/repo` with `openwiki/quickstart.md` | You want to serve OpenWiki-generated repository docs from a repo root or `openwiki/` folder. | `llmwiki-markdown` |
 | `./examples/sample-wiki` | You want the stable public first-run sample. | `llmwiki-markdown` |
 | `./tests/fixtures/obsidian-vault` | You want to smoke an Obsidian-shaped fixture. | `obsidian` |
 | `./tests/fixtures/llmwiki-compiler-output` | You want to smoke compiler-style topic wiki output. | `llmwiki-markdown` |
