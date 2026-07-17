@@ -67,6 +67,19 @@ cd /path/to/llmwiki-serve
 uv run llmwiki-serve query /path/to/wiki "what is in this wiki?"
 ```
 
+## Recent Generated Output Is Not Visible
+
+Keep the default strict source scan for local authoring and most generated
+wiki smoke tests. If `llmwiki-serve` was started with
+`--producer-manifest <path>`, the producer must update that marker after every
+source-changing build. A source file change without a marker update can leave
+the cached projection visible.
+
+When in doubt, remove `--producer-manifest`, confirm the marker is a
+non-symlink file inside the served root, or restart the server after the
+producer build completes. The marker is only a freshness signal; it is not the
+public `projection.signature` or `bundle_id`.
+
 ## The Bridge Returns Source Query Failed
 
 Verify each selected source has:

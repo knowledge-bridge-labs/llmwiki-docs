@@ -88,6 +88,12 @@ local graphs, source-checkout builds also expose
 positive value reuses the in-memory projection between checks, so recent edits
 may not appear until the interval expires or the process restarts.
 
+Generated wiki producers that can atomically update a build marker after every
+source-changing compile may opt into `--producer-manifest <path>` for
+long-running servers. Keep the default strict scan unless the producer owns that
+marker discipline; the marker is a freshness hint, not the public
+`projection.signature` or `bundle_id`.
+
 If port `8765` is busy, choose another loopback port and use that URL everywhere
 below:
 
@@ -107,7 +113,8 @@ curl -s http://127.0.0.1:8765/source-bundle
 
 Expected signals:
 
-- `/health` returns `{"status":"ok"}`.
+- `/health` returns `status: "ok"` plus service/version, source identity,
+  capabilities, endpoint paths, and CORS discovery metadata.
 - `/manifest` returns title, adapter, page counts, capabilities, `source_id`, and a redacted network `root`.
 - `/source-bundle` returns `source_id`, `bundle_id`, projection metadata, and source refs when pages declare them.
 
@@ -152,6 +159,13 @@ Optional MCP-style smoke:
 curl -s http://127.0.0.1:8765/mcp \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness","limit":4}}}'
+```
+
+Optional graph-neighborhood smoke after a query identifies a useful page or
+source-ref seed:
+
+```sh
+curl -s 'http://127.0.0.1:8765/graph/neighborhood?seed=release-readiness&depth=1'
 ```
 
 You can stop here if your agent, script, IDE extension, or backend service can
