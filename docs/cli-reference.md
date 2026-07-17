@@ -76,6 +76,7 @@ Expected output is JSON with source metadata:
     "llmwiki_search",
     "llmwiki_read",
     "llmwiki_graph",
+    "llmwiki_graph_neighbors",
     "mcp-jsonrpc",
     "mcp-streamable-http"
   ]
@@ -178,7 +179,7 @@ uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
 Command shape:
 
 ```text
-llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--refresh-interval-seconds <seconds>]
+llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--refresh-interval-seconds <seconds>] [--producer-manifest <path>]
 ```
 
 Options:
@@ -191,6 +192,7 @@ Options:
 | `--allow-drafts` | disabled | Allows `include_drafts` requests to return draft or unpublished pages. Keep disabled unless a trusted local workflow needs it. |
 | `--cors-origin` | local browser allowlist | Replaces the default local browser CORS allowlist. Repeat for multiple explicit origins. |
 | `--refresh-interval-seconds` | `0.0` | Local-performance knob for projection freshness. `0.0` checks the source signature on every request. Positive values reuse the in-memory projection between checks. |
+| `--producer-manifest` | unset | Optional producer-owned freshness marker. When the non-symlink marker exists inside the served root, strict refresh checks use it instead of rescanning every source file. |
 
 The default `0.0` is the strict freshness path for local authoring and exact
 tests: edits are checked before each served response. A positive refresh
@@ -198,6 +200,13 @@ interval can improve repeated requests against larger local graphs, but updates
 may be invisible until the interval expires. Use the default, wait for the
 interval, or restart the process when you need immediate visibility of a source
 change.
+
+Use `--producer-manifest` only for generated wiki outputs whose producer
+updates the marker after every source-changing compile. If the marker is
+missing, outside the served root, or a symlink, `llmwiki-serve` falls back to
+the default strict source scan. The marker controls freshness checks only;
+public `projection.signature` and `bundle_id` remain content-derived from the
+served projection and are recomputed on initial load and marker changes.
 
 Readiness checks:
 
@@ -213,10 +222,11 @@ Expected readiness output:
 
 | Check | Expected signal |
 | --- | --- |
-| `/health` | `{ "status": "ok" }` |
+| `/health` | `status: "ok"` with service/version, current source summary, capabilities, endpoint paths, and CORS discovery metadata. |
 | `/manifest` | Manifest JSON with `root` redacted to an empty string. |
 | `/query` | `ContextPack` JSON with `orientation`, `evidence`, `limitations`, and `graph`. |
-| `/mcp` | JSON-RPC `tools/list` and `tools/call` responses for `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, and `llmwiki_graph`. |
+| `/graph/neighborhood` | Bounded graph neighborhood around one or more `seed` values, with optional `depth`, `direction`, `relation`, `limit`, and `include_drafts`. |
+| `/mcp` | JSON-RPC `tools/list` and `tools/call` responses for `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, `llmwiki_source_refs`, and `llmwiki_source_bundle`. |
 | `/mcp/stream` | Official MCP Streamable HTTP endpoint when supported by the installed server version. |
 | `/.well-known/agent-card.json` | A2A-style discovery card only when A2A source compatibility is enabled. |
 
@@ -228,6 +238,7 @@ Common failures:
 | HTTP `422` with `wiki_root_unsupported` | The source folder has no supported pages at request time. | Confirm source contents or rerun after compile output appears. |
 | HTTP `404` with `wiki_root_missing` | The source root was removed or never existed. | Restore the folder or restart with the correct path. |
 | Recent source edit is not visible | A positive `--refresh-interval-seconds` value is reusing the in-memory projection between checks. | Keep the default `0.0` for strict freshness, wait for the interval, or restart the process. |
+| Generated output changed but the served projection did not | `--producer-manifest` is set, but the producer did not update the marker after changing source files. | Update the marker as part of the producer build, remove `--producer-manifest`, or restart after verifying the producer contract. |
 | Browser preflight fails | The browser origin is not allowed. | Add the exact origin with `--cors-origin` or use a local default origin. |
 | Draft page is still hidden | The server was not started with `--allow-drafts`, or the request did not set `include_drafts`. | Enable both only in a trusted local workflow. |
 

@@ -54,6 +54,8 @@ evidence-only result, or call a delegated runtime when synthesis is configured.
 - search results
 - page read payloads
 - graph nodes and edges
+- bounded graph neighborhoods around page, source-ref, tag, or sidecar graph
+  seed nodes
 - optional graph facts from sidecar data
 - raw-origin records that tie derived evidence back to files, URLs, commits,
   sections, or line ranges when available
@@ -130,7 +132,7 @@ changing the ownership boundary.
 | Search | Find candidate pages, chunks, headings, tags, references, and graph facts. | Scores, matched fields, bundle/source handle, page or chunk handle, raw-origin summary. |
 | Context | Return a ranked evidence pack with orientation pages, limitations, citations, and graph hints. | Evidence handles, citation records, graph hints, retrieval trace IDs, raw-origin metadata. |
 | Read | Resolve an opaque handle into an approved page, section, chunk, or fact payload. | Stable handle, title, headings, source references, draft/public status, raw-origin metadata. |
-| Graph | Return nodes, edges, neighborhoods, paths, references, and sidecar facts relevant to the query or handle. | Node and edge handles, relation types, weights or scores when available, origin records for graph facts. |
+| Graph | Return nodes, edges, bounded neighborhoods, paths, references, and sidecar facts relevant to the query or handle. | Node and edge handles, normalized seed and unmatched values, relation filters, relation types, weights or scores when available, origin records for graph facts. |
 | Origin resolution | Explain where returned evidence came from without exposing private storage assumptions. | File path or URL when policy allows, commit or snapshot, front matter IDs, heading anchors, line or byte ranges. |
 
 Raw-origin metadata is a target design requirement for OSS readiness because it
@@ -160,8 +162,8 @@ and trace normalization, use `llmwiki-agent-bridge`.
 
 | Surface | Owner | Used for | Returned artifact |
 | --- | --- | --- | --- |
-| HTTP source endpoints | `llmwiki-serve` | Direct context, search, read, graph retrieval. | Context packs, pages, graph projections. |
-| MCP source tools | `llmwiki-serve` | Tool-oriented direct source retrieval. | `llmwiki_context`, search, read, graph tool results. |
+| HTTP source endpoints | `llmwiki-serve` | Direct context, search, read, graph, and graph-neighborhood retrieval. | Context packs, pages, graph projections, graph neighborhoods. |
+| MCP source tools | `llmwiki-serve` | Tool-oriented direct source retrieval. | `llmwiki_context`, search, read, graph, and graph-neighbor tool results. |
 | A2A source compatibility | `llmwiki-serve`, opt-in | A2A-native source discovery when a client cannot call HTTP/MCP directly. | `llmwiki_context` source artifact. |
 | Agent Bridge A2A | `llmwiki-agent-bridge` | Bridge-facing evidence fan-out and optional answer synthesis from selected sources. | `llmwiki_agent_result` artifact. |
 | Agent Bridge MCP | `llmwiki-agent-bridge` | MCP clients that want one bridge tool for evidence-only or runtime-backed grounded answering. | `structuredContent.llmwiki_agent_result`. |

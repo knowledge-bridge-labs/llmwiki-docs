@@ -4,6 +4,9 @@ This toolchain is in source-checkout preview. The supported first-run path is
 to clone the repositories and run the local checks documented in
 [Quickstart](/quickstart). Registry package installs remain pending until the
 first PyPI/npm packages are published.
+`llmwiki-serve` main includes the 0.2.0 source release contract from PR #11;
+use a current source checkout for the rich health discovery, graph
+neighborhood, MCP graph-neighbor, and producer freshness marker surfaces.
 
 The project is independent community tooling for LLM Wiki-style Markdown
 knowledge folders and agent-readable context. It is not an official project
@@ -29,7 +32,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
-| `llmwiki-serve` | Python package, Apache-2.0, CLI entrypoint | PyPI publication pending | Source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
+| `llmwiki-serve` | Python package 0.2.0, Apache-2.0, CLI entrypoint | PyPI publication pending | Source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-agent-bridge` | npm package, Apache-2.0, CLI entrypoint | npm publication pending | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package, Apache-2.0, Vite browser workbench artifact | npm publication pending | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-docs` | VitePress docs portal, Apache-2.0 | GitHub Pages path prepared | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
@@ -37,17 +40,17 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 The primary gate column is a status-oriented smoke signal. Each repository also
 keeps its own README, changelog, package metadata, license files, and CI gates.
 
-The dated `0.1.0` changelog sections in `llmwiki-serve`,
-`llmwiki-agent-bridge`, and `llmwiki-chat` describe source-preview baselines.
-Registry package publication is still pending until this matrix records package
-versions and install commands.
+The `llmwiki-serve` 0.2.0 source release baseline is merged on main. The dated
+`0.1.0` changelog sections in `llmwiki-agent-bridge` and `llmwiki-chat`
+describe their source-preview baselines. Registry package publication is still
+pending until this matrix records package versions and install commands.
 
 ## Protocol Surfaces
 
 | Surface | Owner | Status | Compatibility claim | Validation gate |
 | --- | --- | --- | --- | --- |
-| HTTP Knowledge Source | `llmwiki-serve` | Public-preview contract | Local HTTP endpoints for manifest, context query, search, read, and graph projection. | `llmwiki-serve` release smoke and `llmwiki-chat` `npm run test:e2e:live` smoke. |
-| MCP JSON-RPC compatibility | `llmwiki-serve` | Compatibility surface | Legacy JSON-RPC tool calls for local integration testing. | `llmwiki-serve` MCP smoke coverage. |
+| HTTP Knowledge Source | `llmwiki-serve` | Public-preview contract | Local HTTP endpoints for health discovery, manifest, context query, search, read, graph projection, and graph neighborhoods. | `llmwiki-serve` release smoke and `llmwiki-chat` `npm run test:e2e:live` smoke. |
+| MCP JSON-RPC compatibility | `llmwiki-serve` | Compatibility surface | Legacy JSON-RPC tool calls for local integration testing, including `llmwiki_graph_neighbors`. | `llmwiki-serve` MCP smoke coverage. |
 | MCP Streamable HTTP | `llmwiki-serve` | SDK-backed source surface where implemented | Official MCP SDK-backed tool calls for source retrieval. | `llmwiki-serve` MCP SDK smoke coverage. |
 | A2A source compatibility | `llmwiki-serve` | Opt-in compatibility surface | Agent-card discovery and `message:send` for A2A-native source discovery. | A2A source smoke coverage when enabled. |
 | Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract | A2A and MCP bridge endpoints that gather source evidence and return a grounded answer artifact. | `npm run check` in `llmwiki-agent-bridge`. |
