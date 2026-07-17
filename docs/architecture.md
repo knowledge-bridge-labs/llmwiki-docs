@@ -97,6 +97,9 @@ answers itself.
 Use `llmwiki-agent-bridge` when a client needs one HTTP service that gathers
 evidence from selected sources and returns a stable artifact shape. Runtime
 synthesis is optional and only happens in runtime-backed bridge modes.
+Bridge MCP clients can also use read-only source tools to list, search, read,
+inspect graph neighborhoods, and fetch source-bundle metadata from registered
+or inline Knowledge Sources without calling the configured runtime.
 
 Use `llmwiki-chat` when a human needs to inspect sources, choose a bridge, ask
 questions, review trace steps, and view cited answers in a browser.
@@ -166,7 +169,7 @@ and trace normalization, use `llmwiki-agent-bridge`.
 | MCP source tools | `llmwiki-serve` | Tool-oriented direct source retrieval. | `llmwiki_context`, search, read, graph, and graph-neighbor tool results. |
 | A2A source compatibility | `llmwiki-serve`, opt-in | A2A-native source discovery when a client cannot call HTTP/MCP directly. | `llmwiki_context` source artifact. |
 | Agent Bridge A2A | `llmwiki-agent-bridge` | Bridge-facing evidence fan-out and optional answer synthesis from selected sources. | `llmwiki_agent_result` artifact. |
-| Agent Bridge MCP | `llmwiki-agent-bridge` | MCP clients that want one bridge tool for evidence-only or runtime-backed grounded answering. | `structuredContent.llmwiki_agent_result`. |
+| Agent Bridge MCP | `llmwiki-agent-bridge` | MCP clients that want `llmwiki_agent_run` for evidence-only or runtime-backed grounded answering, plus read-only source tools for progressive exploration of registered or inline Knowledge Sources. | `structuredContent.llmwiki_agent_result` for full answer runs, or structured source-tool results such as `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, and `llmwiki_source_bundle`. |
 
 ## Ownership Boundaries
 

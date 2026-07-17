@@ -361,14 +361,14 @@ Response:
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| `GET` | `/health` | Reports bridge readiness, selected runtime profile, runtime identity, model configuration, allowed-origin count, and source policy. |
-| `GET` | `/.well-known/agent-card.json` | Returns the A2A-style runtime card with the bridge identity and `message:send` URL. |
+| `GET` | `/health` | Reports bridge readiness, selected runtime profile, runtime identity, model configuration, allowed-origin count, source policy, and redacted `sourceRegistry` readiness counts. |
+| `GET` | `/.well-known/agent-card.json` | Returns the A2A-style runtime card with the bridge identity, `message:send` URL, and redacted `metadata.sourceRegistry` readiness counts. |
 | `POST` | `/message:send` | Accepts a query plus selected Knowledge Sources and returns a completed task with a `llmwiki_agent_result` artifact. |
 | `GET` | `/settings` | Serves the bridge-owned guided setup page: connect runtime, register Knowledge Sources, and verify with `POST /message:send`. |
 | `GET` | `/settings.json` | Returns redacted bridge settings and endpoint metadata. |
 | `PUT` | `/settings/config.json` | Persists runtime configuration plus advanced access, CORS, timeout, and source-policy settings. |
 | `GET/PUT` | `/settings/sources.json` | Reads or persists registered Knowledge Sources. |
-| `POST` | `/mcp` | Exposes bridge tools such as `llmwiki_agent_run` for MCP bridge clients. |
+| `POST` | `/mcp` | Exposes `llmwiki_agent_run` plus read-only source tools for MCP bridge clients. |
 
 When `LLMWIKI_AGENT_BRIDGE_BEARER_TOKEN` is configured, every bridge HTTP
 request must include `Authorization: Bearer <token>`. Browser requests are also
@@ -395,7 +395,13 @@ provide its own source list.
   "agentRuntime": "generic",
   "modelConfigured": false,
   "configuredAllowedOrigins": 1,
-  "sourcePolicy": "private-http"
+  "sourcePolicy": "private-http",
+  "sourceRegistry": {
+    "registeredSourceCount": 1,
+    "selectedSourceCount": 1,
+    "selectedReadySourceCount": 1,
+    "unavailableSourceCount": 0
+  }
 }
 ```
 
@@ -403,7 +409,11 @@ provide its own source list.
 and hybrid runs require `modelConfigured: true` before the bridge can call the
 configured OpenAI-compatible endpoint.
 
-## Agent Bridge Message And MCP Tool
+`sourceRegistry` is intentionally a readiness summary. It lets clients know
+whether the bridge has registered, selected, and ready Knowledge Sources
+without returning local source endpoint URLs from `/health` or the agent card.
+
+## Agent Bridge Message And MCP Tools
 
 `llmwiki-agent-bridge` accepts the same logical run through A2A-style
 `POST /message:send` and MCP `tools/call` with `llmwiki_agent_run`. The bridge
@@ -412,6 +422,33 @@ source list when the request omits sources. Evidence-only requests return a
 normalized source-evidence artifact without calling a runtime. Delegated-runtime
 and hybrid requests call the configured OpenAI-compatible runtime and return a
 normalized result artifact.
+
+The bridge MCP surface has two layers:
+
+| Tool layer | Tools | Runtime call | Use when |
+| --- | --- | --- | --- |
+| Full grounded answer path | `llmwiki_agent_run` | Evidence-only mode skips the runtime; delegated-runtime and hybrid modes call the configured runtime. | The client wants the bridge to gather evidence, assemble trace steps, and return one `llmwiki_agent_result`. |
+| Progressive source exploration | `llmwiki_list_sources`, `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, `llmwiki_source_bundle` | No runtime call. | The host agent wants to list registered or inline Knowledge Sources, inspect context/search/read/graph/source-bundle data, then decide whether to keep exploring or call `llmwiki_agent_run`. |
+
+Source-specific tools accept `sourceId` or `source_id` and optional inline
+`knowledgeSources` or `knowledge_sources`. If no inline sources are supplied,
+the bridge uses sources registered through `/settings`. When more than one
+ready selected source is available, source-specific tools require `sourceId`.
+`llmwiki_list_sources` returns a URL-free text summary; structured descriptors
+are meant for local workbenches that need to pass selected bridge-managed
+sources back to `/message:send` or `llmwiki_agent_run`.
+
+Read-only source tool results use these structured keys:
+
+| Tool | Required arguments | Structured result |
+| --- | --- | --- |
+| `llmwiki_list_sources` | none | `structuredContent.llmwiki_sources` |
+| `llmwiki_context` | `query` | `structuredContent.llmwiki_context` |
+| `llmwiki_search` | `query` | `structuredContent.llmwiki_search` |
+| `llmwiki_read` | `pageId` | `structuredContent.llmwiki_read` |
+| `llmwiki_graph` | none | `structuredContent.llmwiki_graph` |
+| `llmwiki_graph_neighbors` | `nodeId` or `nodeIds` | `structuredContent.llmwiki_graph_neighbors` |
+| `llmwiki_source_bundle` | none | `structuredContent.llmwiki_source_bundle` |
 
 ```json
 {

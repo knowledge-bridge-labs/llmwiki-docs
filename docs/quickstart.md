@@ -253,6 +253,26 @@ citations, graph data, source bundles, trace steps, and per-source failures
 preserve the selected source order even when individual source calls finish out
 of order.
 
+Optional MCP source-tool smoke:
+
+```sh
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness","limit":4,"knowledgeSources":[{"id":"local-wiki","name":"Local Wiki","protocol":"llmwiki-http","status":"ready","url":"http://127.0.0.1:8765","selected":true}]}}}'
+```
+
+Use `llmwiki_agent_run` when the bridge should return a full grounded answer
+artifact. Use read-only source tools such as `llmwiki_list_sources`,
+`llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`,
+`llmwiki_graph_neighbors`, and `llmwiki_source_bundle` when your host agent
+wants progressive source exploration without a runtime call. If you register
+sources through `/settings`, source tools can omit inline `knowledgeSources`
+and use the registered source IDs.
+
 ## Optional Runtime-Backed Bridge
 
 Configure a runtime only after evidence-only bridge smoke passes. The bridge
