@@ -7,6 +7,8 @@ first PyPI/npm packages are published.
 `llmwiki-serve` main includes the 0.2.0 source release contract from PR #11;
 use a current source checkout for the rich health discovery, graph
 neighborhood, MCP graph-neighbor, and producer freshness marker surfaces.
+`llmwiki-agent-bridge` main includes read-only MCP source tools and
+`sourceRegistry` readiness metadata for bridge-managed Knowledge Sources.
 
 The project is independent community tooling for LLM Wiki-style Markdown
 knowledge folders and agent-readable context. It is not an official project
@@ -53,7 +55,7 @@ pending until this matrix records package versions and install commands.
 | MCP JSON-RPC compatibility | `llmwiki-serve` | Compatibility surface | Legacy JSON-RPC tool calls for local integration testing, including `llmwiki_graph_neighbors`. | `llmwiki-serve` MCP smoke coverage. |
 | MCP Streamable HTTP | `llmwiki-serve` | SDK-backed source surface where implemented | Official MCP SDK-backed tool calls for source retrieval. | `llmwiki-serve` MCP SDK smoke coverage. |
 | A2A source compatibility | `llmwiki-serve` | Opt-in compatibility surface | Agent-card discovery and `message:send` for A2A-native source discovery. | A2A source smoke coverage when enabled. |
-| Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract | A2A and MCP bridge endpoints that gather source evidence and return a grounded answer artifact. | `npm run check` in `llmwiki-agent-bridge`. |
+| Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract | A2A and MCP bridge endpoints that gather source evidence, expose read-only source exploration tools, and return a grounded answer artifact when `llmwiki_agent_run` or `message:send` is used. | `npm run check` in `llmwiki-agent-bridge`. |
 | Browser workbench | `llmwiki-chat` | Public-preview UI | Source selection, graph inspection, bridge selection, trace display, citations, and answer review. | `llmwiki-chat` lint, typecheck, unit, E2E, build, and pack gates. |
 
 ## Runtime Adapter Status
@@ -61,7 +63,7 @@ pending until this matrix records package versions and install commands.
 | Runtime path | Status | What works | What is not claimed | Validation gate |
 | --- | --- | --- | --- | --- |
 | Agent Bridge A2A | Public-preview path | Connects chat or clients to a bridge agent card and `message:send` endpoint. | Certified A2A conformance or hosted runtime operation. | Bridge and chat A2A smoke tests. |
-| Agent Bridge MCP | Public-preview path | Connects chat or MCP clients to `llmwiki_agent_run` on the bridge. | Certified MCP conformance or hosted runtime operation. | Bridge and chat MCP smoke tests. |
+| Agent Bridge MCP | Public-preview path | Connects chat or MCP clients to `llmwiki_agent_run` for full bridge answers, or to read-only source tools for progressive exploration of registered or inline Knowledge Sources. | Certified MCP conformance or hosted runtime operation. | Bridge and chat MCP smoke tests. |
 | Local Development Runtime | Supported for development | Deterministic UI flow, tool-call trace, citation rendering, and graph continuity. | Production answer quality. | `npm run test` and `npm run test:e2e` in `llmwiki-chat`. |
 | Hermes profile | Supported bridge profile | Uses the bridge runtime profile for Hermes-compatible gateways. | Product-certified Hermes integration. | Bridge profile tests plus operator smoke against a real Hermes-compatible gateway. |
 | DeepAgents profile | Supported bridge profile | Uses the bridge runtime profile for DeepAgents-compatible gateways. | Product-certified DeepAgents integration. | Bridge profile tests plus operator smoke against a real DeepAgents runtime. |
