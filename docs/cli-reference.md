@@ -4,10 +4,9 @@ This page is the operator reference for the public-preview command surfaces.
 Use [Quickstart](/quickstart) for the shortest successful path, then use this
 page when you need exact command shapes, expected output, and failure behavior.
 
-The current supported path is source checkout usage. Package command examples
-are included as publication targets and install-smoke references, but registry
-installs should not be treated as supported until the release status says the
-packages are published.
+Source checkout usage remains supported for local development. Published
+package commands are also available for package-manager installs and
+install-smoke verification; use the status matrix below for exact versions.
 
 ## Setup Context
 
@@ -25,14 +24,14 @@ Use these runtime baselines:
 
 | Component | Source checkout setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | `uv sync --extra dev` from `llmwiki-serve` | PyPI publication pending. Use package commands only after the package gate passes. |
-| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` | npm publication pending. Source checkout is the supported local path. |
-| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm publication pending. The browser workbench is run from source today. |
+| `llmwiki-serve` | `uv sync --extra dev` from `llmwiki-serve` | PyPI published as `llmwiki-serve==0.2.0`; package commands are available. |
+| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` | npm published as `llmwiki-agent-bridge@0.1.0`; source checkout remains supported for local development. |
+| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.0`; source checkout remains supported for local development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
-Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. After
-the first package publication, the matching install-smoke commands should also
-pass from a clean temporary directory.
+Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. The
+matching install-smoke commands for published packages should also pass from a
+clean temporary directory.
 
 Most examples use `./examples/sample-wiki`. Replace that path with your own
 Markdown, Obsidian, or LLMWiki-style graph after the sample source smoke passes.

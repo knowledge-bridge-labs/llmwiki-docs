@@ -258,7 +258,7 @@ visibility, missing Pages, or unapplied branch policy, not stale public copy.
 The copy flip must update [Release Status & Compatibility](/status) so
 `public unpublished` is the current phase, and it must update both the status
 matrix and [CLI Reference](/cli-reference) so `llmwiki-docs` Pages are live for
-public preview rather than publication pending.
+public preview and package rows reflect the current registry state.
 Also confirm the owner-provided private security and conduct reporting routes
 are published or otherwise reachable by maintainers before the repositories
 accept public issues.

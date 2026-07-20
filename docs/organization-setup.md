@@ -322,12 +322,12 @@ preparation language to public-unpublished language:
   should describe public repositories and live Pages as the expected state
 - [Release Status & Compatibility](/status) should mark `public unpublished`
   as the current phase and describe `llmwiki-docs` Pages as live for public
-  preview, not publication pending
+  preview instead of planned or unavailable
 - [CLI Reference](/cli-reference) should describe `llmwiki-docs` Pages as live
   for public preview; package publication remains not applicable for the docs
   portal
-- package sections should still say PyPI/npm publication is pending until the
-  first packages are actually published
+- package sections should describe package-manager installs as available once
+  package upload and install-smoke verification complete
 - maintainer-only runbooks may still document private staging as a historical
   or repeatable phase, but not as the current state for public users
 
