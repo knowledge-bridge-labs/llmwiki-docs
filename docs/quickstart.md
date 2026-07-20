@@ -7,8 +7,10 @@ This is the shortest public-preview path for an existing LLMWiki user:
 3. Add `llmwiki-agent-bridge` only when one endpoint should gather evidence or call a runtime.
 4. Add `llmwiki-chat` only when a human needs a browser workbench for source, citation, graph, and trace review.
 
-The supported first-run path is source checkouts until the first PyPI/npm package
-publication gates pass. See [Release Status & Compatibility](/status).
+The supported first-run paths are source checkouts and the published package
+installs listed in [Release Status & Compatibility](/status). Use source
+checkouts when you want bundled fixtures and development scripts; use package
+installs when you already have a wiki path to serve.
 
 ## Prerequisites
 
@@ -71,6 +73,13 @@ git clone https://github.com/knowledge-bridge-labs/llmwiki-serve.git
 cd llmwiki-serve
 uv sync --extra dev
 uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
+```
+
+If you already have a wiki path and prefer the published CLI, start it without a
+checkout:
+
+```sh
+uvx --from llmwiki-serve==0.2.0 llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
 To serve your own graph, replace `./examples/sample-wiki` with the folder that
@@ -186,6 +195,12 @@ git clone https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge.git
 cd llmwiki-agent-bridge
 npm ci
 node ./bin/llmwiki-agent-bridge.mjs
+```
+
+Or run the published package:
+
+```sh
+npm exec --package llmwiki-agent-bridge@0.1.0 -- llmwiki-agent-bridge
 ```
 
 Windows PowerShell:
