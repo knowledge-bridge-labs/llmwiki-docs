@@ -410,11 +410,12 @@ open:
   `https://github.com/<org>/<repo>.git` are treated as the same repository.
   This prevents `actions/checkout` remotes from failing preflight only because
   the `.git` suffix is absent.
-- The central package-publication runbook now explains that the public
-  unpublished phase should still show PyPI/npm package publication as pending
-  until upload and install-smoke verification finish.
-- The bridge release checklist now uses the same interpretation: the bridge
-  package may remain npm-publication pending during `public-unpublished`.
+- The central package-publication runbook now explains that, before package
+  upload, the public unpublished phase could show PyPI/npm packages as not yet
+  uploaded until install-smoke verification finished.
+- The bridge release checklist used the same interpretation: before package
+  upload, the bridge package could be marked as not yet uploaded during
+  `public-unpublished`.
 - `launch-copy:check:public-unpublished` now treats `GitHub Pages publication
   pending` as stale public-launch copy. This keeps the docs portal from
   claiming public-unpublished readiness while the status matrix or CLI reference
