@@ -8,9 +8,11 @@ This is the shortest public-preview path for an existing LLMWiki user:
 4. Add `llmwiki-chat` only when a human needs a browser workbench for source, citation, graph, and trace review.
 
 The supported first-run paths are source checkouts and the published package
-installs listed in [Release Status & Compatibility](/status). Use source
-checkouts when you want bundled fixtures and development scripts; use package
-installs when you already have a wiki path to serve.
+installs listed in [Release Status & Compatibility](/status). Current package
+versions are `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.0`. Use source checkouts when you want bundled fixtures and
+development scripts; use package installs when you already have a wiki path to
+serve.
 
 ## Prerequisites
 
@@ -102,6 +104,14 @@ source-changing compile may opt into `--producer-manifest <path>` for
 long-running servers. Keep the default strict scan unless the producer owns that
 marker discipline; the marker is a freshness hint, not the public
 `projection.signature` or `bundle_id`.
+
+Local I/O logging is enabled by default for `llmwiki-serve serve` and writes
+redacted request/response JSONL to `.runtime-logs/llmwiki-serve-io.jsonl`.
+Pass `--io-log off` or set `LLMWIKI_SERVE_IO_LOG=off` to disable it; pass a
+path or set `LLMWIKI_SERVE_IO_LOG=<path>` to choose another sink. The logger
+redacts common credentials, credential-bearing URLs, private local path shapes,
+and the served root, but it still captures user queries and approved wiki
+content for debugging, so treat the file as local sensitive data.
 
 If port `8765` is busy, choose another loopback port and use that URL everywhere
 below:
@@ -339,11 +349,15 @@ URL is `http://127.0.0.1:8765`.
 
 First-run flow:
 
-1. Choose the connection path you want to test.
-2. For direct source testing, confirm the sample Knowledge Source is `ready`,
-   or add your source URL and click `Test source`.
-3. For bridge testing, select `Local Agent Bridge (A2A)` or `Local Agent Bridge
-   (MCP)`, confirm the bridge URL, and click `Test bridge`.
+1. Start in the `First-run quickstart` panel. It shows copyable commands for
+   the local sample source and the optional local bridge.
+2. For direct source testing, confirm the sample Knowledge Source URL is
+   `http://127.0.0.1:8765`, then click `Test sample source` or the source
+   card's `Test source`. Add your own source URL only after the sample passes.
+3. For bridge testing, start `llmwiki-agent-bridge` on
+   `http://127.0.0.1:8788`, then click `Test local bridge` from the quickstart
+   panel or select `Local Agent Bridge (A2A)` / `Local Agent Bridge (MCP)`,
+   confirm the bridge URL, and click `Test bridge`.
 4. When a bridge is ready, chat discovers the bridge's registered Knowledge
    Sources and shows them as bridge-managed, read-only source cards. Edit those
    sources in the bridge settings page; direct source cards in chat remain
@@ -353,6 +367,13 @@ First-run flow:
    Runtime` for deterministic UI, citation, trace, and graph smoke tests.
 7. Ask a small question, then review the answer, citations, graph context,
    artifacts, and run details.
+
+The `Local I/O logging` controls are enabled by default in the chat UI. They
+keep bounded browser-local JSONL in localStorage for debugging prompts, runtime
+request payloads, answers/errors, and response metadata. Disable or clear the
+panel before shared-device demos. Redaction removes common credentials and
+credential-bearing URL parts before storage, but logged prompts and answers may
+still contain sensitive content.
 
 If the default Vite port is busy:
 

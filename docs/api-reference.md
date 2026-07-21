@@ -106,6 +106,14 @@ parameters select the starting nodes and relation filter.
 `include_drafts` only has effect when the server operator started
 `llmwiki-serve` with draft access enabled.
 
+Evidence-routing guard for `/query`: `orientation` entries are navigation
+helpers for hot, index, or overview pages. They do not make a query answerable
+by themselves and they do not override draft filtering. If a request has no
+approved query-ranked evidence, or only draft/unapproved matches were withheld,
+clients should treat `answerable: false`, empty `evidence`, and any
+`limitations` as the authoritative routing signal even when orientation pages
+are present.
+
 `GET /read/{page_id}` returns HTTP 404 with `detail: "page not found"` when no
 page matches the ID or path. When a page exists but is withheld by draft
 filtering, the response is HTTP 200 with:

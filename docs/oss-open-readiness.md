@@ -1,7 +1,16 @@
 # OSS Open Readiness Rounds
 
-Status: active
-Last updated: 2026-07-05
+Status: historical
+Last updated: 2026-07-21
+
+::: warning Historical readiness evidence
+This page is a historical rollup of pre-first-release readiness rounds. It no
+longer describes current launch blockers: repository visibility, GitHub Pages,
+and first package publication have since moved to the public published baseline.
+For current state, read [Release Status & Compatibility](/status),
+[Package Publication](/package-publication), and
+[Organization & Pages Setup](/organization-setup).
+:::
 
 This page tracks the pre-public-open readiness loop for the coordinated
 `llmwiki-serve`, `llmwiki-agent-bridge`, `llmwiki-chat`, and `llmwiki-docs`
@@ -595,7 +604,7 @@ confirmed private security/conduct report routes, a deliberate public-launch
 copy flip, public visibility, Pages publication, branch policy, and
 `release:preflight:public-unpublished`.
 
-## Open Issues
+## Historical Open Issues
 
 ### R7 Quickstart And Private Settings Rerun
 
@@ -681,14 +690,11 @@ Resolved post-merge issues:
 | `llmwiki-chat` | `npm run check` or scoped lint/type/test/build while iterating | browser source setup, bridge setup, ask flow, markdown, citations, graph, run details |
 | `llmwiki-docs` | `npm run check` | VitePress render smoke, Mermaid SVG smoke, quickstart link and command review |
 
-## Next Round
+## Historical Next Round Notes
 
-1. Public visibility, Pages publication, branch protection, CODEOWNERS, and
-   public-unpublished preflight have now passed for the clean public repositories.
-2. Keep source-checkout quickstart as the supported first-run path until package
-   publication is intentionally approved.
-3. Before package publication, update [Release Status & Compatibility](/status)
-   with exact package versions, registry state, protocol caveats, and validation
-   commands.
-4. Run package publication gates only after the release owner approves the
-   registry publication step.
+These notes were the next steps at the time this readiness log was active. They
+are superseded by the current published baseline in
+[Release Status & Compatibility](/status): source checkouts remain supported,
+GitHub Pages is live, and the first packages are published as
+`llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.0`.

@@ -4,9 +4,11 @@ This page is the operator reference for the public-preview command surfaces.
 Use [Quickstart](/quickstart) for the shortest successful path, then use this
 page when you need exact command shapes, expected output, and failure behavior.
 
-Source checkout usage remains supported for local development. Published
-package commands are also available for package-manager installs and
-install-smoke verification; use the status matrix below for exact versions.
+Source checkout usage remains supported for local development, bundled
+fixtures, and release verification. Published package commands are also
+available for package-manager installs and install-smoke verification:
+`llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.0`.
 
 ## Setup Context
 
@@ -178,7 +180,7 @@ uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
 Command shape:
 
 ```text
-llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--refresh-interval-seconds <seconds>] [--producer-manifest <path>]
+llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--enable-a2a-compat] [--refresh-interval-seconds <seconds>] [--producer-manifest <path>] [--io-log <path|off>]
 ```
 
 Options:
@@ -190,8 +192,10 @@ Options:
 | `--port` | `8765` | HTTP port for the source endpoint. |
 | `--allow-drafts` | disabled | Allows `include_drafts` requests to return draft or unpublished pages. Keep disabled unless a trusted local workflow needs it. |
 | `--cors-origin` | local browser allowlist | Replaces the default local browser CORS allowlist. Repeat for multiple explicit origins. |
+| `--enable-a2a-compat` | disabled | Enables legacy A2A-style source compatibility endpoints. Keep disabled unless a client requires that adapter surface. |
 | `--refresh-interval-seconds` | `0.0` | Local-performance knob for projection freshness. `0.0` checks the source signature on every request. Positive values reuse the in-memory projection between checks. |
 | `--producer-manifest` | unset | Optional producer-owned freshness marker. When the non-symlink marker exists inside the served root, strict refresh checks use it instead of rescanning every source file. |
+| `--io-log` | `.runtime-logs/llmwiki-serve-io.jsonl` | Local request/response JSONL logging for `serve`. Set `off` to disable or pass a path to choose a different sink. `LLMWIKI_SERVE_IO_LOG` accepts the same values. |
 
 The default `0.0` is the strict freshness path for local authoring and exact
 tests: edits are checked before each served response. A positive refresh
@@ -206,6 +210,16 @@ missing, outside the served root, or a symlink, `llmwiki-serve` falls back to
 the default strict source scan. The marker controls freshness checks only;
 public `projection.signature` and `bundle_id` remain content-derived from the
 served projection and are recomputed on initial load and marker changes.
+
+Local I/O logging is enabled by default for HTTP, MCP-style JSON-RPC, MCP
+Streamable HTTP, and A2A-style compatibility requests served by
+`llmwiki-serve serve`. It writes one JSONL event per request to
+`.runtime-logs/llmwiki-serve-io.jsonl` unless `--io-log off` or
+`LLMWIKI_SERVE_IO_LOG=off` is set. The logger redacts common credential
+headers, token-shaped fields, credential-bearing URLs, private local path
+shapes, and the served root, but it still captures user queries and approved
+wiki content for debugging. Treat the file as local sensitive data and do not
+commit it.
 
 Readiness checks:
 
@@ -282,6 +296,13 @@ Core environment variables:
 | `LLMWIKI_AGENT_BRIDGE_ALLOWED_SOURCE_ORIGINS` | unset | Comma-separated exact source origins for `allowlist` or stricter policies. |
 | `LLMWIKI_AGENT_BRIDGE_ALLOW_PUBLIC_BIND` | unset | Set to `1` before binding to a non-loopback host. |
 | `LLMWIKI_AGENT_BRIDGE_CONFIG_PATH` | CLI user config file | Persistent settings file for `/settings/config.json` and `/settings/sources.json`; embedded callers can pass `configPath`. |
+| `LLMWIKI_AGENT_BRIDGE_AUDIT_LOG` | unset | Opt-in safe request audit JSON lines through the bridge logger. Audit events include route patterns, counts, status, and redaction flags, not raw prompts, answers, URLs, model names, credentials, query strings, or local paths. |
+| `LLMWIKI_AGENT_BRIDGE_IO_LOG` | `file` | Default-on I/O debug JSONL. Set `off` to suppress prompt/body/answer debug logs, `logger` or `stdout` to route through process logs, or `file` to append JSONL to a file sink. |
+| `LLMWIKI_AGENT_BRIDGE_IO_LOG_PATH` | `.runtime-logs/llmwiki-agent-bridge-io.jsonl` | Optional file path for bridge I/O JSONL logs. |
+
+The default runtime profile is `hermes` for compatibility with existing bridge
+setups. For a generic OpenAI-compatible local endpoint, set
+`LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic` explicitly.
 
 Runtime identity overrides are available when an integration needs custom
 agent-card metadata:
@@ -341,7 +362,7 @@ Expected evidence-only health output includes fields like:
 {
   "status": "ok",
   "runtime": "llmwiki-agent-bridge",
-  "runtimeProfile": "generic",
+  "runtimeProfile": "hermes",
   "modelConfigured": false,
   "configuredAllowedOrigins": 0,
   "sourcePolicy": "private-http"
@@ -379,14 +400,26 @@ Default local flow:
 
 1. Start `llmwiki-serve` on `http://127.0.0.1:8765`.
 2. Start `llmwiki-chat` with `npm run dev`.
-3. For direct source testing, confirm the default Knowledge Source is ready.
-4. Select the local Agent Bridge at `http://127.0.0.1:8788` when a bridge is
-   running, choose A2A or MCP mode, and run `Test bridge`.
-5. When the bridge is ready, its registered Knowledge Sources appear as
+3. Begin in the `First-run quickstart` panel. It shows the local source and
+   bridge commands before you choose a runtime path.
+4. For direct source testing, confirm the default Knowledge Source is ready and
+   click `Test sample source` or the source card's `Test source`.
+5. If `llmwiki-agent-bridge` is running at `http://127.0.0.1:8788`, click
+   `Test local bridge` from the quickstart panel or select the local Agent
+   Bridge card, choose A2A or MCP mode, and run `Test bridge`.
+6. When the bridge is ready, its registered Knowledge Sources appear as
    bridge-managed, read-only source cards. Manage those sources in the bridge
    settings page; keep chat direct sources for standalone source testing.
-6. Use `Local Development Runtime` only for deterministic UI checks when no
+7. Use `Local Development Runtime` only for deterministic UI checks when no
    bridge or model runtime is available.
+
+The `Local I/O logging` controls are visible in the chat UI and are enabled by
+default. They store bounded browser-local JSONL in localStorage for debugging
+prompts, runtime request payloads, answers/errors, and response metadata.
+Disable the toggle or clear/export/copy the panel before shared-device demos.
+Authorization headers, bearer tokens, API-key shaped values, and
+credential-bearing URL parts are redacted before storage, but the entries may
+still contain user prompts and answer text.
 
 Hermes, DeepAgents, and generic OpenAI-compatible bridge workflows use the
 standalone `llmwiki-agent-bridge` package path above. `llmwiki-chat` no longer
