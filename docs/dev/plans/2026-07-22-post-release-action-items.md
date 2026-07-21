@@ -23,7 +23,7 @@ baseline.
 | 4 | Add reproducible screenshot capture workflow. | Done | `llmwiki-chat` now has `npm run docs:capture-screenshots` and `npm run docs:check-screenshots`; both current PNGs reproduce byte-identically. |
 | 5 | Decide `llmwiki-agent-bridge` `compact-json` default promotion path. | Done | `llmwiki-agent-bridge` now documents that runtime prompts already use compact JSON, while broad production-default approval remains a separate multi-runtime/model-class evidence claim gated by the tracked e2e wrapper. |
 | 6 | Add chat-to-bridge multi-turn/context live verification. | Done | `llmwiki-chat` now has `npm run test:e2e:bridge-multiturn`, proving browser → real bridge → test OpenAI-compatible runtime over three turns with stable thread/context/session IDs and bounded runtime history. |
-| 7 | Improve bridge-managed source UX and orchestration controls. | Pending | Cover bridge-mediated graph/read, source grouping, and explicit `evidence-only` / `delegated-runtime` / `hybrid` mode controls. |
+| 7 | Improve bridge-managed source UX and orchestration controls. | Done | `llmwiki-chat` now exposes bridge-only `evidence-only` / `delegated-runtime` / `hybrid` orchestration controls and routes bridge-managed page/detail previews through the owning bridge MCP `llmwiki_read` tool instead of direct private source `/read/...` fetches. Source grouping remains an optional cosmetic follow-up. |
 | 8 | Process Dependabot PRs after release baseline. | Pending | Handle dependency/action bumps one at a time with CI evidence. |
 | 9 | Investigate bundle-size warning. | Pending | Vite repeatedly warns about the large browser chunk; evaluate code splitting after higher-priority docs/release drift is closed. |
 
