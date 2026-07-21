@@ -24,7 +24,7 @@ baseline.
 | 5 | Decide `llmwiki-agent-bridge` `compact-json` default promotion path. | Done | `llmwiki-agent-bridge` now documents that runtime prompts already use compact JSON, while broad production-default approval remains a separate multi-runtime/model-class evidence claim gated by the tracked e2e wrapper. |
 | 6 | Add chat-to-bridge multi-turn/context live verification. | Done | `llmwiki-chat` now has `npm run test:e2e:bridge-multiturn`, proving browser → real bridge → test OpenAI-compatible runtime over three turns with stable thread/context/session IDs and bounded runtime history. |
 | 7 | Improve bridge-managed source UX and orchestration controls. | Done | `llmwiki-chat` now exposes bridge-only `evidence-only` / `delegated-runtime` / `hybrid` orchestration controls and routes bridge-managed page/detail previews through the owning bridge MCP `llmwiki_read` tool instead of direct private source `/read/...` fetches. Source grouping remains an optional cosmetic follow-up. |
-| 8 | Process Dependabot PRs after release baseline. | Pending | Handle dependency/action bumps one at a time with CI evidence. |
+| 8 | Process Dependabot PRs after release baseline. | Done | All open Dependabot PRs were handled with green CI evidence: `llmwiki-serve` #12/#13, `llmwiki-agent-bridge` #6/#15, `llmwiki-chat` #7/#16, and `llmwiki-docs` #12. `llmwiki-chat` #16 also refreshed generated third-party license output before merge. |
 | 9 | Investigate bundle-size warning. | Pending | Vite repeatedly warns about the large browser chunk; evaluate code splitting after higher-priority docs/release drift is closed. |
 
 ## Excluded For Now
