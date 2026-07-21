@@ -23,12 +23,14 @@ import { withBase } from 'vitepress'
 
 <section class="home-demo">
   <div>
-    <p class="section-kicker">60-second demo</p>
+    <p class="section-kicker">Conceptual architecture demo</p>
     <h2>See the folder-to-agent flow before you install.</h2>
     <p>
       Upstream workflows create compatible Markdown or wiki files.
       <code>llmwiki-serve</code> projects that folder read-only, and agents,
       bridge, or chat consume the served Knowledge Source.
+      The committed media is conceptual until screenshots are regenerated for
+      the latest quickstart and logging controls.
     </p>
     <a href="./demo">Open the full demo notes</a>
   </div>
@@ -104,7 +106,7 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use source checkouts today. PyPI and npm package commands become primary after publication gates pass.</span>
+    <span>Use source checkouts or the published packages: <code>llmwiki-serve==0.2.0</code>, <code>llmwiki-agent-bridge@0.1.0</code>, and <code>llmwiki-chat@0.1.0</code>.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>

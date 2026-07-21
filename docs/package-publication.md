@@ -1,7 +1,18 @@
 # Package Publication
 
-Use this runbook only after the repositories have moved to the target GitHub
-organization and the release owner has approved the first public preview.
+Use this runbook when a maintainer is preparing a future package release or
+verifying the current public-preview package baseline. The first public package
+baseline has already been published:
+
+| Package | Published baseline | Registry |
+| --- | --- | --- |
+| `llmwiki-serve` | `0.2.0` | PyPI |
+| `llmwiki-agent-bridge` | `0.1.0` | npm |
+| `llmwiki-chat` | `0.1.0` | npm |
+
+Source checkouts remain supported for development, bundled fixtures, and
+release verification. Public-unpublished gates that expected PyPI `404` or npm
+`E404` were pre-first-release checks; they are historical for this baseline.
 
 Package publication is intentionally a maintainer-owner gate. Do not publish
 from ad hoc local credentials, CI secrets, or generated tokens that are not part
@@ -9,8 +20,8 @@ of an approved release process.
 
 ## Current Registry Checks
 
-Before publishing, verify that the package names are still available or owned by
-the project:
+For the current baseline, verify that the public registries return the
+published versions:
 
 ```sh
 npm view llmwiki-chat version --json
@@ -44,15 +55,18 @@ try {
 }
 ```
 
-An HTTP 404 or npm E404 means the package name is not currently published from
-that registry view. Re-check immediately before release because registry state
-can change.
+These checks should report `llmwiki-serve` `0.2.0`,
+`llmwiki-agent-bridge` `0.1.0`, and `llmwiki-chat` `0.1.0`. A PyPI HTTP `404`
+or npm `E404` is no longer a successful current-state result for these
+packages; it means the package is unavailable from that registry view or the
+query failed.
 
-Before publishing, also verify that the target GitHub organization, repository
-URLs, and Pages URL resolve publicly:
+Before publishing a future version, also verify that the target GitHub
+organization, repository URLs, Pages URL, and current package baseline resolve
+publicly:
 
 ```sh
-npm run release:preflight:public-unpublished
+npm run release:preflight:published
 gh repo view knowledge-bridge-labs/llmwiki-serve
 gh repo view knowledge-bridge-labs/llmwiki-agent-bridge
 gh repo view knowledge-bridge-labs/llmwiki-chat
@@ -64,39 +78,47 @@ If the release owner chose a different target organization, run the preflight
 with `LLMWIKI_TARGET_ORG=<org>` and replace the `gh repo view` and Pages URL
 checks with that organization name.
 
-During private staging, the expected registry result is still npm `E404` or
-PyPI HTTP `404`; use `npm run release:preflight:private-staging` only after the
-target organization exists and the transferred private repositories are
-accessible to the authenticated GitHub CLI user. That mode requires the target
-repositories to exist and remain private, and it expects the public Pages URL to
-remain missing. Private collaborator access belongs to this private-staging
-gate, not to package publication. Target organization, repository, and Pages
-URLs must not fail for the public preview release gate.
-
-After the first packages are published, use:
+For a local copy-only check of the published baseline, use:
 
 ```sh
+npm run launch-copy:check:published
 npm run release:preflight:published
 ```
 
-That mode fails if the expected packages are still missing from PyPI/npm and
-warns or blocks on published-version drift according to strict preflight mode.
+Those modes fail if the expected packages are missing from PyPI/npm and warn or
+block on published-version drift according to strict preflight mode.
+
+## Historical Pre-First-Release Checks
+
+Before the first package upload, private staging and public-unpublished gates
+intentionally expected missing packages:
+
+```sh
+npm run release:preflight:private-staging
+npm run release:preflight:public-unpublished
+```
+
+In that historical phase, npm `E404` or PyPI HTTP `404` meant the package name
+was not yet published from that registry view. Use those modes only when
+rehearsing a brand-new organization or package namespace before any package has
+ever been uploaded. They are not the current validation gates for the published
+`llmwiki-*` baseline.
 
 ## Shared Release Order
 
-1. Confirm `npm run release:preflight:public-unpublished` passes from clean
-   sibling checkouts. Do not publish packages while this gate is failing.
+1. Confirm `npm run launch-copy:check:published` and
+   `npm run release:preflight:published` pass from clean sibling checkouts.
 2. Confirm the GitHub organization, teams, public repository visibility, branch
-   protection, vulnerability reporting, and Pages settings are configured.
+   protection, vulnerability reporting, Pages settings, and current package
+   ownership are configured.
 3. Run every repository's documented local and CI gate.
 4. Confirm third-party notices retain the license text, copyright notices, and
    attribution files required by redistributed source, wheel, npm, browser, and
    Pages artifacts.
 5. Update `CHANGELOG.md` and [Release Status & Compatibility](/status) with the
    intended release version, current registry state, protocol caveats, and
-   validation commands. In the public-unpublished phase, the matrix should still
-   accurately mark registry publication as pending until upload and install
-   verification finish.
+   validation commands. Public-facing docs should keep the already published
+   baseline clear while any future version is still pending upload.
 6. Build artifacts from a clean checkout.
 7. Publish only through an owner-approved registry account or trusted publishing
    path.
@@ -223,3 +245,5 @@ node -e "const fs = require('node:fs'); const root = require.resolve('llmwiki-ch
   logs to reproduce.
 - The status matrix has not been intentionally prepared for this release, or it
   no longer matches the current registry state.
+- The current published baseline cannot be verified with
+  `npm run release:preflight:published`.
