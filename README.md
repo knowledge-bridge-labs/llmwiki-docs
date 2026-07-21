@@ -27,16 +27,21 @@ implementation details in the owning repo README or docs directory.
 - [Network & Security](docs/network-security.md)
 - [Release Status & Compatibility](docs/status.md)
 
-The docs are intentionally local-first. Source checkouts are the supported
-first-run path until the first PyPI/npm package publication gates pass.
+The docs are intentionally local-first. Source checkouts remain supported for
+bundled samples, development scripts, and release verification. Package
+installs are also available for `llmwiki-serve==0.2.0`,
+`llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.0`; see
+[Release Status & Compatibility](docs/status.md) for the current baseline.
 
 Shortest local path:
 
-1. Run `llmwiki-serve` against your existing wiki folder, or use the bundled
-   `./examples/sample-wiki` source.
+1. Run `llmwiki-serve` from a source checkout or the published package against
+   your existing wiki folder. Use the bundled `./examples/sample-wiki` source
+   from a checkout when you want a known-good fixture.
 2. Query `http://127.0.0.1:8765/query`.
 3. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
-   bridge endpoint or browser workbench.
+   bridge endpoint or browser workbench; source checkouts and the published npm
+   packages are both supported.
 
 ## Develop
 
@@ -82,8 +87,7 @@ It is not:
 
 Repository metadata and Pages paths target
 `knowledge-bridge-labs/llmwiki-docs`. The hosted Pages site is the canonical
-public-preview docs entrypoint once repository visibility and Pages deployment
-are enabled.
+public-preview docs entrypoint.
 
 ## Content Map
 

@@ -13,6 +13,8 @@ surface at `docs/openapi.json` in the server repository. In local sibling
 checkouts, read `../llmwiki-serve/docs/openapi.json`; the public repository
 path is
 `https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/main/docs/openapi.json`.
+The `llmwiki-serve` main branch now includes the 0.2.0 source release contract
+from PR #11.
 
 The OpenAPI artifact is generated from the implemented FastAPI routes and data
 models by `scripts/export_openapi.py`, then checked by the server release smoke
@@ -36,7 +38,7 @@ behind these responses.
 
 | Endpoint | Method | Request | Response |
 | --- | --- | --- | --- |
-| `/health` | `GET` | none | `{ "status": "ok" }` |
+| `/health` | `GET` | none | `HealthResponse` readiness and discovery payload |
 | `/manifest` | `GET` | none | `WikiManifest` |
 | `/source-bundle` | `GET` | query `include_drafts` | `SourceBundleManifest` with bundle identity, projection metadata, capabilities, raw-origin metadata, and typed source refs |
 | `/source-refs` | `GET` | query `include_drafts` | `SourceRefsResponse` with opaque source-reference handles linked to served pages |
@@ -44,10 +46,46 @@ behind these responses.
 | `/search` | `POST` | `QueryRequest` | `{ "results": SearchResult[] }` |
 | `/read/{page_id}` | `GET` | query `include_drafts` | page payload, HTTP 404 for a missing page, or withheld payload for a draft page |
 | `/graph` | `GET` | query `limit`, `include_drafts` | `{ "nodes": GraphNode[], "edges": GraphEdge[] }` |
+| `/graph/neighborhood` | `GET` | query `seed`, `depth`, `direction`, `relation`, `limit`, `include_drafts` | `GraphNeighborhoodResponse` |
 | `/mcp` | `POST` | JSON-RPC object | Legacy MCP-style JSON-RPC result envelope |
 | `/mcp/stream` | `POST` | MCP Streamable HTTP | Official MCP SDK-backed tool surface where enabled by the server version |
 | `/.well-known/agent-card.json` | `GET` | none | A2A-style agent card when A2A compatibility is enabled |
 | `/message:send` | `POST` | A2A-style message | completed task with `llmwiki_context` artifact when A2A compatibility is enabled |
+
+`GET /health` is also the lightweight discovery document for client setup. It
+returns `status: "ok"` plus `service`, `version`, source identity and projection
+counts, capabilities, endpoint paths, and CORS mode. It does not expose the
+local source root or literal configured CORS origin values. The example below
+shows representative fields and omits some source and endpoint keys for
+brevity.
+
+```json
+{
+  "status": "ok",
+  "service": "llmwiki-serve",
+  "version": "0.2.0",
+  "source": {
+    "source_id": "sample-packaging-llmwiki",
+    "bundle_id": "sample-packaging-llmwiki:sha256:abc123...",
+    "projection": {
+      "signature": "sha256:abc123...",
+      "page_count": 5,
+      "approved_page_count": 4
+    }
+  },
+  "capabilities": ["llmwiki_context", "llmwiki_graph_neighbors"],
+  "endpoints": {
+    "query": "/query",
+    "graph_neighborhood": "/graph/neighborhood",
+    "mcp_jsonrpc": "/mcp"
+  },
+  "cors": {
+    "mode": "local-dev-allowlist",
+    "local_dev_origins": true,
+    "explicit_origin_count": 0
+  }
+}
+```
 
 `QueryRequest`:
 
@@ -62,8 +100,19 @@ behind these responses.
 For HTTP `/query` and `/search`, `limit` is validated as an integer in
 `1..30`; invalid requests fail request validation. MCP-style context and
 search calls clamp `limit` to `1..30`. Graph calls clamp `limit` to `1..2000`.
+Graph neighborhood calls clamp `depth` to `0..4`, `limit` to `1..500`, and
+`direction` to `out`, `in`, or `both`; repeated `seed` and `relation` query
+parameters select the starting nodes and relation filter.
 `include_drafts` only has effect when the server operator started
 `llmwiki-serve` with draft access enabled.
+
+Evidence-routing guard for `/query`: `orientation` entries are navigation
+helpers for hot, index, or overview pages. They do not make a query answerable
+by themselves and they do not override draft filtering. If a request has no
+approved query-ranked evidence, or only draft/unapproved matches were withheld,
+clients should treat `answerable: false`, empty `evidence`, and any
+`limitations` as the authoritative routing signal even when orientation pages
+are present.
 
 `GET /read/{page_id}` returns HTTP 404 with `detail: "page not found"` when no
 page matches the ID or path. When a page exists but is withheld by draft
@@ -82,6 +131,16 @@ signature before each request and refreshes the in-memory projection when the
 source changed. Positive values are a local-performance optimization: the server
 can reuse the current projection between checks, so source edits may not be
 visible until the interval expires or the process is restarted.
+
+`--producer-manifest <path>` is a separate opt-in freshness contract for
+generated wiki outputs. When the configured non-symlink marker exists inside
+the served root, strict refresh checks use that marker instead of rescanning
+all source files. The producer must update the marker after every
+source-changing build; otherwise the cached projection may remain visible. If
+the marker is missing or unsafe, the server falls back to the default strict
+scan. The marker is not the public projection identity:
+`projection.signature` and `bundle_id` remain content-derived from the served
+projection and are recomputed on initial load and marker changes.
 
 ## Context Pack
 
@@ -138,6 +197,33 @@ Network responses intentionally omit the local source root from `/manifest`.
 Client code should rely on `source_id`, `bundle_id`, `page_id`, `path`,
 `title`, `source_refs`, and `llmwiki://...` handles for citations rather than
 absolute local file paths.
+
+## Graph Neighborhood
+
+Use `/graph/neighborhood` after `/query`, `/search`, or `llmwiki_context`
+identifies a page, source reference, tag, or sidecar graph node worth
+inspecting.
+
+```sh
+curl -s 'http://127.0.0.1:8765/graph/neighborhood?seed=release-readiness&depth=1&direction=both'
+```
+
+Response shape:
+
+```json
+{
+  "seeds": ["page:release-readiness"],
+  "unmatched": [],
+  "depth": 1,
+  "direction": "both",
+  "relations": [],
+  "nodes": [],
+  "edges": []
+}
+```
+
+`seed` can be repeated. Unknown seed values are returned in `unmatched`.
+`relation` can also be repeated and is normalized before filtering.
 
 ## Source Bundle And Source Refs
 
@@ -223,6 +309,7 @@ Available tools:
 | `llmwiki_search` | `query`, `limit`, `include_drafts` | `{ "results": SearchResult[] }` |
 | `llmwiki_read` | `page_id` or `id`, `include_drafts` | page payload or not-found payload |
 | `llmwiki_graph` | `limit`, `include_drafts` | graph payload |
+| `llmwiki_graph_neighbors` | `seed` or `seeds`, `depth`, `direction`, `relation` or `relations`, `limit`, `include_drafts` | graph neighborhood payload |
 | `llmwiki_source_refs` | `include_drafts` | `SourceRefsResponse` |
 | `llmwiki_source_bundle` | `include_drafts` | `SourceBundleManifest` |
 
@@ -282,14 +369,14 @@ Response:
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| `GET` | `/health` | Reports bridge readiness, selected runtime profile, runtime identity, model configuration, allowed-origin count, and source policy. |
-| `GET` | `/.well-known/agent-card.json` | Returns the A2A-style runtime card with the bridge identity and `message:send` URL. |
+| `GET` | `/health` | Reports bridge readiness, selected runtime profile, runtime identity, model configuration, allowed-origin count, source policy, and redacted `sourceRegistry` readiness counts. |
+| `GET` | `/.well-known/agent-card.json` | Returns the A2A-style runtime card with the bridge identity, `message:send` URL, and redacted `metadata.sourceRegistry` readiness counts. |
 | `POST` | `/message:send` | Accepts a query plus selected Knowledge Sources and returns a completed task with a `llmwiki_agent_result` artifact. |
 | `GET` | `/settings` | Serves the bridge-owned guided setup page: connect runtime, register Knowledge Sources, and verify with `POST /message:send`. |
 | `GET` | `/settings.json` | Returns redacted bridge settings and endpoint metadata. |
 | `PUT` | `/settings/config.json` | Persists runtime configuration plus advanced access, CORS, timeout, and source-policy settings. |
 | `GET/PUT` | `/settings/sources.json` | Reads or persists registered Knowledge Sources. |
-| `POST` | `/mcp` | Exposes bridge tools such as `llmwiki_agent_run` for MCP bridge clients. |
+| `POST` | `/mcp` | Exposes `llmwiki_agent_run` plus read-only source tools for MCP bridge clients. |
 
 When `LLMWIKI_AGENT_BRIDGE_BEARER_TOKEN` is configured, every bridge HTTP
 request must include `Authorization: Bearer <token>`. Browser requests are also
@@ -316,7 +403,13 @@ provide its own source list.
   "agentRuntime": "generic",
   "modelConfigured": false,
   "configuredAllowedOrigins": 1,
-  "sourcePolicy": "private-http"
+  "sourcePolicy": "private-http",
+  "sourceRegistry": {
+    "registeredSourceCount": 1,
+    "selectedSourceCount": 1,
+    "selectedReadySourceCount": 1,
+    "unavailableSourceCount": 0
+  }
 }
 ```
 
@@ -324,7 +417,11 @@ provide its own source list.
 and hybrid runs require `modelConfigured: true` before the bridge can call the
 configured OpenAI-compatible endpoint.
 
-## Agent Bridge Message And MCP Tool
+`sourceRegistry` is intentionally a readiness summary. It lets clients know
+whether the bridge has registered, selected, and ready Knowledge Sources
+without returning local source endpoint URLs from `/health` or the agent card.
+
+## Agent Bridge Message And MCP Tools
 
 `llmwiki-agent-bridge` accepts the same logical run through A2A-style
 `POST /message:send` and MCP `tools/call` with `llmwiki_agent_run`. The bridge
@@ -333,6 +430,33 @@ source list when the request omits sources. Evidence-only requests return a
 normalized source-evidence artifact without calling a runtime. Delegated-runtime
 and hybrid requests call the configured OpenAI-compatible runtime and return a
 normalized result artifact.
+
+The bridge MCP surface has two layers:
+
+| Tool layer | Tools | Runtime call | Use when |
+| --- | --- | --- | --- |
+| Full grounded answer path | `llmwiki_agent_run` | Evidence-only mode skips the runtime; delegated-runtime and hybrid modes call the configured runtime. | The client wants the bridge to gather evidence, assemble trace steps, and return one `llmwiki_agent_result`. |
+| Progressive source exploration | `llmwiki_list_sources`, `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, `llmwiki_source_bundle` | No runtime call. | The host agent wants to list registered or inline Knowledge Sources, inspect context/search/read/graph/source-bundle data, then decide whether to keep exploring or call `llmwiki_agent_run`. |
+
+Source-specific tools accept `sourceId` or `source_id` and optional inline
+`knowledgeSources` or `knowledge_sources`. If no inline sources are supplied,
+the bridge uses sources registered through `/settings`. When more than one
+ready selected source is available, source-specific tools require `sourceId`.
+`llmwiki_list_sources` returns a URL-free text summary; structured descriptors
+are meant for local workbenches that need to pass selected bridge-managed
+sources back to `/message:send` or `llmwiki_agent_run`.
+
+Read-only source tool results use these structured keys:
+
+| Tool | Required arguments | Structured result |
+| --- | --- | --- |
+| `llmwiki_list_sources` | none | `structuredContent.llmwiki_sources` |
+| `llmwiki_context` | `query` | `structuredContent.llmwiki_context` |
+| `llmwiki_search` | `query` | `structuredContent.llmwiki_search` |
+| `llmwiki_read` | `pageId` | `structuredContent.llmwiki_read` |
+| `llmwiki_graph` | none | `structuredContent.llmwiki_graph` |
+| `llmwiki_graph_neighbors` | `nodeId` or `nodeIds` | `structuredContent.llmwiki_graph_neighbors` |
+| `llmwiki_source_bundle` | none | `structuredContent.llmwiki_source_bundle` |
 
 ```json
 {
@@ -409,7 +533,8 @@ releases. See [Diagnostics](/diagnostics).
 ## Compatibility Notes
 
 - Prefer `/query` or `llmwiki_context` for first-pass retrieval.
-- Use `/search`, `/read/{page_id}`, and `/graph` for follow-up inspection.
+- Use `/search`, `/read/{page_id}`, `/graph`, and `/graph/neighborhood` for
+  follow-up inspection.
 - Preserve draft filtering unless the deployment is a trusted local workflow.
 - Cite returned `page_id`, `title`, `path`, and `source_refs` when composing
   model answers.

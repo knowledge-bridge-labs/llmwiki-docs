@@ -1,7 +1,16 @@
 # OSS Open Readiness Rounds
 
-Status: active
-Last updated: 2026-07-05
+Status: historical
+Last updated: 2026-07-21
+
+::: warning Historical readiness evidence
+This page is a historical rollup of pre-first-release readiness rounds. It no
+longer describes current launch blockers: repository visibility, GitHub Pages,
+and first package publication have since moved to the public published baseline.
+For current state, read [Release Status & Compatibility](/status),
+[Package Publication](/package-publication), and
+[Organization & Pages Setup](/organization-setup).
+:::
 
 This page tracks the pre-public-open readiness loop for the coordinated
 `llmwiki-serve`, `llmwiki-agent-bridge`, `llmwiki-chat`, and `llmwiki-docs`
@@ -410,11 +419,12 @@ open:
   `https://github.com/<org>/<repo>.git` are treated as the same repository.
   This prevents `actions/checkout` remotes from failing preflight only because
   the `.git` suffix is absent.
-- The central package-publication runbook now explains that the public
-  unpublished phase should still show PyPI/npm package publication as pending
-  until upload and install-smoke verification finish.
-- The bridge release checklist now uses the same interpretation: the bridge
-  package may remain npm-publication pending during `public-unpublished`.
+- The central package-publication runbook now explains that, before package
+  upload, the public unpublished phase could show PyPI/npm packages as not yet
+  uploaded until install-smoke verification finished.
+- The bridge release checklist used the same interpretation: before package
+  upload, the bridge package could be marked as not yet uploaded during
+  `public-unpublished`.
 - `launch-copy:check:public-unpublished` now treats `GitHub Pages publication
   pending` as stale public-launch copy. This keeps the docs portal from
   claiming public-unpublished readiness while the status matrix or CLI reference
@@ -594,7 +604,7 @@ confirmed private security/conduct report routes, a deliberate public-launch
 copy flip, public visibility, Pages publication, branch policy, and
 `release:preflight:public-unpublished`.
 
-## Open Issues
+## Historical Open Issues
 
 ### R7 Quickstart And Private Settings Rerun
 
@@ -680,14 +690,11 @@ Resolved post-merge issues:
 | `llmwiki-chat` | `npm run check` or scoped lint/type/test/build while iterating | browser source setup, bridge setup, ask flow, markdown, citations, graph, run details |
 | `llmwiki-docs` | `npm run check` | VitePress render smoke, Mermaid SVG smoke, quickstart link and command review |
 
-## Next Round
+## Historical Next Round Notes
 
-1. Public visibility, Pages publication, branch protection, CODEOWNERS, and
-   public-unpublished preflight have now passed for the clean public repositories.
-2. Keep source-checkout quickstart as the supported first-run path until package
-   publication is intentionally approved.
-3. Before package publication, update [Release Status & Compatibility](/status)
-   with exact package versions, registry state, protocol caveats, and validation
-   commands.
-4. Run package publication gates only after the release owner approves the
-   registry publication step.
+These notes were the next steps at the time this readiness log was active. They
+are superseded by the current published baseline in
+[Release Status & Compatibility](/status): source checkouts remain supported,
+GitHub Pages is live, and the first packages are published as
+`llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.0`.

@@ -8,6 +8,12 @@ This first-run demo shows the ownership boundary in one minute: an upstream
 workflow creates Markdown, `llmwiki-serve` projects that folder into read-only
 APIs, and agents, bridge, or chat consume the served Knowledge Source.
 
+::: info Conceptual demo media
+The committed video and poster are architecture/conceptual demo media until the
+screenshots are regenerated for the latest quickstart panel, package-install,
+and local I/O logging controls.
+:::
+
 <div class="demo-video-panel">
   <video
     controls

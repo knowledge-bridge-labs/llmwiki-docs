@@ -67,6 +67,19 @@ cd /path/to/llmwiki-serve
 uv run llmwiki-serve query /path/to/wiki "what is in this wiki?"
 ```
 
+## Recent Generated Output Is Not Visible
+
+Keep the default strict source scan for local authoring and most generated
+wiki smoke tests. If `llmwiki-serve` was started with
+`--producer-manifest <path>`, the producer must update that marker after every
+source-changing build. A source file change without a marker update can leave
+the cached projection visible.
+
+When in doubt, remove `--producer-manifest`, confirm the marker is a
+non-symlink file inside the served root, or restart the server after the
+producer build completes. The marker is only a freshness signal; it is not the
+public `projection.signature` or `bundle_id`.
+
 ## The Bridge Returns Source Query Failed
 
 Verify each selected source has:
@@ -82,6 +95,32 @@ configuration, discovery, authorization, connection, request, or response. When
 the run still has usable evidence from other sources, per-source failures appear
 as warning or error trace steps inside the returned answer artifact instead of
 failing the whole request.
+
+## Bridge MCP Source Tools Cannot Select a Source
+
+Check the bridge registry first:
+
+```sh
+curl -s http://127.0.0.1:8788/health
+```
+
+`sourceRegistry.selectedReadySourceCount` should be greater than zero when you
+expect registered sources from `/settings` to be usable. The same redacted
+readiness summary appears in the agent card metadata. It reports counts only;
+it does not expose Knowledge Source endpoint URLs.
+
+For MCP clients, call `tools/list` and then `llmwiki_list_sources`. The source
+list text is URL-free and useful for choosing a source ID. If more than one
+ready selected source is available, source-specific tools such as
+`llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`,
+`llmwiki_graph_neighbors`, and `llmwiki_source_bundle` require `sourceId` or
+an inline `knowledgeSources` array. Use `llmwiki_context` first for
+orientation; use `llmwiki_graph_neighbors` after you have a graph node or
+page/source-ref seed.
+
+These source tools do not call the configured runtime. If you need the bridge
+to produce one grounded answer artifact with citations and trace steps, call
+`llmwiki_agent_run` or `POST /message:send` instead.
 
 ## CI Fails After Documentation Edits
 

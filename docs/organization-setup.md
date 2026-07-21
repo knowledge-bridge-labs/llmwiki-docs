@@ -9,6 +9,12 @@ The target organization is `knowledge-bridge-labs`. The documentation URL is:
 https://knowledge-bridge-labs.github.io/llmwiki-docs/
 ```
 
+As of 2026-07-21, this guide is a setup, recovery, and maintenance runbook for
+an organization whose public docs and first packages are already published.
+Sections that mention private staging, public-unpublished copy, missing Pages,
+PyPI `404`, or npm `E404` describe historical pre-first-release gates unless
+they explicitly say they are for a new organization rehearsal.
+
 The name is intentionally neutral. It describes the toolchain's role around
 agent-readable Knowledge Sources without implying that the organization owns
 the broader LLM Wiki idea, upstream producers, or any third-party runtime. Avoid
@@ -311,40 +317,52 @@ security and conduct reporting routes. If either route is missing, keep the
 repositories private and record the missing owner-provided route as unresolved
 external input.
 
-## Public Launch Copy Flip
+## Historical Public Launch Copy Flip
 
-Before changing visibility, update the public-facing copy from private
-preparation language to public-unpublished language:
+Before the original first public visibility change, maintainers updated
+public-facing copy from private preparation language to launch language. For
+the current published baseline, use `launch-copy:check:published`; the
+`public-unpublished` language below applies only to a pre-first-release
+rehearsal before packages exist.
 
 - repository README files should no longer say that the repository is private
   or that public links are expected to be unavailable
 - docs home, quickstart, FAQ, troubleshooting, community, and status pages
   should describe public repositories and live Pages as the expected state
-- [Release Status & Compatibility](/status) should mark `public unpublished`
-  as the current phase and describe `llmwiki-docs` Pages as live for public
-  preview, not publication pending
+- [Release Status & Compatibility](/status) should describe the current
+  published package baseline and `llmwiki-docs` Pages as live for public
+  preview instead of planned or unavailable
 - [CLI Reference](/cli-reference) should describe `llmwiki-docs` Pages as live
   for public preview; package publication remains not applicable for the docs
   portal
-- package sections should still say PyPI/npm publication is pending until the
-  first packages are actually published
+- package sections should describe package-manager installs as available for
+  `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+  `llmwiki-chat@0.1.0`, while future release candidates are clearly marked as
+  pending until upload and install-smoke verification complete
 - maintainer-only runbooks may still document private staging as a historical
   or repeatable phase, but not as the current state for public users
 
-Check the copy through the public preflight before and after the update:
+Check the current published copy with:
+
+```sh
+npm run launch-copy:check:published
+npm run release:preflight:published
+```
+
+For a historical pre-first-release rehearsal only, use:
 
 ```sh
 npm run launch-copy:check:public-unpublished
 npm run release:preflight:public-unpublished
 ```
 
-The launch-copy check is local-only. It should pass before visibility changes
-because it does not require public repositories, GitHub Pages, branch policy, or
-registry state.
-
-Before visibility changes, this command should still fail on repository
-visibility and Pages. It should no longer fail on public launch copy after the
-copy flip has been committed and pushed.
+For that historical rehearsal, the launch-copy check was local-only and could
+pass before visibility changes because it did not require public repositories,
+GitHub Pages, branch policy, or registry state. The full
+`release:preflight:public-unpublished` command was expected to keep failing on
+repository visibility and Pages until the visibility and Pages steps completed,
+but it should not fail on public launch copy after the copy flip was committed
+and pushed.
 
 Preview the exact repository visibility commands:
 
@@ -397,7 +415,9 @@ npm run pages:publish:wait
 
 The `pages:publish:*` helpers watch the latest `pages.yml` run on `main` and
 poll the rendered Pages URL until it returns a 2xx response. Use this before
-running `release:preflight:public-unpublished`.
+running `release:preflight:published` for the current baseline. Use
+`release:preflight:public-unpublished` only for a historical pre-first-release
+rehearsal before packages exist.
 
 ## Branch Protection
 
@@ -455,7 +475,24 @@ npm run branch-policy:apply -- --allow-private-plan
 
 ## Final Verification
 
-Run:
+For the current published baseline, run:
+
+```sh
+npm run check
+npm run launch-copy:check:published
+npm run transfer:verify:public
+npm run release:preflight:published
+```
+
+The public transfer verifier checks organization/repository access, public
+visibility, default branch, repository metadata, local remotes, stale owner
+links, workflow visibility, team access, vulnerability alerts, private
+vulnerability reporting endpoints, Pages reachability, and branch policy or
+ruleset state. Treat a missing branch policy warning as a launch checklist item
+before accepting external pull requests.
+
+For a historical private-staging rehearsal of a new organization before public
+visibility and package upload, run:
 
 ```sh
 npm run transfer:verify
@@ -463,26 +500,20 @@ npm run check
 npm run release:preflight:private-staging
 ```
 
-The transfer verifier checks organization/repository access, private visibility,
-default branch, repository metadata, local remotes, stale owner links, workflow visibility,
-team access, vulnerability alerts, private vulnerability reporting endpoints,
-and warns when GitHub security features are unavailable or not enabled. It treats
-missing Pages configuration as expected during private staging and warns if a
-Pages site is already configured before public launch. It reports
-whether each repository has branch protection or an active ruleset for `main`;
-treat a missing branch policy warning as a launch checklist item before
-accepting external pull requests. The private-staging preflight adds package
-artifact checks, registry-name availability checks, private repository
-visibility checks, and an explicit expectation that the Pages URL is still
-missing. Use `npm run release:preflight:private-staging:branch-policy` when the
-release owner wants branch policy gaps to block private staging instead of
-remaining warnings.
+That private-staging preflight adds package artifact checks,
+registry-name-availability checks, private repository visibility checks, and an
+explicit expectation that the Pages URL is still missing. Use
+`npm run release:preflight:private-staging:branch-policy` when the release owner
+wants branch policy gaps to block private staging instead of remaining
+warnings.
 
-After the release owner intentionally switches the public-facing repositories
-and Pages site to public visibility, run the visibility, Pages, and branch
+After the release owner intentionally switches a new public-facing repository
+set and Pages site to public visibility, run the visibility, Pages, and branch
 policy helpers. Pages setup requires the explicit public-launch flag through the
 package script so Pages setup cannot hide accidental public repository
-visibility:
+visibility. For the current published baseline, prefer the published preflight
+commands below; the combined public-launch command is a historical
+pre-first-release workflow:
 
 ```sh
 npm run public:launch:dry-run
@@ -491,8 +522,8 @@ npm run public:launch:apply -- --accept-public-launch --confirm-public-launch=kn
 
 The combined apply command runs launch-copy verification, private-staging
 preflight, public visibility changes, Pages setup and deployment wait, branch
-protection, public transfer verification, and
-`release:preflight:public-unpublished`. To run the steps manually instead, use:
+protection, public transfer verification, and a public preflight. To run the
+historical pre-first-release steps manually instead, use:
 
 ```sh
 npm run visibility:public:dry-run
@@ -506,9 +537,17 @@ npm run transfer:verify:public
 npm run release:preflight:public-unpublished
 ```
 
-Those public-launch checks require public repository visibility and a reachable
-Pages URL while still expecting PyPI/npm package names to be unpublished. These
-checks still do not prove plan eligibility, team membership, or monitored
+Those historical public-launch checks require public repository visibility and
+a reachable Pages URL while expecting PyPI/npm package names to be unpublished.
+For the current published baseline, use:
+
+```sh
+npm run launch-copy:check:published
+npm run transfer:verify:public
+npm run release:preflight:published
+```
+
+These checks still do not prove plan eligibility, team membership, or monitored
 security/conduct contact routes; confirm those manually in the GitHub UI and
 owner-maintained contact surfaces.
 
@@ -517,6 +556,9 @@ transfer and verification commands, or set `LLMWIKI_TARGET_ORG=<org>` for the
 same effect:
 
 ```sh
-npm run release:preflight:private-staging -- --target-org=<org>
-npm run release:preflight:public-unpublished -- --target-org=<org>
+npm run release:preflight:published -- --target-org=<org>
 ```
+
+For a historical pre-first-release rehearsal before packages exist, use
+`release:preflight:private-staging` before public visibility and
+`release:preflight:public-unpublished` after public visibility and Pages.

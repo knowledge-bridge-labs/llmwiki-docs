@@ -7,8 +7,12 @@ This is the shortest public-preview path for an existing LLMWiki user:
 3. Add `llmwiki-agent-bridge` only when one endpoint should gather evidence or call a runtime.
 4. Add `llmwiki-chat` only when a human needs a browser workbench for source, citation, graph, and trace review.
 
-The supported first-run path is source checkouts until the first PyPI/npm package
-publication gates pass. See [Release Status & Compatibility](/status).
+The supported first-run paths are source checkouts and the published package
+installs listed in [Release Status & Compatibility](/status). Current package
+versions are `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.0`. Use source checkouts when you want bundled fixtures and
+development scripts; use package installs when you already have a wiki path to
+serve.
 
 ## Prerequisites
 
@@ -73,6 +77,13 @@ uv sync --extra dev
 uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
 ```
 
+If you already have a wiki path and prefer the published CLI, start it without a
+checkout:
+
+```sh
+uvx --from llmwiki-serve==0.2.0 llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
+```
+
 To serve your own graph, replace `./examples/sample-wiki` with the folder that
 contains your wiki:
 
@@ -87,6 +98,20 @@ local graphs, source-checkout builds also expose
 `--refresh-interval-seconds <seconds>` as an opt-in local-performance knob. A
 positive value reuses the in-memory projection between checks, so recent edits
 may not appear until the interval expires or the process restarts.
+
+Generated wiki producers that can atomically update a build marker after every
+source-changing compile may opt into `--producer-manifest <path>` for
+long-running servers. Keep the default strict scan unless the producer owns that
+marker discipline; the marker is a freshness hint, not the public
+`projection.signature` or `bundle_id`.
+
+Local I/O logging is enabled by default for `llmwiki-serve serve` and writes
+redacted request/response JSONL to `.runtime-logs/llmwiki-serve-io.jsonl`.
+Pass `--io-log off` or set `LLMWIKI_SERVE_IO_LOG=off` to disable it; pass a
+path or set `LLMWIKI_SERVE_IO_LOG=<path>` to choose another sink. The logger
+redacts common credentials, credential-bearing URLs, private local path shapes,
+and the served root, but it still captures user queries and approved wiki
+content for debugging, so treat the file as local sensitive data.
 
 If port `8765` is busy, choose another loopback port and use that URL everywhere
 below:
@@ -107,7 +132,8 @@ curl -s http://127.0.0.1:8765/source-bundle
 
 Expected signals:
 
-- `/health` returns `{"status":"ok"}`.
+- `/health` returns `status: "ok"` plus service/version, source identity,
+  capabilities, endpoint paths, and CORS discovery metadata.
 - `/manifest` returns title, adapter, page counts, capabilities, `source_id`, and a redacted network `root`.
 - `/source-bundle` returns `source_id`, `bundle_id`, projection metadata, and source refs when pages declare them.
 
@@ -154,6 +180,13 @@ curl -s http://127.0.0.1:8765/mcp \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness","limit":4}}}'
 ```
 
+Optional graph-neighborhood smoke after a query identifies a useful page or
+source-ref seed:
+
+```sh
+curl -s 'http://127.0.0.1:8765/graph/neighborhood?seed=release-readiness&depth=1'
+```
+
 You can stop here if your agent, script, IDE extension, or backend service can
 call `llmwiki-serve` directly and synthesize its own answer.
 
@@ -172,6 +205,12 @@ git clone https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge.git
 cd llmwiki-agent-bridge
 npm ci
 node ./bin/llmwiki-agent-bridge.mjs
+```
+
+Or run the published package:
+
+```sh
+npm exec --package llmwiki-agent-bridge@0.1.0 -- llmwiki-agent-bridge
 ```
 
 Windows PowerShell:
@@ -239,6 +278,26 @@ citations, graph data, source bundles, trace steps, and per-source failures
 preserve the selected source order even when individual source calls finish out
 of order.
 
+Optional MCP source-tool smoke:
+
+```sh
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness","limit":4,"knowledgeSources":[{"id":"local-wiki","name":"Local Wiki","protocol":"llmwiki-http","status":"ready","url":"http://127.0.0.1:8765","selected":true}]}}}'
+```
+
+Use `llmwiki_agent_run` when the bridge should return a full grounded answer
+artifact. Use read-only source tools such as `llmwiki_list_sources`,
+`llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`,
+`llmwiki_graph_neighbors`, and `llmwiki_source_bundle` when your host agent
+wants progressive source exploration without a runtime call. If you register
+sources through `/settings`, source tools can omit inline `knowledgeSources`
+and use the registered source IDs.
+
 ## Optional Runtime-Backed Bridge
 
 Configure a runtime only after evidence-only bridge smoke passes. The bridge
@@ -290,11 +349,15 @@ URL is `http://127.0.0.1:8765`.
 
 First-run flow:
 
-1. Choose the connection path you want to test.
-2. For direct source testing, confirm the sample Knowledge Source is `ready`,
-   or add your source URL and click `Test source`.
-3. For bridge testing, select `Local Agent Bridge (A2A)` or `Local Agent Bridge
-   (MCP)`, confirm the bridge URL, and click `Test bridge`.
+1. Start in the `First-run quickstart` panel. It shows copyable commands for
+   the local sample source and the optional local bridge.
+2. For direct source testing, confirm the sample Knowledge Source URL is
+   `http://127.0.0.1:8765`, then click `Test sample source` or the source
+   card's `Test source`. Add your own source URL only after the sample passes.
+3. For bridge testing, start `llmwiki-agent-bridge` on
+   `http://127.0.0.1:8788`, then click `Test local bridge` from the quickstart
+   panel or select `Local Agent Bridge (A2A)` / `Local Agent Bridge (MCP)`,
+   confirm the bridge URL, and click `Test bridge`.
 4. When a bridge is ready, chat discovers the bridge's registered Knowledge
    Sources and shows them as bridge-managed, read-only source cards. Edit those
    sources in the bridge settings page; direct source cards in chat remain
@@ -304,6 +367,13 @@ First-run flow:
    Runtime` for deterministic UI, citation, trace, and graph smoke tests.
 7. Ask a small question, then review the answer, citations, graph context,
    artifacts, and run details.
+
+The `Local I/O logging` controls are enabled by default in the chat UI. They
+keep bounded browser-local JSONL in localStorage for debugging prompts, runtime
+request payloads, answers/errors, and response metadata. Disable or clear the
+panel before shared-device demos. Redaction removes common credentials and
+credential-bearing URL parts before storage, but logged prompts and answers may
+still contain sensitive content.
 
 If the default Vite port is busy:
 
