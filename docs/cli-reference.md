@@ -8,7 +8,7 @@ Source checkout usage remains supported for local development, bundled
 fixtures, and release verification. Published package commands are also
 available for package-manager installs and install-smoke verification:
 `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
-`llmwiki-chat@0.1.0`.
+`llmwiki-chat@0.1.3`.
 
 ## Setup Context
 
@@ -28,7 +28,7 @@ Use these runtime baselines:
 | --- | --- | --- |
 | `llmwiki-serve` | `uv sync --extra dev` from `llmwiki-serve` | PyPI published as `llmwiki-serve==0.2.0`; package commands are available. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` | npm published as `llmwiki-agent-bridge@0.1.0`; source checkout remains supported for local development. |
-| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.0`; source checkout remains supported for local development. |
+| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.3`; source checkout remains supported for local development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
 Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. The

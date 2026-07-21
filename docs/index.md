@@ -106,7 +106,7 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use source checkouts or the published packages: <code>llmwiki-serve==0.2.0</code>, <code>llmwiki-agent-bridge@0.1.0</code>, and <code>llmwiki-chat@0.1.0</code>.</span>
+    <span>Use source checkouts or the published packages: <code>llmwiki-serve==0.2.0</code>, <code>llmwiki-agent-bridge@0.1.0</code>, and <code>llmwiki-chat@0.1.3</code>.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>

@@ -19,7 +19,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported preview path | You want to run `llmwiki-serve`, the optional bridge, chat, or docs locally today. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.0`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.3`. |
 
 ## First-Run Roles
 
