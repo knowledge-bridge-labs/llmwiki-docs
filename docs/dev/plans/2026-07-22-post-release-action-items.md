@@ -26,6 +26,7 @@ baseline.
 | 7 | Improve bridge-managed source UX and orchestration controls. | Done | `llmwiki-chat` now exposes bridge-only `evidence-only` / `delegated-runtime` / `hybrid` orchestration controls and routes bridge-managed page/detail previews through the owning bridge MCP `llmwiki_read` tool instead of direct private source `/read/...` fetches. Source grouping remains an optional cosmetic follow-up. |
 | 8 | Process Dependabot PRs after release baseline. | Done | All open Dependabot PRs were handled with green CI evidence: `llmwiki-serve` #12/#13, `llmwiki-agent-bridge` #6/#15, `llmwiki-chat` #7/#16, and `llmwiki-docs` #12. `llmwiki-chat` #16 also refreshed generated third-party license output before merge. |
 | 9 | Investigate bundle-size warning. | Done | `llmwiki-chat` split the Markdown renderer into a lazy chunk. Production build now emits `index-*.js` at about 343.61 kB plus `MarkdownRenderer-*.js` at about 161.99 kB, with no Vite chunk-size warning. `npm run build` now also runs `bundle:check` to guard that Markdown parser internals stay out of the entry chunk. |
+| 10 | Finish and publish `llmwiki-serve` Redis opt-in projection cache. | Pending | Recover and review the existing `feat/redis-projection-store` branch, keep Redis strictly optional via an install extra such as `llmwiki-serve[redis]`, prove freshness/corruption/fallback behavior with tests, update spec/ADR/docs, then release through the PyPI Trusted Publisher workflow after normal package validation. |
 
 ## Excluded For Now
 
