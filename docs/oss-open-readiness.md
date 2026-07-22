@@ -697,4 +697,4 @@ are superseded by the current published baseline in
 [Release Status & Compatibility](/status): source checkouts remain supported,
 GitHub Pages is live, and the first packages are published as
 `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
-`llmwiki-chat@0.1.0`.
+`llmwiki-chat@0.1.3`.

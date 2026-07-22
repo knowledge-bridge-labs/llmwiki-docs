@@ -20,6 +20,7 @@ const requireOrgAdmin = process.argv.includes('--require-org-admin');
 const strictBranchPolicy = process.argv.includes('--strict-branch-policy');
 const allowRegistryInconclusive = process.argv.includes('--allow-registry-inconclusive');
 const onlyLaunchCopy = process.argv.includes('--only-launch-copy');
+const onlyPublishedDocsVersionCopy = process.argv.includes('--only-published-docs-version-copy');
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const docsRepo = resolve(scriptDir, '..');
 const workspaceRoot = resolve(docsRepo, '..');
@@ -77,6 +78,16 @@ const launchCopyPathspecCandidates = [
   'SUPPORT.md',
   'CODE_OF_CONDUCT.md'
 ];
+// Keep this aligned with the public VitePress/package surface. Operational and
+// historical runbooks may intentionally contain older exact package examples.
+const publicDocsVersionCopyExcludedFiles = new Set([
+  'docs/organization-setup.md',
+  'docs/operations-release-checklist.md',
+  'docs/oss-open-readiness.md',
+  'docs/package-publication.md'
+]);
+const publicPackageVersionPattern = '\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?';
+const registryVersionCache = new Map();
 let requiredFailures = 0;
 let strictBlockers = 0;
 let warnings = 0;
@@ -95,6 +106,14 @@ if ((allowPagesMissing || expectPagesMissing) && requirePages) {
 
 if (onlyLaunchCopy && !expectPublicRepos && !expectPublished) {
   throw new Error('Use --expect-public-repos or --expect-published with --only-launch-copy.');
+}
+
+if (onlyLaunchCopy && onlyPublishedDocsVersionCopy) {
+  throw new Error('Use only one of --only-launch-copy or --only-published-docs-version-copy.');
+}
+
+if (onlyPublishedDocsVersionCopy && !expectPublished) {
+  throw new Error('Use --expect-published with --only-published-docs-version-copy.');
 }
 
 function readOption(name) {
@@ -411,6 +430,10 @@ function pathMatchesSpec(filePath, spec) {
 
 function normalizePackagePath(spec) {
   return spec.replaceAll('\\', '/').replace(/^\.\//, '').replace(/\/$/, '');
+}
+
+function normalizeRepoPath(path) {
+  return path.replaceAll('\\', '/').replace(/^\.\//, '');
 }
 
 function globSpecToRegExp(pattern) {
@@ -789,6 +812,333 @@ function checkLaunchCopy(repoName) {
   );
 }
 
+function registryDisplayLabel(repo) {
+  return `${repo.registry.type === 'pypi' ? 'PyPI' : 'npm'} ${repo.registry.name}`;
+}
+
+function registryLookup(repo) {
+  const cacheKey = `${repo.registry.type}:${repo.registry.name}`;
+  if (registryVersionCache.has(cacheKey)) {
+    return registryVersionCache.get(cacheKey);
+  }
+
+  let lookup;
+  if (repo.registry.type === 'npm') {
+    const result = run('npm', ['view', repo.registry.name, 'version']);
+    if (result.ok) {
+      lookup = { state: 'published', version: result.stdout };
+    } else if (result.stderr.includes('E404') || result.stdout.includes('E404')) {
+      lookup = { state: 'unpublished', message: resultMessage(result) };
+    } else {
+      lookup = { state: 'inconclusive', message: resultMessage(result) };
+    }
+  } else if (repo.registry.type === 'pypi') {
+    const result = run('curl', [
+      '-sS',
+      '-w',
+      '\n%{http_code}',
+      `https://pypi.org/pypi/${repo.registry.name}/json`
+    ]);
+    const newline = result.stdout.lastIndexOf('\n');
+    const body = newline === -1 ? '' : result.stdout.slice(0, newline).replace(/^\uFEFF/, '');
+    const status = newline === -1 ? result.stdout : result.stdout.slice(newline + 1).trim();
+    if (status === '200') {
+      try {
+        const published = JSON.parse(body).info?.version ?? '';
+        lookup = published
+          ? { state: 'published', version: published }
+          : { state: 'inconclusive', message: 'PyPI response did not include info.version' };
+      } catch (error) {
+        lookup = { state: 'inconclusive', message: `could not parse PyPI JSON (${error.message})` };
+      }
+    } else if (status === '404') {
+      lookup = { state: 'unpublished', message: '404' };
+    } else {
+      lookup = { state: 'inconclusive', message: resultMessage(result) };
+    }
+  } else {
+    lookup = { state: 'inconclusive', message: `unsupported registry type ${repo.registry.type}` };
+  }
+
+  registryVersionCache.set(cacheKey, lookup);
+  return lookup;
+}
+
+function reportRegistryLookupProblem(repo, lookup) {
+  const label = registryDisplayLabel(repo);
+  if (lookup.state === 'unpublished') {
+    if (expectPublished) {
+      fail(label, 'expected published, got registry not found');
+    } else {
+      pass(label, 'unpublished / name currently returns not found');
+    }
+    return;
+  }
+
+  if (strict || expectPublished || expectUnpublished) {
+    if (allowRegistryInconclusive) {
+      warn(label, lookup.message);
+    } else {
+      fail(label, lookup.message);
+    }
+  } else {
+    warn(label, lookup.message);
+  }
+}
+
+function listPublicDocsVersionCopyFiles() {
+  const result = run('git', ['-C', docsRepo, 'ls-files', 'README.md', 'docs/*.md']);
+  if (!result.ok) {
+    fail('public docs version copy files', resultMessage(result));
+    return [];
+  }
+
+  return result.stdout
+    .split(/\r?\n/)
+    .filter(Boolean)
+    .map(normalizeRepoPath)
+    .filter(isPublicDocsVersionCopyFile)
+    .sort();
+}
+
+function isPublicDocsVersionCopyFile(path) {
+  if (path === 'README.md') {
+    return true;
+  }
+  if (!path.startsWith('docs/') || !path.endsWith('.md')) {
+    return false;
+  }
+  if (path.startsWith('docs/dev/') || publicDocsVersionCopyExcludedFiles.has(path)) {
+    return false;
+  }
+  return true;
+}
+
+function packageVersionMentionPattern(repo) {
+  const separator = repo.registry.type === 'pypi' ? '==' : '@';
+  return new RegExp(
+    `(^|[^A-Za-z0-9_.-])(${escapeExtendedRegex(repo.registry.name)}${escapeExtendedRegex(separator)}(${publicPackageVersionPattern}))(?=$|[^A-Za-z0-9_.-])`,
+    'gm'
+  );
+}
+
+function expectedDocsVersionToken(repo, version) {
+  const separator = repo.registry.type === 'pypi' ? '==' : '@';
+  return `${repo.registry.name}${separator}${version}`;
+}
+
+function versionMentionLine(text, index) {
+  return text.slice(0, index).split(/\r?\n/).length;
+}
+
+function publicDocsVersionMentions(repo, files) {
+  const mentions = [];
+  const pattern = packageVersionMentionPattern(repo);
+  for (const file of files) {
+    const text = readFileSync(resolve(docsRepo, file), 'utf8');
+    pattern.lastIndex = 0;
+    for (const match of text.matchAll(pattern)) {
+      const prefix = match[1] ?? '';
+      mentions.push({
+        file,
+        line: versionMentionLine(text, match.index + prefix.length),
+        token: match[2],
+        version: match[3]
+      });
+    }
+  }
+  mentions.push(...publicDocsTableVersionMentions(repo, files));
+  mentions.push(...publicDocsProseVersionMentions(repo, files));
+  return mentions;
+}
+
+function publicDocsTableVersionMentions(repo, files) {
+  const mentions = [];
+  const versionPattern = new RegExp(publicPackageVersionPattern, 'g');
+
+  for (const file of files) {
+    const text = readFileSync(resolve(docsRepo, file), 'utf8');
+    const lines = text.split(/\r?\n/);
+
+    for (let index = 0; index < lines.length - 1; index += 1) {
+      const headerCells = markdownTableCells(lines[index]);
+      if (!headerCells || !isMarkdownTableSeparator(lines[index + 1])) {
+        continue;
+      }
+
+      const versionColumnIndexes = publicDocsVersionTableColumnIndexes(headerCells);
+      if (versionColumnIndexes.length === 0) {
+        continue;
+      }
+
+      let rowIndex = index + 2;
+      for (; rowIndex < lines.length; rowIndex += 1) {
+        const rowCells = markdownTableCells(lines[rowIndex]);
+        if (!rowCells || isMarkdownTableSeparator(lines[rowIndex])) {
+          break;
+        }
+
+        if (!rowCells.some((cell) => markdownCellMentionsPackage(cell, repo.registry.name))) {
+          continue;
+        }
+
+        for (const columnIndex of versionColumnIndexes) {
+          const cell = rowCells[columnIndex] ?? '';
+          versionPattern.lastIndex = 0;
+          for (const match of cell.matchAll(versionPattern)) {
+            mentions.push({
+              file,
+              line: rowIndex + 1,
+              token: `${repo.registry.name} ${match[0]}`,
+              version: match[0]
+            });
+          }
+        }
+      }
+
+      index = rowIndex - 1;
+    }
+  }
+
+  return mentions;
+}
+
+function markdownTableCells(line) {
+  const trimmed = line.trim();
+  if (!trimmed.startsWith('|')) {
+    return null;
+  }
+
+  const row = trimmed.endsWith('|') ? trimmed.slice(1, -1) : trimmed.slice(1);
+  return row.split('|').map((cell) => cell.trim());
+}
+
+function isMarkdownTableSeparator(line) {
+  const cells = markdownTableCells(line);
+  return Boolean(cells?.length) && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+}
+
+function publicDocsVersionTableColumnIndexes(headerCells) {
+  return headerCells
+    .map((cell, index) => ({ cell: stripMarkdownInlineFormatting(cell).toLowerCase(), index }))
+    .filter(({ cell }) => /\b(package|registry|version|publication|status)\b/.test(cell))
+    .map(({ index }) => index);
+}
+
+function markdownCellMentionsPackage(cell, packageName) {
+  const text = stripMarkdownInlineFormatting(cell);
+  const pattern = new RegExp(
+    `(^|[^A-Za-z0-9_.-])${escapeExtendedRegex(packageName)}(?=$|[^A-Za-z0-9_.-])`
+  );
+  return pattern.test(text);
+}
+
+function stripMarkdownInlineFormatting(value) {
+  return value
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+}
+
+function publicDocsProseVersionMentions(repo, files) {
+  const mentions = [];
+  const packagePattern = new RegExp(
+    `(^|[^A-Za-z0-9_.-])(\\\`?${escapeExtendedRegex(repo.registry.name)}\\\`?)(?=$|[^A-Za-z0-9_.-])`,
+    'g'
+  );
+  const versionPattern = new RegExp(publicPackageVersionPattern, 'g');
+
+  for (const file of files) {
+    const text = readFileSync(resolve(docsRepo, file), 'utf8');
+    const lines = text.split(/\r?\n/);
+
+    for (const [lineIndex, line] of lines.entries()) {
+      if (markdownTableCells(line)) {
+        continue;
+      }
+
+      packagePattern.lastIndex = 0;
+      for (const packageMatch of line.matchAll(packagePattern)) {
+        const packagePrefix = packageMatch[1] ?? '';
+        const packageToken = packageMatch[2] ?? '';
+        const afterPackageIndex = packageMatch.index + packagePrefix.length + packageToken.length;
+        const tail = line.slice(afterPackageIndex, afterPackageIndex + 120);
+
+        versionPattern.lastIndex = 0;
+        for (const versionMatch of tail.matchAll(versionPattern)) {
+          const between = tail.slice(0, versionMatch.index);
+          if (between.includes('@') || between.includes('==') || between.includes('|')) {
+            continue;
+          }
+
+          const afterVersion = tail.slice(
+            versionMatch.index + versionMatch[0].length,
+            versionMatch.index + versionMatch[0].length + 48
+          );
+          const context = `${between} ${afterVersion}`.toLowerCase();
+          if (!/\b(package|packages|published|version|release|contract|baseline|source)\b/.test(context)) {
+            continue;
+          }
+
+          mentions.push({
+            file,
+            line: lineIndex + 1,
+            token: `${repo.registry.name} ${versionMatch[0]}`,
+            version: versionMatch[0]
+          });
+        }
+      }
+    }
+  }
+
+  return mentions;
+}
+
+function summarizeVersionMentions(mentions) {
+  const lines = mentions.slice(0, 12).map((mention) => `${mention.file}:${mention.line} ${mention.token}`);
+  const remaining = mentions.length - lines.length;
+  return remaining > 0 ? `${lines.join('\n')}\n...and ${remaining} more` : lines.join('\n');
+}
+
+function checkPublishedDocsVersionCopy({ reportLookupProblems = false } = {}) {
+  if (!expectPublished) {
+    return;
+  }
+
+  const files = listPublicDocsVersionCopyFiles();
+  if (files.length === 0) {
+    fail('public docs version copy files', 'no README or public docs markdown files found');
+    return;
+  }
+
+  for (const repo of repos) {
+    if (!repo.registry) continue;
+
+    const lookup = registryLookup(repo);
+    if (lookup.state !== 'published') {
+      if (reportLookupProblems) {
+        reportRegistryLookupProblem(repo, lookup);
+      }
+      continue;
+    }
+
+    const expectedToken = expectedDocsVersionToken(repo, lookup.version);
+    const mentions = publicDocsVersionMentions(repo, files);
+    const staleMentions = mentions.filter((mention) => mention.version !== lookup.version);
+    const label = `${repo.registry.name} public docs version copy`;
+
+    if (mentions.length === 0) {
+      fail(label, `expected at least one user-facing docs mention of ${expectedToken}`);
+    } else if (staleMentions.length > 0) {
+      fail(
+        label,
+        `expected ${expectedToken}; stale mention(s):\n${summarizeVersionMentions(staleMentions)}`
+      );
+    } else {
+      pass(label, `${mentions.length} user-facing mention(s) match published ${expectedToken}`);
+    }
+  }
+}
+
 function checkOrgAccess() {
   const auth = run('gh', ['auth', 'status']);
   if (auth.ok) {
@@ -891,72 +1241,20 @@ function checkRegistries() {
   for (const repo of repos) {
     if (!repo.registry) continue;
     const version = localVersion(repo);
-    if (repo.registry.type === 'npm') {
-      const result = run('npm', ['view', repo.registry.name, 'version']);
-      if (result.ok) {
-        if (expectUnpublished) {
-          fail(`npm ${repo.registry.name}`, `expected unpublished, found ${result.stdout}`);
-        } else if (result.stdout === version) {
-          pass(`npm ${repo.registry.name}`, `published version matches local ${version}`);
-        } else {
-          strictOnly(
-            `npm ${repo.registry.name}`,
-            `published version ${result.stdout} differs from local ${version}`
-          );
-        }
-      } else if (result.stderr.includes('E404') || result.stdout.includes('E404')) {
-        if (expectPublished) {
-          fail(`npm ${repo.registry.name}`, 'expected published, got E404');
-        } else {
-          pass(`npm ${repo.registry.name}`, 'unpublished / name currently returns E404');
-        }
-      } else if (strict || expectPublished || expectUnpublished) {
-        if (allowRegistryInconclusive) {
-          warn(`npm ${repo.registry.name}`, resultMessage(result));
-        } else {
-          fail(`npm ${repo.registry.name}`, resultMessage(result));
-        }
+    const lookup = registryLookup(repo);
+    if (lookup.state === 'published') {
+      if (expectUnpublished) {
+        fail(registryDisplayLabel(repo), `expected unpublished, found ${lookup.version}`);
+      } else if (lookup.version === version) {
+        pass(registryDisplayLabel(repo), `published version matches local ${version}`);
       } else {
-        warn(`npm ${repo.registry.name}`, resultMessage(result));
+        strictOnly(
+          registryDisplayLabel(repo),
+          `published version ${lookup.version} differs from local ${version}`
+        );
       }
-    }
-    if (repo.registry.type === 'pypi') {
-      const result = run('curl', [
-        '-sS',
-        '-w',
-        '\n%{http_code}',
-        `https://pypi.org/pypi/${repo.registry.name}/json`
-      ]);
-      const newline = result.stdout.lastIndexOf('\n');
-      const body = newline === -1 ? '' : result.stdout.slice(0, newline);
-      const status = newline === -1 ? result.stdout : result.stdout.slice(newline + 1).trim();
-      if (status === '200') {
-        const published = JSON.parse(body).info?.version ?? '';
-        if (expectUnpublished) {
-          fail(`PyPI ${repo.registry.name}`, `expected unpublished, found ${published}`);
-        } else if (published === version) {
-          pass(`PyPI ${repo.registry.name}`, `published version matches local ${version}`);
-        } else {
-          strictOnly(
-            `PyPI ${repo.registry.name}`,
-            `published version ${published} differs from local ${version}`
-          );
-        }
-      } else if (status === '404') {
-        if (expectPublished) {
-          fail(`PyPI ${repo.registry.name}`, 'expected published, got 404');
-        } else {
-          pass(`PyPI ${repo.registry.name}`, 'unpublished / name currently returns 404');
-        }
-      } else if (strict || expectPublished || expectUnpublished) {
-        if (allowRegistryInconclusive) {
-          warn(`PyPI ${repo.registry.name}`, resultMessage(result));
-        } else {
-          fail(`PyPI ${repo.registry.name}`, resultMessage(result));
-        }
-      } else {
-        warn(`PyPI ${repo.registry.name}`, resultMessage(result));
-      }
+    } else {
+      reportRegistryLookupProblem(repo, lookup);
     }
   }
 }
@@ -988,7 +1286,11 @@ function checkLocalReleaseArtifacts() {
 
 console.log(strict ? 'Public preview preflight: strict mode' : 'Public preview preflight: staging mode');
 console.log(`Target organization: ${targetOrg}`);
-if (onlyLaunchCopy) {
+if (onlyPublishedDocsVersionCopy) {
+  console.log(
+    'Expectations: published-docs-version-copy only, repos=not checked, pages=not checked, branch-policy=not checked, registry=published'
+  );
+} else if (onlyLaunchCopy) {
   console.log(
     `Expectations: launch-copy=${
       expectPublished ? 'published' : 'public-unpublished'
@@ -1007,20 +1309,25 @@ if (onlyLaunchCopy) {
 }
 console.log('');
 
-for (const repo of repos) {
-  if (!onlyLaunchCopy) {
-    assertCleanCheckout(repo.name);
-    checkTargetOrgLinks(repo.name);
+if (onlyPublishedDocsVersionCopy) {
+  checkPublishedDocsVersionCopy({ reportLookupProblems: true });
+} else {
+  for (const repo of repos) {
+    if (!onlyLaunchCopy) {
+      assertCleanCheckout(repo.name);
+      checkTargetOrgLinks(repo.name);
+    }
+    checkLaunchCopy(repo.name);
   }
-  checkLaunchCopy(repo.name);
-}
 
-if (!onlyLaunchCopy) {
-  checkLocalReleaseArtifacts();
-  checkPackageArtifacts();
-  checkOrgAccess();
-  checkRepositoryPolicies();
-  checkRegistries();
+  if (!onlyLaunchCopy) {
+    checkLocalReleaseArtifacts();
+    checkPackageArtifacts();
+    checkOrgAccess();
+    checkRepositoryPolicies();
+    checkRegistries();
+    checkPublishedDocsVersionCopy();
+  }
 }
 
 console.log('');

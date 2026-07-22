@@ -10,7 +10,7 @@ This is the shortest public-preview path for an existing LLMWiki user:
 The supported first-run paths are source checkouts and the published package
 installs listed in [Release Status & Compatibility](/status). Current package
 versions are `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
-`llmwiki-chat@0.1.0`. Use source checkouts when you want bundled fixtures and
+`llmwiki-chat@0.1.3`. Use source checkouts when you want bundled fixtures and
 development scripts; use package installs when you already have a wiki path to
 serve.
 

@@ -30,7 +30,7 @@ implementation details in the owning repo README or docs directory.
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
 installs are also available for `llmwiki-serve==0.2.0`,
-`llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.0`; see
+`llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.3`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
 
 Shortest local path:
