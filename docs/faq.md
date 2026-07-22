@@ -14,7 +14,7 @@ serve a wiki folder, answer `/query`, and expose MCP-style JSON-RPC without the
 bridge, chat workbench, or any model runtime.
 
 Clone it when you want the bundled `./examples/sample-wiki` fixture and
-development scripts. Use the published `llmwiki-serve==0.2.0` package when you
+development scripts. Use the published `llmwiki-serve==0.2.1` package when you
 already have a wiki path to serve.
 
 Clone `llmwiki-agent-bridge` later only if you need a companion service for
@@ -48,8 +48,8 @@ when you want to connect optional tools such as the bridge or chat workbench.
 
 Source checkouts remain supported because they include fixtures, development
 scripts, and release-smoke commands. Package installs are now available for the
-current public-preview baseline: `llmwiki-serve==0.2.0`,
-`llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.3`.
+current public-preview baseline: `llmwiki-serve==0.2.1`,
+`llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.4`.
 
 If you are working from an offline or mirrored environment, use local sibling
 checkouts or accessible mirrored remotes.
@@ -66,9 +66,9 @@ browser client; it does not start `llmwiki-serve` or a production Agent Runtime.
 
 ## Can I install the packages instead of cloning?
 
-Yes. Use `uvx --from llmwiki-serve==0.2.0 llmwiki-serve ...` for the source
+Yes. Use `uvx --from llmwiki-serve==0.2.1 llmwiki-serve ...` for the source
 server, `npm exec --package llmwiki-agent-bridge@0.1.0 -- llmwiki-agent-bridge`
-for the bridge, and `llmwiki-chat@0.1.3` for package install or static artifact
+for the bridge, and `llmwiki-chat@0.1.4` for package install or static artifact
 verification. Source checkouts remain the most convenient path when you want
 the sample wiki, Vite dev server, or repository-local checks.
 

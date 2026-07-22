@@ -336,8 +336,8 @@ rehearsal before packages exist.
   for public preview; package publication remains not applicable for the docs
   portal
 - package sections should describe package-manager installs as available for
-  `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
-  `llmwiki-chat@0.1.3`, while future release candidates are clearly marked as
+  `llmwiki-serve==0.2.1`, `llmwiki-agent-bridge@0.1.0`, and
+  `llmwiki-chat@0.1.4`, while future release candidates are clearly marked as
   pending until upload and install-smoke verification complete
 - maintainer-only runbooks may still document private staging as a historical
   or repeatable phase, but not as the current state for public users
