@@ -696,5 +696,5 @@ These notes were the next steps at the time this readiness log was active. They
 are superseded by the current published baseline in
 [Release Status & Compatibility](/status): source checkouts remain supported,
 GitHub Pages is live, and the first packages are published as
-`llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
-`llmwiki-chat@0.1.3`.
+`llmwiki-serve==0.2.1`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.4`.

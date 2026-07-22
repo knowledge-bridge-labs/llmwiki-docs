@@ -1,14 +1,14 @@
 # Package Publication
 
 Use this runbook when a maintainer is preparing a future package release or
-verifying the current public-preview package baseline. The first public package
-baseline has already been published:
+verifying the current public-preview package baseline. The current public
+package baseline is published:
 
 | Package | Published baseline | Registry |
 | --- | --- | --- |
-| `llmwiki-serve` | `0.2.0` | PyPI |
+| `llmwiki-serve` | `0.2.1` | PyPI |
 | `llmwiki-agent-bridge` | `0.1.0` | npm |
-| `llmwiki-chat` | `0.1.0` | npm |
+| `llmwiki-chat` | `0.1.4` | npm |
 
 Source checkouts remain supported for development, bundled fixtures, and
 release verification. Public-unpublished gates that expected PyPI `404` or npm
@@ -55,8 +55,8 @@ try {
 }
 ```
 
-These checks should report `llmwiki-serve` `0.2.0`,
-`llmwiki-agent-bridge` `0.1.0`, and `llmwiki-chat` `0.1.0`. A PyPI HTTP `404`
+These checks should report `llmwiki-serve` `0.2.1`,
+`llmwiki-agent-bridge` `0.1.0`, and `llmwiki-chat` `0.1.4`. A PyPI HTTP `404`
 or npm `E404` is no longer a successful current-state result for these
 packages; it means the package is unavailable from that registry view or the
 query failed.

@@ -2,24 +2,22 @@
 
 Status: active
 Owner: llmwiki-* maintainers
-Scope: follow-up work after `llmwiki-chat@0.1.3` and the current public-preview
-baseline.
+Scope: follow-up work after the current public-preview package baseline release.
 
 ## Current Baseline
 
-- `llmwiki-serve==0.2.0` is published on PyPI.
+- `llmwiki-serve==0.2.1` is published on PyPI.
 - `llmwiki-agent-bridge@0.1.0` is published on npm.
-- `llmwiki-chat@0.1.3` is published on npm.
-- `llmwiki-docs` public-preview preflight passed after the `llmwiki-chat@0.1.3`
-  release.
+- `llmwiki-chat@0.1.4` is published on npm.
+- `llmwiki-docs` package-version copy is synchronized to the current baseline.
 
 ## TODO
 
 | Priority | Item | Status | Notes |
 | ---: | --- | --- | --- |
-| 1 | Update `llmwiki-docs` public package/version copy. | Done | User-facing docs now say `llmwiki-chat@0.1.3`, not older `0.1.0` examples. Historical/operational copy was reviewed separately. |
+| 1 | Update `llmwiki-docs` public package/version copy. | Done | User-facing docs now say `llmwiki-serve==0.2.1` and `llmwiki-chat@0.1.4`; historical/operational copy was reviewed separately. |
 | 2 | Harden docs release preflight against stale package-version copy. | Done | `release:preflight:published` now includes a public docs package-version copy check, with a focused `--only-published-docs-version-copy` mode. |
-| 3 | Verify npm/GitHub page rendering manually. | Done | User manual confirmation: the npm page shows package version `llmwiki-chat` `0.1.3`; README/package copy shows `llmwiki-chat@0.1.3` and `llmwiki-agent-bridge@0.1.0`; the demo image is the latest default screen. The visible `Release llmwiki-chat 0.1.2` text was from GitHub image/link context, not stale npm package copy. |
+| 3 | Verify npm/GitHub page rendering manually. | Done | Historical 0.1.3-baseline confirmation: the npm page showed package version `llmwiki-chat` `0.1.3`; README/package copy showed chat version `0.1.3` and `llmwiki-agent-bridge@0.1.0`; the demo image was the latest default screen. The visible `Release llmwiki-chat 0.1.2` text was from GitHub image/link context, not stale npm package copy. |
 | 4 | Add reproducible screenshot capture workflow. | Done | `llmwiki-chat` now has `npm run docs:capture-screenshots` and `npm run docs:check-screenshots`; both current PNGs reproduce byte-identically. |
 | 5 | Decide `llmwiki-agent-bridge` `compact-json` default promotion path. | Done | `llmwiki-agent-bridge` now documents that runtime prompts already use compact JSON, while broad production-default approval remains a separate multi-runtime/model-class evidence claim gated by the tracked e2e wrapper. |
 | 6 | Add chat-to-bridge multi-turn/context live verification. | Done | `llmwiki-chat` now has `npm run test:e2e:bridge-multiturn`, proving browser → real bridge → test OpenAI-compatible runtime over three turns with stable thread/context/session IDs and bounded runtime history. |
