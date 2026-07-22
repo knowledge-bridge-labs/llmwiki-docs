@@ -947,6 +947,149 @@ function publicDocsVersionMentions(repo, files) {
       });
     }
   }
+  mentions.push(...publicDocsTableVersionMentions(repo, files));
+  mentions.push(...publicDocsProseVersionMentions(repo, files));
+  return mentions;
+}
+
+function publicDocsTableVersionMentions(repo, files) {
+  const mentions = [];
+  const versionPattern = new RegExp(publicPackageVersionPattern, 'g');
+
+  for (const file of files) {
+    const text = readFileSync(resolve(docsRepo, file), 'utf8');
+    const lines = text.split(/\r?\n/);
+
+    for (let index = 0; index < lines.length - 1; index += 1) {
+      const headerCells = markdownTableCells(lines[index]);
+      if (!headerCells || !isMarkdownTableSeparator(lines[index + 1])) {
+        continue;
+      }
+
+      const versionColumnIndexes = publicDocsVersionTableColumnIndexes(headerCells);
+      if (versionColumnIndexes.length === 0) {
+        continue;
+      }
+
+      let rowIndex = index + 2;
+      for (; rowIndex < lines.length; rowIndex += 1) {
+        const rowCells = markdownTableCells(lines[rowIndex]);
+        if (!rowCells || isMarkdownTableSeparator(lines[rowIndex])) {
+          break;
+        }
+
+        if (!rowCells.some((cell) => markdownCellMentionsPackage(cell, repo.registry.name))) {
+          continue;
+        }
+
+        for (const columnIndex of versionColumnIndexes) {
+          const cell = rowCells[columnIndex] ?? '';
+          versionPattern.lastIndex = 0;
+          for (const match of cell.matchAll(versionPattern)) {
+            mentions.push({
+              file,
+              line: rowIndex + 1,
+              token: `${repo.registry.name} ${match[0]}`,
+              version: match[0]
+            });
+          }
+        }
+      }
+
+      index = rowIndex - 1;
+    }
+  }
+
+  return mentions;
+}
+
+function markdownTableCells(line) {
+  const trimmed = line.trim();
+  if (!trimmed.startsWith('|')) {
+    return null;
+  }
+
+  const row = trimmed.endsWith('|') ? trimmed.slice(1, -1) : trimmed.slice(1);
+  return row.split('|').map((cell) => cell.trim());
+}
+
+function isMarkdownTableSeparator(line) {
+  const cells = markdownTableCells(line);
+  return Boolean(cells?.length) && cells.every((cell) => /^:?-{3,}:?$/.test(cell));
+}
+
+function publicDocsVersionTableColumnIndexes(headerCells) {
+  return headerCells
+    .map((cell, index) => ({ cell: stripMarkdownInlineFormatting(cell).toLowerCase(), index }))
+    .filter(({ cell }) => /\b(package|registry|version|publication|status)\b/.test(cell))
+    .map(({ index }) => index);
+}
+
+function markdownCellMentionsPackage(cell, packageName) {
+  const text = stripMarkdownInlineFormatting(cell);
+  const pattern = new RegExp(
+    `(^|[^A-Za-z0-9_.-])${escapeExtendedRegex(packageName)}(?=$|[^A-Za-z0-9_.-])`
+  );
+  return pattern.test(text);
+}
+
+function stripMarkdownInlineFormatting(value) {
+  return value
+    .replace(/`([^`]*)`/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+}
+
+function publicDocsProseVersionMentions(repo, files) {
+  const mentions = [];
+  const packagePattern = new RegExp(
+    `(^|[^A-Za-z0-9_.-])(\\\`?${escapeExtendedRegex(repo.registry.name)}\\\`?)(?=$|[^A-Za-z0-9_.-])`,
+    'g'
+  );
+  const versionPattern = new RegExp(publicPackageVersionPattern, 'g');
+
+  for (const file of files) {
+    const text = readFileSync(resolve(docsRepo, file), 'utf8');
+    const lines = text.split(/\r?\n/);
+
+    for (const [lineIndex, line] of lines.entries()) {
+      if (markdownTableCells(line)) {
+        continue;
+      }
+
+      packagePattern.lastIndex = 0;
+      for (const packageMatch of line.matchAll(packagePattern)) {
+        const packagePrefix = packageMatch[1] ?? '';
+        const packageToken = packageMatch[2] ?? '';
+        const afterPackageIndex = packageMatch.index + packagePrefix.length + packageToken.length;
+        const tail = line.slice(afterPackageIndex, afterPackageIndex + 120);
+
+        versionPattern.lastIndex = 0;
+        for (const versionMatch of tail.matchAll(versionPattern)) {
+          const between = tail.slice(0, versionMatch.index);
+          if (between.includes('@') || between.includes('==') || between.includes('|')) {
+            continue;
+          }
+
+          const afterVersion = tail.slice(
+            versionMatch.index + versionMatch[0].length,
+            versionMatch.index + versionMatch[0].length + 48
+          );
+          const context = `${between} ${afterVersion}`.toLowerCase();
+          if (!/\b(package|packages|published|version|release|contract|baseline|source)\b/.test(context)) {
+            continue;
+          }
+
+          mentions.push({
+            file,
+            line: lineIndex + 1,
+            token: `${repo.registry.name} ${versionMatch[0]}`,
+            version: versionMatch[0]
+          });
+        }
+      }
+    }
+  }
+
   return mentions;
 }
 

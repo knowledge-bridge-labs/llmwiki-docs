@@ -35,14 +35,14 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- | --- | --- | --- |
 | `llmwiki-serve` | Python package 0.2.0, Apache-2.0, CLI entrypoint | PyPI published 0.2.0 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-agent-bridge` | npm package 0.1.0, Apache-2.0, CLI entrypoint | npm published 0.1.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
-| `llmwiki-chat` | npm package 0.1.0, Apache-2.0, Vite browser workbench artifact | npm published 0.1.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
+| `llmwiki-chat` | npm package 0.1.3, Apache-2.0, Vite browser workbench artifact | npm published 0.1.3 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-docs` | VitePress docs portal, Apache-2.0 | GitHub Pages live | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 
 The primary gate column is a status-oriented smoke signal. Each repository also
 keeps its own README, changelog, package metadata, license files, and CI gates.
 
-The `llmwiki-serve` 0.2.0 package and the `llmwiki-agent-bridge` /
-`llmwiki-chat` 0.1.0 packages are published. Source checkouts remain supported
+The `llmwiki-serve==0.2.0`, `llmwiki-agent-bridge@0.1.0`, and
+`llmwiki-chat@0.1.3` packages are published. Source checkouts remain supported
 for development and release verification.
 
 ## Protocol Surfaces
