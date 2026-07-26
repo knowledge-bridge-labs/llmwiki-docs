@@ -7,7 +7,8 @@ package baseline is published:
 | Package | Published baseline | Registry |
 | --- | --- | --- |
 | `llmwiki-serve` | `0.2.1` | PyPI |
-| `llmwiki-agent-bridge` | `0.1.0` | npm |
+| `llmwiki-bridge-start` | `0.0.1` | npm |
+| `llmwiki-agent-bridge` | `0.2.0` | npm |
 | `llmwiki-chat` | `0.1.4` | npm |
 
 Source checkouts remain supported for development, bundled fixtures, and
@@ -25,6 +26,7 @@ published versions:
 
 ```sh
 npm view llmwiki-chat version --json
+npm view llmwiki-bridge-start version --json
 npm view llmwiki-agent-bridge version --json
 ```
 
@@ -56,10 +58,16 @@ try {
 ```
 
 These checks should report `llmwiki-serve` `0.2.1`,
-`llmwiki-agent-bridge` `0.1.0`, and `llmwiki-chat` `0.1.4`. A PyPI HTTP `404`
-or npm `E404` is no longer a successful current-state result for these
-packages; it means the package is unavailable from that registry view or the
-query failed.
+`llmwiki-bridge-start` `0.0.1`, `llmwiki-agent-bridge` `0.2.0`, and
+`llmwiki-chat` `0.1.4`. A PyPI HTTP `404` or npm `E404` is no longer a
+successful current-state result for these packages; it means the package is
+unavailable from that registry view or the query failed.
+
+`llmwiki-bridge-start@0.0.1` was manually first-published. Treat it as the
+current first-run package baseline, but do not cite it as Trusted
+Publisher/OIDC validation evidence. The next real `llmwiki-bridge-start`
+version should verify npm Trusted Publishing through GitHub Actions OIDC before
+the release is marked complete.
 
 Before publishing a future version, also verify that the target GitHub
 organization, repository URLs, Pages URL, and current package baseline resolve
@@ -159,6 +167,35 @@ After publishing, verify:
 ```sh
 uv tool install llmwiki-serve
 llmwiki-serve --help
+```
+
+## `llmwiki-bridge-start` npm Gate
+
+Run from the `llmwiki-bridge-start` repository:
+
+```sh
+npm ci
+npm run check
+npm audit --audit-level=moderate
+```
+
+Before publishing a future version:
+
+- Confirm the npm tarball contains the CLI entrypoint, source files, public
+  release metadata, retained license artifacts, and governance files only.
+- Confirm examples and docs use generic private-runtime placeholders such as
+  `OpenAI-compatible local endpoint`, `http://127.0.0.1:8642/v1`,
+  `local-model`, and `runtimeProfile=generic|hermes|deepagents`.
+- Confirm no private endpoints, concrete private model names, local vault
+  content, generated logs, credentials, or OTP material are included.
+- Configure and verify npm Trusted Publishing/OIDC for the next real version.
+  The manually published `0.0.1` baseline is not Trusted Publisher/OIDC
+  validation evidence.
+
+After publishing a future version, verify from a clean directory:
+
+```sh
+npm exec --package llmwiki-bridge-start@<version> -- llmwiki-bridge-start --help
 ```
 
 ## `llmwiki-agent-bridge` npm Gate
