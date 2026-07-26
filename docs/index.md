@@ -106,7 +106,7 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use source checkouts or the published packages: <code>llmwiki-serve==0.2.1</code>, <code>llmwiki-agent-bridge@0.1.0</code>, and <code>llmwiki-chat@0.1.4</code>.</span>
+    <span>Use source checkouts or the published packages: <code>llmwiki-serve==0.2.1</code>, <code>llmwiki-bridge-start@0.0.1</code>, <code>llmwiki-agent-bridge@0.2.1</code>, and <code>llmwiki-chat@0.1.4</code>.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>
@@ -129,8 +129,8 @@ import { withBase } from 'vitepress'
   </a>
   <a class="quickstart-step" href="./quickstart#optional-agent-bridge">
     <span>Optional</span>
-    <strong>Start the bridge</strong>
-    <p>Use evidence-only source fan-out first. Connect a runtime only when the bridge should synthesize answers.</p>
+    <strong>Run bridge starter</strong>
+    <p>Use <code>llmwiki-bridge-start</code> for guided discovery, source startup, bridge registration, and smoke checks. Connect a runtime only when the bridge should synthesize answers.</p>
   </a>
   <a class="quickstart-step" href="./quickstart#optional-chat-workbench">
     <span>Optional</span>
@@ -146,6 +146,11 @@ import { withBase } from 'vitepress'
     <span>Knowledge Source</span>
     <strong>llmwiki-serve</strong>
     <p>Serves one existing LLMWiki, Markdown, or Obsidian folder as read-only HTTP/MCP context, search, page, graph, and manifest APIs.</p>
+  </a>
+  <a class="repo-card" href="https://github.com/knowledge-bridge-labs/llmwiki-bridge-start">
+    <span>First-run entrypoint</span>
+    <strong>llmwiki-bridge-start</strong>
+    <p>Discovers existing wiki folders, validates startable sources, starts loopback source servers, and optionally registers them with the bridge.</p>
   </a>
   <a class="repo-card" href="https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge">
     <span>Optional coordinator</span>
@@ -164,6 +169,7 @@ import { withBase } from 'vitepress'
 | Need | Recommended path |
 | --- | --- |
 | One coding agent should read one wiki folder while it works | Run `llmwiki-serve` and connect the agent directly. |
+| You want a guided local first run from existing wiki folders | Run `llmwiki-bridge-start` first, then keep the direct source URLs or add the bridge. |
 | Several wiki folders must be searched together | Run one `llmwiki-serve` per folder and connect them through `llmwiki-agent-bridge`. |
 | A service should gather evidence and call a model runtime for a cited answer | Use `llmwiki-agent-bridge` in delegated-runtime or hybrid mode. |
 | A human needs to test setup, inspect evidence, or debug traces | Open `llmwiki-chat` as the browser workbench. |
@@ -174,13 +180,16 @@ import { withBase } from 'vitepress'
 ```mermaid
 flowchart LR
   wiki["Wiki folder"]
+  start["llmwiki-bridge-start"]
   serve["llmwiki-serve"]
   agent["Host agent"]
   bridge["Agent bridge"]
   runtime["Runtime"]
   chat["llmwiki-chat"]
 
-  wiki -->|project| serve
+  wiki -->|discover/start| start
+  start -->|project| serve
+  start -->|optional register| bridge
   serve -->|direct retrieval| agent
   bridge -->|query sources| serve
   bridge -->|delegate synthesis| runtime
@@ -191,6 +200,7 @@ flowchart LR
 | Module | Owns | Does not own |
 | --- | --- | --- |
 | `llmwiki-serve` | File projection, manifest, context packs, search, read, graph, HTTP, MCP, optional A2A source compatibility. | Wiki authoring, ingestion jobs, model calls, answer synthesis, browser UI. |
+| `llmwiki-bridge-start` | First-run discovery, local source startup, optional bridge registration, and smoke-test handoff for existing wiki folders. | Wiki compilation or ingestion, runtime hosting, answer synthesis, replacing the bridge. |
 | `llmwiki-agent-bridge` | Source fan-out, runtime profile config, OpenAI-compatible chat completions call, normalized answer artifact, citations, graph, trace. | Reading local files directly, hosting a model, browser source selection UI. |
 | `llmwiki-chat` | Source setup, bridge/runtime setup, graph inspection, answer review, run details, citation selection. | Serving wiki files, storing provider secrets, production answer quality. |
 | `llmwiki-docs` | Cross-repo first-run path, architecture, protocol posture, release status, operations references. | Package runtime behavior or upstream LLM Wiki specification ownership. |

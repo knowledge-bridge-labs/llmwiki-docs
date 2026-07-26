@@ -9,6 +9,7 @@ This repository is the GitHub Pages documentation portal for serving
 LLMWiki-style Markdown folders as agent-readable Knowledge Sources:
 
 - `llmwiki-serve`: read-only Knowledge Source server for one Markdown/wiki folder.
+- `llmwiki-bridge-start`: first-run entrypoint for discovering existing wiki folders, starting loopback sources, and handing them to agent clients or the bridge.
 - `llmwiki-agent-bridge`: optional runtime companion that gathers source evidence and returns one cited answer artifact.
 - `llmwiki-chat`: optional browser workbench for source setup, bridge selection, graph/citation review, and run details.
 - `llmwiki-docs`: cross-repo onboarding, architecture, protocol posture, release status, and operations references.
@@ -30,8 +31,12 @@ implementation details in the owning repo README or docs directory.
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
 installs are also available for `llmwiki-serve==0.2.1`,
-`llmwiki-agent-bridge@0.1.0`, and `llmwiki-chat@0.1.4`; see
+`llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and
+`llmwiki-chat@0.1.4`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
+`llmwiki-bridge-start@0.0.1` was the manually published first release; the
+next real package version is the one that should validate Trusted
+Publisher/OIDC publishing.
 
 Shortest local path:
 
@@ -39,7 +44,9 @@ Shortest local path:
    your existing wiki folder. Use the bundled `./examples/sample-wiki` source
    from a checkout when you want a known-good fixture.
 2. Query `http://127.0.0.1:8765/query`.
-3. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
+3. Use `llmwiki-bridge-start` when you want a guided first-run path for
+   discovery, source startup, bridge registration, and smoke checks.
+4. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
    bridge endpoint or browser workbench; source checkouts and the published npm
    packages are both supported.
 

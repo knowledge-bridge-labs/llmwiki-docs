@@ -9,10 +9,10 @@ This is the shortest public-preview path for an existing LLMWiki user:
 
 The supported first-run paths are source checkouts and the published package
 installs listed in [Release Status & Compatibility](/status). Current package
-versions are `llmwiki-serve==0.2.1`, `llmwiki-agent-bridge@0.1.0`, and
-`llmwiki-chat@0.1.4`. Use source checkouts when you want bundled fixtures and
-development scripts; use package installs when you already have a wiki path to
-serve.
+versions are `llmwiki-serve==0.2.1`, `llmwiki-bridge-start@0.0.1`,
+`llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.4`. Use source checkouts
+when you want bundled fixtures and development scripts; use package installs
+when you already have a wiki path to serve.
 
 ## Prerequisites
 
@@ -195,9 +195,32 @@ For exact CLI output examples, see [Examples](/examples) and
 
 ## Optional Agent Bridge
 
-Use the bridge when one local endpoint should gather evidence from selected
-Knowledge Sources and return a normalized artifact. Start with evidence-only
-mode; it proves source fan-out without calling a model runtime.
+Use `llmwiki-bridge-start` as the first-run entrypoint when you want guided
+discovery, source startup, bridge registration, and smoke checks from existing
+wiki folders. It does not compile or ingest knowledge, and it does not replace
+`llmwiki-agent-bridge`; it hands you direct source URLs or an optional bridge
+handoff.
+
+Run it against a known wiki folder:
+
+```sh
+npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --path /path/to/your/wiki
+```
+
+Or let it scan your workspace for candidate wiki folders:
+
+```sh
+npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --workspace
+```
+
+Minimum success is a healthy loopback `llmwiki-serve` source endpoint. If you
+skip the bridge, use the printed source URL or MCP Streamable HTTP URL directly
+with a coding agent or script. Add `llmwiki-agent-bridge` only when one local
+endpoint should gather evidence from selected Knowledge Sources, fan out across
+multiple sources, or call a runtime for a normalized artifact. Start with
+evidence-only mode; it proves source fan-out without calling a model runtime.
+
+Manual source-checkout bridge start:
 
 ```sh
 cd ..
@@ -210,7 +233,7 @@ node ./bin/llmwiki-agent-bridge.mjs
 Or run the published package:
 
 ```sh
-npm exec --package llmwiki-agent-bridge@0.1.0 -- llmwiki-agent-bridge
+npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
 
 Windows PowerShell:
@@ -222,13 +245,17 @@ node .\bin\llmwiki-agent-bridge.mjs
 If port `8788` is busy, set a bridge port before starting it:
 
 ```sh
-LLMWIKI_AGENT_BRIDGE_PORT=39188 node ./bin/llmwiki-agent-bridge.mjs
+LLMWIKI_AGENT_BRIDGE_PORT=39188 npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
 
 ```powershell
 $env:LLMWIKI_AGENT_BRIDGE_PORT = '39188'
-node .\bin\llmwiki-agent-bridge.mjs
+npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
+
+From a source checkout, replace the final `npm exec ...` command with
+`node ./bin/llmwiki-agent-bridge.mjs` or
+`node .\bin\llmwiki-agent-bridge.mjs`.
 
 With the sample source on `127.0.0.1:8765` and the bridge on `127.0.0.1:8788`,
 send the bundled evidence-only request from the bridge checkout:
@@ -309,7 +336,7 @@ macOS/Linux:
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-node ./bin/llmwiki-agent-bridge.mjs
+npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
 
 Windows PowerShell:
@@ -318,8 +345,11 @@ Windows PowerShell:
 $env:LLMWIKI_AGENT_BRIDGE_BASE_URL = 'http://127.0.0.1:8642/v1'
 $env:LLMWIKI_AGENT_BRIDGE_MODEL = 'local-model'
 $env:LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE = 'generic'
-node .\bin\llmwiki-agent-bridge.mjs
+npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
+
+From a source checkout, use `node ./bin/llmwiki-agent-bridge.mjs` or
+`node .\bin\llmwiki-agent-bridge.mjs` as the final command.
 
 | Profile | Use when |
 | --- | --- |
