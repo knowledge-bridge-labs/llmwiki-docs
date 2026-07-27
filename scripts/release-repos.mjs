@@ -24,6 +24,17 @@ export const releaseRepos = [
     }
   },
   {
+    name: 'llmwiki-bridge-start',
+    type: 'node',
+    description:
+      'First-run entrypoint for discovering local wiki folders and handing them to source and bridge workflows.',
+    registry: { type: 'npm', name: 'llmwiki-bridge-start' },
+    requiredChecks: {
+      private: ['check'],
+      public: ['check', 'analyze javascript-typescript', 'dependency review']
+    }
+  },
+  {
     name: 'llmwiki-chat',
     type: 'node',
     description:

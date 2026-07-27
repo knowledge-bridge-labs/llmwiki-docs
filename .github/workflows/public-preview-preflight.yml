@@ -59,6 +59,14 @@ jobs:
           token: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
           persist-credentials: false
 
+      - name: Checkout bridge start
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ inputs.target_org }}/llmwiki-bridge-start
+          path: llmwiki-bridge-start
+          token: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
+          persist-credentials: false
+
       - name: Checkout chat
         uses: actions/checkout@v5
         with:
@@ -75,6 +83,7 @@ jobs:
           cache-dependency-path: |
             llmwiki-docs/package-lock.json
             llmwiki-agent-bridge/package-lock.json
+            llmwiki-bridge-start/package-lock.json
             llmwiki-chat/package-lock.json
 
       - name: Setup Python
@@ -91,6 +100,10 @@ jobs:
 
       - name: Install bridge dependencies
         working-directory: llmwiki-agent-bridge
+        run: npm ci
+
+      - name: Install bridge-start dependencies
+        working-directory: llmwiki-bridge-start
         run: npm ci
 
       - name: Install chat dependencies
