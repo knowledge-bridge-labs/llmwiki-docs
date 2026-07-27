@@ -6,9 +6,9 @@ package baseline is published:
 
 | Package | Published baseline | Registry |
 | --- | --- | --- |
-| `llmwiki-serve` | `0.2.1` | PyPI |
+| `llmwiki-serve` | `0.2.2` | PyPI |
 | `llmwiki-bridge-start` | `0.0.1` | npm |
-| `llmwiki-agent-bridge` | `0.2.0` | npm |
+| `llmwiki-agent-bridge` | `0.2.1` | npm |
 | `llmwiki-chat` | `0.1.4` | npm |
 
 Source checkouts remain supported for development, bundled fixtures, and
@@ -57,8 +57,8 @@ try {
 }
 ```
 
-These checks should report `llmwiki-serve` `0.2.1`,
-`llmwiki-bridge-start` `0.0.1`, `llmwiki-agent-bridge` `0.2.0`, and
+These checks should report `llmwiki-serve` `0.2.2`,
+`llmwiki-bridge-start` `0.0.1`, `llmwiki-agent-bridge` `0.2.1`, and
 `llmwiki-chat` `0.1.4`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
 unavailable from that registry view or the query failed.
