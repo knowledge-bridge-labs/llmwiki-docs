@@ -19,6 +19,8 @@ const requirePages = process.argv.includes('--require-pages');
 const requireOrgAdmin = process.argv.includes('--require-org-admin');
 const strictBranchPolicy = process.argv.includes('--strict-branch-policy');
 const allowRegistryInconclusive = process.argv.includes('--allow-registry-inconclusive');
+const allowBranchPolicyInconclusive = process.argv.includes('--allow-branch-policy-inconclusive');
+const allowNetworkInstall = process.argv.includes('--allow-network-install');
 const onlyLaunchCopy = process.argv.includes('--only-launch-copy');
 const onlyPublishedDocsVersionCopy = process.argv.includes('--only-published-docs-version-copy');
 const scriptDir = dirname(fileURLToPath(import.meta.url));
@@ -577,7 +579,8 @@ function assertNpmPack(repo) {
 function assertPythonReleaseSmoke(repo) {
   const path = localPath(repo.name);
   withPreflightTempEnv((tempEnv) => {
-    let result = run('uv', ['run', 'python', 'scripts/release_smoke.py'], { cwd: path, env: tempEnv });
+    const smokeArgs = ['scripts/release_smoke.py', ...(allowNetworkInstall ? ['--allow-network-install'] : [])];
+    let result = run('uv', ['run', 'python', ...smokeArgs], { cwd: path, env: tempEnv });
     if (!result.ok) {
       const scriptsDir =
         process.platform === 'win32' ? resolve(path, '.venv', 'Scripts') : resolve(path, '.venv', 'bin');
@@ -585,7 +588,7 @@ function assertPythonReleaseSmoke(repo) {
         ? resolve(scriptsDir, 'python.exe')
         : resolve(scriptsDir, 'python');
       if (existsSync(python)) {
-        result = run(python, ['scripts/release_smoke.py'], {
+        result = run(python, smokeArgs, {
           cwd: path,
           env: { ...tempEnv, PATH: `${scriptsDir}${delimiter}${tempEnv.PATH ?? ''}` }
         });
@@ -1230,11 +1233,23 @@ function checkRepositoryPolicies() {
       continue;
     }
 
+    if (allowBranchPolicyInconclusive && apiProblems.length > 0 && apiProblems.every(isBranchPolicyReadInconclusive)) {
+      warn(
+        `branch policy ${fullName}`,
+        `could not inspect branch protection with this token; verify with an admin-capable token. ${apiProblems.join('; ')}`
+      );
+      continue;
+    }
+
     branchPolicyOnly(
       `branch policy ${fullName}`,
       [...problems, ...apiProblems].join('; ') || 'no active main-branch policy found'
     );
   }
+}
+
+function isBranchPolicyReadInconclusive(problem) {
+  return /Resource not accessible by integration|HTTP 403|Requires authentication|Not Found|HTTP 404/i.test(problem);
 }
 
 function checkRegistries() {

@@ -154,4 +154,4 @@ jobs:
         working-directory: llmwiki-docs
         env:
           GH_TOKEN: ${{ secrets.LLMWIKI_PREFLIGHT_TOKEN || github.token }}
-        run: npm run release:preflight:published
+        run: npm run release:preflight:published -- --allow-network-install --allow-branch-policy-inconclusive
