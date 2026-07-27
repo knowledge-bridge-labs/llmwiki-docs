@@ -47,8 +47,10 @@ shapes.
 | --- | --- | --- |
 | `uv run llmwiki-serve manifest <wiki-path>` | `llmwiki-serve` checkout | Print a local manifest for a compatible Markdown/wiki folder. |
 | `uv run llmwiki-serve query <wiki-path> <text>` | `llmwiki-serve` checkout | Build one context pack for an agent or smoke test. |
+| `uv run llmwiki-serve source-refs <wiki-path>` | `llmwiki-serve` checkout | Print visible source-reference handles for cited source metadata. |
+| `uv run llmwiki-serve source-bundle <wiki-path>` | `llmwiki-serve` checkout | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
 | `uv run llmwiki-serve serve <wiki-path>` | `llmwiki-serve` checkout | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
-| `npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
+| `npx llmwiki-bridge-start@latest --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
 | `npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge` | Any local workspace | Start the optional runtime companion bridge from the published package. |
 | `node ./bin/llmwiki-agent-bridge.mjs` | `llmwiki-agent-bridge` checkout | Start the optional runtime companion bridge from a source checkout. |
 | `npm run dev` | `llmwiki-chat` checkout | Start the browser workbench through Vite. |
@@ -170,6 +172,46 @@ Common failures:
 | `No matching approved LLMWiki page was found.` | The source loaded, but the query did not match approved pages. | Try a broader query or inspect draft filtering. |
 | `No supported wiki files were found...` | The source root is unsupported. | Run `manifest` on the same root. |
 
+## `llmwiki-serve source-refs`
+
+Use `source-refs` when a client needs source-owned handles for cited metadata
+without the full source-bundle envelope.
+
+```sh
+cd ../llmwiki-serve
+uv run llmwiki-serve source-refs ./examples/sample-wiki
+```
+
+Expected output is JSON with `source_id` and visible `refs`. Each ref has a
+stable opaque id, a `llmwiki://.../source-refs/...` URI, labels declared by the
+served pages, and linked page ids. Draft-only refs stay hidden unless draft
+serving is explicitly enabled in a trusted local workflow.
+
+Do not derive local file paths from source-ref ids or URIs. Pass them back to
+`llmwiki-serve` or keep them as citation metadata in the host trace.
+
+## `llmwiki-serve source-bundle`
+
+Use `source-bundle` when an agent, bridge, or smoke test needs source identity
+and citation metadata before deciding whether to query or inspect pages.
+
+```sh
+cd ../llmwiki-serve
+uv run llmwiki-serve source-bundle ./examples/sample-wiki
+```
+
+Expected output includes:
+
+- `source_id`
+- `bundle_id`
+- projection metadata such as `projection.signature`
+- capabilities, including `llmwiki_source_refs` and `llmwiki_source_bundle`
+- visible `source_refs`
+- raw-origin metadata when the source declares it
+
+The source bundle is coordination metadata owned by the source endpoint. It is
+not an invitation to bypass `llmwiki-serve` and read arbitrary local files.
+
 ## `llmwiki-serve serve`
 
 Use `serve` when a browser workbench, IDE agent, MCP-style client, or bridge
@@ -229,6 +271,8 @@ Readiness checks:
 ```sh
 curl -s http://127.0.0.1:8765/health
 curl -s http://127.0.0.1:8765/manifest
+curl -s http://127.0.0.1:8765/source-refs
+curl -s http://127.0.0.1:8765/source-bundle
 curl -s http://127.0.0.1:8765/query \
   -H 'content-type: application/json' \
   -d '{"query":"release readiness","limit":4}'
@@ -240,6 +284,8 @@ Expected readiness output:
 | --- | --- |
 | `/health` | `status: "ok"` with service/version, current source summary, capabilities, endpoint paths, and CORS discovery metadata. |
 | `/manifest` | Manifest JSON with `root` redacted to an empty string. |
+| `/source-refs` | Visible typed source-reference handles linked to served pages. |
+| `/source-bundle` | Source identity, bundle identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
 | `/query` | `ContextPack` JSON with `orientation`, `evidence`, `limitations`, and `graph`. |
 | `/graph/neighborhood` | Bounded graph neighborhood around one or more `seed` values, with optional `depth`, `direction`, `relation`, `limit`, and `include_drafts`. |
 | `/mcp` | JSON-RPC `tools/list` and `tools/call` responses for `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, `llmwiki_source_refs`, and `llmwiki_source_bundle`. |
@@ -269,14 +315,17 @@ replacement for `llmwiki-agent-bridge`.
 Run against a known folder:
 
 ```sh
-npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --path /path/to/your/wiki
+npx llmwiki-bridge-start@latest --path /path/to/your/wiki
 ```
 
 Scan the user's workspace:
 
 ```sh
-npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --workspace
+npx llmwiki-bridge-start@latest --workspace
 ```
+
+At this baseline, `@latest` resolves to `llmwiki-bridge-start@0.0.2`. Pin the
+version only for reproducible release checks.
 
 Useful scriptable commands:
 
@@ -289,9 +338,13 @@ Useful scriptable commands:
 | `llmwiki-bridge-start smoke --bridge http://127.0.0.1:8788` | Run an evidence-only bridge smoke request. |
 
 Minimum success is a healthy loopback source endpoint and a handoff URL that a
-coding agent or script can use directly. Optional bridge setup starts or uses
+coding agent or script can use directly. When bridge setup is skipped, the
+handoff can be a direct source URL or an MCP Streamable HTTP URL such as
+`http://127.0.0.1:<port>/mcp/stream`. Optional bridge setup starts or uses
 `llmwiki-agent-bridge@0.2.1`; configure a runtime only when you need
-runtime-backed synthesis.
+runtime-backed synthesis. Interactive runtime installer steps require explicit
+approval, and `--yes` automation does not install runtimes unless
+`--install-runtime` is also supplied.
 
 ## `llmwiki-agent-bridge`
 

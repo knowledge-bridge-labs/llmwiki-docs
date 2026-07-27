@@ -4,6 +4,12 @@ Direct integrations let an agent retrieve context from a Knowledge Source
 without using the bridge. This is the right path when the agent already has a
 trusted tool, command, MCP, or HTTP route and can handle synthesis itself.
 
+Direct source examples use `http://127.0.0.1:8765`, the default
+`llmwiki-serve` loopback URL. Optional bridge examples use
+`http://127.0.0.1:8788`, the default `llmwiki-agent-bridge` loopback URL. Keep
+those roles separate: the source returns evidence; the optional bridge fans out
+across sources and may call a configured runtime.
+
 ## Good Fits
 
 Use direct source calls for:

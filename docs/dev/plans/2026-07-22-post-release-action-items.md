@@ -6,19 +6,21 @@ Scope: follow-up work after the current public-preview package baseline release.
 
 ## Current Baseline
 
-- `llmwiki-serve==0.2.1` is published on PyPI.
-- `llmwiki-bridge-start@0.0.1` is published on npm as the first-run
+This plan is superseded by the current public docs baseline:
+
+- `llmwiki-serve==0.2.2` is published on PyPI.
+- `llmwiki-bridge-start@0.0.2` is published on npm as the first-run
   entrypoint.
 - `llmwiki-agent-bridge@0.2.1` is published on npm as the current bridge
   package.
-- `llmwiki-chat@0.1.4` is published on npm.
+- `llmwiki-chat@0.1.6` is published on npm.
 - `llmwiki-docs` package-version copy is synchronized to the current baseline.
 
 ## TODO
 
 | Priority | Item | Status | Notes |
 | ---: | --- | --- | --- |
-| 1 | Update `llmwiki-docs` public package/version copy. | Done | User-facing docs now say `llmwiki-serve==0.2.1`, `llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.4`; historical/operational copy was reviewed separately. |
+| 1 | Update `llmwiki-docs` public package/version copy. | Done | User-facing docs now say `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`, `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`; historical/operational copy was reviewed separately. |
 | 2 | Harden docs release preflight against stale package-version copy. | Done | `release:preflight:published` now includes a public docs package-version copy check, with a focused `--only-published-docs-version-copy` mode. |
 | 3 | Verify npm/GitHub page rendering manually. | Done | Historical 0.1.3-baseline confirmation: the npm page showed package version `llmwiki-chat` `0.1.3`; README/package copy showed chat version `0.1.3` and the then-current bridge package copy; the demo image was the latest default screen. The visible `Release llmwiki-chat 0.1.2` text was from GitHub image/link context, not stale npm package copy. |
 | 4 | Add reproducible screenshot capture workflow. | Done | `llmwiki-chat` now has `npm run docs:capture-screenshots` and `npm run docs:check-screenshots`; both current PNGs reproduce byte-identically. |
