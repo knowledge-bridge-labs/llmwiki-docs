@@ -114,9 +114,14 @@ llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
 ```sh
-cd ../llmwiki-chat
-npm run dev
+mkdir llmwiki-chat-static
+cd llmwiki-chat-static
+npm init -y
+npm install llmwiki-chat@0.1.6
+python -m http.server 5173 --directory node_modules/llmwiki-chat/dist --bind 127.0.0.1
 ```
+
+For chat UI development from a source checkout, use `npm run dev` instead.
 
 Readiness checks:
 
@@ -229,7 +234,7 @@ OpenAI-compatible chat completions.
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=hermes-agent \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=hermes \
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 Expected health fields:
@@ -252,7 +257,7 @@ OpenAI-compatible chat completions.
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=deepagents-local \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=deepagents \
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 Expected health fields:
@@ -275,7 +280,7 @@ does not need Hermes or DeepAgents identity.
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 Expected health fields:

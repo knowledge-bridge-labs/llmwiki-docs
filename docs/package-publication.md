@@ -8,8 +8,8 @@ package baseline is published:
 | --- | --- | --- | --- |
 | `llmwiki-serve` | `0.2.2` | PyPI | Public registry version check |
 | `llmwiki-bridge-start` | `0.0.2` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 |
-| `llmwiki-agent-bridge` | `0.2.1` | npm | Public registry version check |
-| `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 |
+| `llmwiki-agent-bridge` | `0.2.1` | npm | Public registry version and CLI metadata check |
+| `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27; static artifact package with no CLI `bin` |
 
 Source checkouts remain supported for development, bundled fixtures, and
 release verification. Public-unpublished gates that expected PyPI `404` or npm
@@ -223,6 +223,7 @@ Before publishing:
 After publishing, verify from a clean directory:
 
 ```sh
+npm exec --package llmwiki-agent-bridge@<version> -- llmwiki-agent-bridge --help
 mkdir llmwiki-agent-bridge-install-smoke
 cd llmwiki-agent-bridge-install-smoke
 npm init -y
@@ -274,6 +275,9 @@ npm init -y
 npm install llmwiki-chat@<version>
 node -e "const fs = require('node:fs'); const root = require.resolve('llmwiki-chat/package.json').replace('package.json', ''); const pkg = require('llmwiki-chat/package.json'); if (pkg.bin) process.exit(1); if (!fs.existsSync(root + 'dist/index.html')) process.exit(1); if (!fs.existsSync(root + 'dist/THIRD_PARTY_LICENSES.md')) process.exit(1); console.log('llmwiki-chat package metadata and dist ok')"
 ```
+
+Do not document or test `npx llmwiki-chat`: the current package is a static
+browser artifact and intentionally has no executable `bin`.
 
 ## Do Not Publish Yet If
 

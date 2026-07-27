@@ -24,7 +24,7 @@ runtime synthesis.
 | GitHub Copilot | IDE integration candidate through MCP-style tools, HTTP tools, or workspace tasks when the IDE environment supports them. | Expose `llmwiki_context` as a local tool or add a workspace task that prints `ContextPack` JSON for the current question. |
 | Cursor | Direct MCP-style or command integration candidate. | Register a local MCP-style source or command wrapper that calls `/query`, then let Cursor use returned evidence as workspace context. |
 | Backend scripts | Direct HTTP. | Call `/query`, `/search`, `/read/{page_id}`, or `/graph` from tests, release checks, and internal tools. |
-| Browser workbench | `llmwiki-chat` plus optional bridge. | Start `npm run dev`, add a Knowledge Source URL, then choose Agent Bridge A2A, Agent Bridge MCP, or Local Development Runtime for UI-only testing. |
+| Browser workbench | `llmwiki-chat` plus optional bridge. | Host the static `llmwiki-chat@0.1.6` package artifact, add a Knowledge Source URL, then choose Agent Bridge A2A, Agent Bridge MCP, or Local Development Runtime for UI-only testing. |
 | Hermes-compatible runtime | Bridge profile. | Set `LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=hermes` and point `BASE_URL` at the runtime's OpenAI-compatible `/v1` endpoint. |
 | DeepAgents-compatible runtime | Bridge profile. | Set `LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=deepagents` and use the same `llmwiki_agent_result` artifact shape. |
 | OpenAI-compatible local runtime | Generic bridge profile. | Set `LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic` with the runtime `BASE_URL` and `MODEL`. |
@@ -117,15 +117,15 @@ selected sources and returns a normalized artifact. Use evidence-only mode when
 you want source proof without a model runtime; use runtime-backed mode when the
 bridge should call an OpenAI-compatible runtime.
 
-Bridge source fan-out uses bounded concurrency in current source-checkout
-workflows, but the artifact is still ordered by the selected source list. Keep
-returned citations, graph data, source bundles, trace steps, and per-source
-failures in that order when rendering evidence or feeding another runtime.
+Bridge source fan-out uses bounded concurrency, and the artifact is ordered by
+the selected source list. Keep returned citations, graph data, source bundles,
+trace steps, and per-source failures in that order when rendering evidence or
+feeding another runtime.
 
 Start the bridge for evidence-only source fan-out:
 
 ```sh
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 Send a message with `mode: "evidence-only"`:
@@ -157,7 +157,7 @@ Start the bridge with a runtime profile when synthesis should be delegated:
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 For a first run, open `http://127.0.0.1:8788/settings`: Step 1 connects the

@@ -106,7 +106,7 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use the published packages first: <code>llmwiki-serve==0.2.2</code>, <code>llmwiki-bridge-start@0.0.2</code>, <code>llmwiki-agent-bridge@0.2.1</code>, and <code>llmwiki-chat@0.1.6</code>. Source checkouts are for bundled fixtures and development.</span>
+    <span>Use the published packages first: <code>llmwiki-serve==0.2.2</code>, <code>npx llmwiki-bridge-start@latest</code>, <code>npx llmwiki-agent-bridge@latest</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>
@@ -130,7 +130,7 @@ import { withBase } from 'vitepress'
   <a class="quickstart-step" href="./quickstart#optional-agent-bridge">
     <span>Optional</span>
     <strong>Run bridge starter</strong>
-    <p>Use <code>llmwiki-bridge-start</code> for guided discovery, source startup, bridge registration, and smoke checks. Connect a runtime only when the bridge should synthesize answers.</p>
+    <p>Use <code>npx llmwiki-bridge-start@latest</code> for guided discovery, source startup, bridge registration, and smoke checks. Connect a runtime only when the bridge should synthesize answers.</p>
   </a>
   <a class="quickstart-step" href="./quickstart#optional-chat-workbench">
     <span>Optional</span>
@@ -169,10 +169,10 @@ import { withBase } from 'vitepress'
 | Need | Recommended path |
 | --- | --- |
 | One coding agent should read one wiki folder while it works | Run `llmwiki-serve` and connect the agent directly. |
-| You want a guided local first run from existing wiki folders | Run `llmwiki-bridge-start` first, then keep the direct source URLs or add the bridge. |
-| Several wiki folders must be searched together | Run one `llmwiki-serve` per folder and connect them through `llmwiki-agent-bridge`. |
-| A service should gather evidence and call a model runtime for a cited answer | Use `llmwiki-agent-bridge` in delegated-runtime or hybrid mode. |
-| A human needs to test setup, inspect evidence, or debug traces | Open `llmwiki-chat` as the browser workbench. |
+| You want a guided local first run from existing wiki folders | Run `npx llmwiki-bridge-start@latest`, then keep the direct source URLs or add the bridge. |
+| Several wiki folders must be searched together | Run one `llmwiki-serve` per folder and connect them through `npx llmwiki-agent-bridge@latest`. |
+| A service should gather evidence and call a model runtime for a cited answer | Use `npx llmwiki-agent-bridge@latest` in delegated-runtime or hybrid mode. |
+| A human needs to test setup, inspect evidence, or debug traces | Host the static `llmwiki-chat@0.1.6` artifact as the browser workbench. |
 | You only need package status, release support, or protocol details | Read [Release Status](/status), [Protocols](/protocols), and [API Reference](/api-reference). |
 
 ## Module Map
