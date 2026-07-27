@@ -3,7 +3,7 @@
 This toolchain is in public preview. The supported first-run paths are source
 checkouts and the published package installs shown below. Use
 [Quickstart](/quickstart) for the shortest local checks.
-`llmwiki-serve` main includes the 0.2.1 source release contract;
+`llmwiki-serve` main includes the 0.2.2 source release contract;
 use a current source checkout for the rich health discovery, graph
 neighborhood, MCP graph-neighbor, and producer freshness marker surfaces.
 `llmwiki-bridge-start@0.0.1` is the current first-run entrypoint for local
@@ -21,7 +21,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported preview path | You want to run `llmwiki-serve`, the optional bridge, chat, or docs locally today. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.1`, `llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.4`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.4`. |
 
 ## First-Run Roles
 
@@ -36,7 +36,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
-| `llmwiki-serve` | Python package 0.2.1, Apache-2.0, CLI entrypoint | PyPI published 0.2.1 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
+| `llmwiki-serve` | Python package 0.2.2, Apache-2.0, CLI entrypoint | PyPI published 0.2.2 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-bridge-start` | npm package 0.0.1, Apache-2.0, CLI entrypoint | npm published 0.0.1 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --help` or repository `npm run check` |
 | `llmwiki-agent-bridge` | npm package 0.2.1, Apache-2.0, CLI entrypoint | npm published 0.2.1 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package 0.1.4, Apache-2.0, Vite browser workbench artifact | npm published 0.1.4 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
@@ -45,7 +45,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 The primary gate column is a status-oriented smoke signal. Each repository also
 keeps its own README, changelog, package metadata, license files, and CI gates.
 
-The `llmwiki-serve==0.2.1`, `llmwiki-bridge-start@0.0.1`,
+The `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.1`,
 `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.4` packages are
 published. Source checkouts remain supported for development and release
 verification.

@@ -14,7 +14,7 @@ serve a wiki folder, answer `/query`, and expose MCP-style JSON-RPC without the
 bridge, chat workbench, or any model runtime.
 
 Clone it when you want the bundled `./examples/sample-wiki` fixture and
-development scripts. Use the published `llmwiki-serve==0.2.1` package when you
+development scripts. Use the published `llmwiki-serve==0.2.2` package when you
 already have a wiki path to serve.
 
 Clone `llmwiki-agent-bridge` later only if you need a companion service for
@@ -48,7 +48,7 @@ when you want to connect optional tools such as the bridge or chat workbench.
 
 Source checkouts remain supported because they include fixtures, development
 scripts, and release-smoke commands. Package installs are now available for the
-current public-preview baseline: `llmwiki-serve==0.2.1`,
+current public-preview baseline: `llmwiki-serve==0.2.2`,
 `llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and
 `llmwiki-chat@0.1.4`.
 
@@ -67,7 +67,7 @@ browser client; it does not start `llmwiki-serve` or a production Agent Runtime.
 
 ## Can I install the packages instead of cloning?
 
-Yes. Use `uvx --from llmwiki-serve==0.2.1 llmwiki-serve ...` for the source
+Yes. Use `uvx --from llmwiki-serve==0.2.2 llmwiki-serve ...` for the source
 server. Use
 `npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --path /path/to/your/wiki`
 when you want the guided first-run entrypoint. Use

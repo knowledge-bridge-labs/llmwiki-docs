@@ -30,7 +30,7 @@ implementation details in the owning repo README or docs directory.
 
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
-installs are also available for `llmwiki-serve==0.2.1`,
+installs are also available for `llmwiki-serve==0.2.2`,
 `llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and
 `llmwiki-chat@0.1.4`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
@@ -105,7 +105,7 @@ public-preview docs entrypoint.
 | Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |
 | Operate | `docs/network-security.md`, `docs/deployment.md`, `docs/troubleshooting.md`, `docs/faq.md` |
-| Status | `docs/status.md`, `docs/faq.md` |
+| Status | `docs/status.md`, `docs/package-publication.md`, `docs/faq.md` |
 
 This is independent community documentation for LLM Wiki-style Markdown
 knowledge folders and agent-readable context. It is not an official project

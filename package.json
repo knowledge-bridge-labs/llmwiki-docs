@@ -28,7 +28,6 @@
     "!docs/organization-setup.md",
     "!docs/operations-release-checklist.md",
     "!docs/oss-open-readiness.md",
-    "!docs/package-publication.md",
     "docs/public/**/*",
     "!docs/public/demo/**/*.gif",
     "docs/.vitepress/config.mts",

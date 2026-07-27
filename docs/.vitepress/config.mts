@@ -16,8 +16,7 @@ export default defineConfig({
     'dev/**',
     'organization-setup.md',
     'operations-release-checklist.md',
-    'oss-open-readiness.md',
-    'package-publication.md'
+    'oss-open-readiness.md'
   ],
   sitemap: {
     hostname: docsUrl
@@ -111,6 +110,7 @@ export default defineConfig({
         text: 'Operations',
         items: [
           { text: 'Deployment', link: '/deployment' },
+          { text: 'Package Publication', link: '/package-publication' },
           { text: 'Network & Security', link: '/network-security' },
           { text: 'Troubleshooting', link: '/troubleshooting' }
         ]
@@ -160,6 +160,7 @@ export default defineConfig({
         text: 'Operations',
         items: [
           { text: 'Deployment', link: '/deployment' },
+          { text: 'Package Publication', link: '/package-publication' },
           { text: 'Network & Security', link: '/network-security' },
           { text: 'Troubleshooting', link: '/troubleshooting' }
         ]
