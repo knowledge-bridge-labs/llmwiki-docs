@@ -7,20 +7,21 @@ knowledge folders and agent-readable context. It should avoid implying
 ownership of upstream concepts or compatibility certification from any named
 runtime or vendor.
 
-## Which repository should I clone first?
+## Which package should I install first?
 
 Start with `llmwiki-serve` first. It is the minimum useful path because it can
 serve a wiki folder, answer `/query`, and expose MCP-style JSON-RPC without the
 bridge, chat workbench, or any model runtime.
 
-Clone it when you want the bundled `./examples/sample-wiki` fixture and
-development scripts. Use the published `llmwiki-serve==0.2.2` package when you
-already have a wiki path to serve.
+Use the published `llmwiki-serve==0.2.2` package for the default path. Clone
+the repository only when you want bundled fixtures or development scripts.
 
-Clone `llmwiki-agent-bridge` later only if you need a companion service for
-evidence-only, delegated-runtime, or hybrid answer loops. Clone `llmwiki-chat`
-later only if you want a browser workbench for source inspection, bridge
-selection, traces, citations, and graph context.
+Run `npx llmwiki-bridge-start@latest` when you want guided discovery and
+source startup. Run `npx llmwiki-agent-bridge@latest` only if you need a
+companion service for evidence-only, delegated-runtime, or hybrid answer loops.
+Install `llmwiki-chat@0.1.6` only if you want to host the static browser
+workbench for source inspection, bridge selection, traces, citations, and graph
+context.
 
 ## Do I need all three repositories?
 
@@ -60,22 +61,23 @@ checkouts or accessible mirrored remotes.
 For the minimum `llmwiki-serve` path, install Git, `uv`, and Python `>=3.11`.
 `uv` can install and manage the Python version on supported platforms.
 
-For optional JavaScript repositories, install Node.js `>=22.12` with npm `>=10`.
+For optional JavaScript packages, install Node.js `>=22.12` with npm `>=10`.
 `llmwiki-agent-bridge` also expects an externally managed OpenAI-compatible chat
 completions runtime when you want real synthesis. `llmwiki-chat` starts only a
-browser client; it does not start `llmwiki-serve` or a production Agent Runtime.
+browser client when its static package artifact is hosted; it does not start
+`llmwiki-serve` or a production Agent Runtime.
 
 ## Can I install the packages instead of cloning?
 
-Yes. Use `uvx --from llmwiki-serve==0.2.2 llmwiki-serve ...` for the source
-server. Use
-`npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --path /path/to/your/wiki`
-when you want the guided first-run entrypoint. Use
-`npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge` when
-you want to run the bridge directly for source fan-out or runtime-backed
-answers. Use `llmwiki-chat@0.1.6` for package install or static artifact
-verification. Source checkouts remain the most convenient path when you want
-the sample wiki, Vite dev server, or repository-local checks.
+Yes. Use `uv tool install llmwiki-serve` or
+`uvx --from llmwiki-serve==0.2.2 llmwiki-serve ...` for the source server. Use
+`npx llmwiki-bridge-start@latest --path /path/to/your/wiki` when you want the
+guided first-run entrypoint. Use `npx llmwiki-agent-bridge@latest` when you
+want to run the bridge directly for source fan-out or runtime-backed answers.
+Use `npm install llmwiki-chat@0.1.6` when you want the static browser
+workbench artifact; the current chat package has no CLI `bin`. Source checkouts
+remain the development path for bundled fixtures, Vite dev server work, or
+repository-local checks.
 
 ## Does the server write into my wiki folder?
 

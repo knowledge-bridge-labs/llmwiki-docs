@@ -1,16 +1,15 @@
 # Release Status & Compatibility
 
-This toolchain is in public preview. The supported first-run paths are source
-checkouts and the published package installs shown below. Use
+This toolchain is in public preview. The supported public first-run paths use
+the published package installs shown below. Source checkouts remain supported
+for bundled fixtures, development scripts, and release verification. Use
 [Quickstart](/quickstart) for the shortest local checks.
-`llmwiki-serve` main includes the 0.2.2 source release contract;
-use a current source checkout for the rich health discovery, graph
-neighborhood, MCP graph-neighbor, and producer freshness marker surfaces.
+`llmwiki-serve==0.2.2` is the current source-server package baseline.
 `llmwiki-bridge-start@0.0.2` is the current first-run entrypoint for local
 discovery, source startup, optional bridge registration, and smoke checks.
 `llmwiki-agent-bridge@0.2.1` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
-`llmwiki-chat@0.1.6` is the current browser workbench package.
+`llmwiki-chat@0.1.6` is the current browser workbench static artifact package.
 The `llmwiki-bridge-start@0.0.2` and `llmwiki-chat@0.1.6` npm publishes were
 verified with Trusted Publisher/OIDC via workflow_dispatch on 2026-07-27.
 Public registry checks on 2026-07-27 confirmed `llmwiki-serve 0.2.2`,
@@ -25,9 +24,9 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Channel | Status | Use it when |
 | --- | --- | --- |
-| Source checkouts | Supported preview path | You want to run `llmwiki-serve`, the optional bridge, chat, or docs locally today. |
+| Source checkouts | Supported development path | You want bundled fixtures, source-level development scripts, screenshot refreshes, or release verification. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`, `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`, `llmwiki-agent-bridge@0.2.1`, and the static `llmwiki-chat@0.1.6` artifact. |
 
 ## First-Run Roles
 
@@ -43,9 +42,9 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
 | `llmwiki-serve` | Python package 0.2.2, Apache-2.0, CLI entrypoint | PyPI published 0.2.2 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
-| `llmwiki-bridge-start` | npm package 0.0.2, Apache-2.0, CLI entrypoint | npm published 0.0.2; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npx llmwiki-bridge-start@latest --help` or repository `npm run check` |
-| `llmwiki-agent-bridge` | npm package 0.2.1, Apache-2.0, CLI entrypoint | npm published 0.2.1 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
-| `llmwiki-chat` | npm package 0.1.6, Apache-2.0, Vite browser workbench artifact | npm published 0.1.6; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
+| `llmwiki-bridge-start` | npm package 0.0.2, Apache-2.0, CLI entrypoint | npm published 0.0.2; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package CLI through `npx llmwiki-bridge-start@latest`; source checkout for harness development | Node.js 22.12+ | `npx llmwiki-bridge-start@latest --help` or repository `npm run check` |
+| `llmwiki-agent-bridge` | npm package 0.2.1, Apache-2.0, CLI entrypoint | npm published 0.2.1 | Package CLI through `npx llmwiki-agent-bridge@latest` or pinned `npm exec`; source checkout for development | Node.js 22.12+ | `npx llmwiki-agent-bridge@latest --help` or repository `npm run check` |
+| `llmwiki-chat` | npm package 0.1.6, Apache-2.0, static Vite browser workbench artifact, no CLI `bin` | npm published 0.1.6; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package `dist/` static hosting or source checkout for UI development | Node.js 22.12+ | package install-smoke for `dist/`, or repository `npm run check` |
 | `llmwiki-docs` | VitePress docs portal, Apache-2.0 | GitHub Pages live | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 
 The primary gate column is a status-oriented smoke signal. Each repository also

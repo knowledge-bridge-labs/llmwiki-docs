@@ -253,13 +253,11 @@ Representative output:
 }
 ```
 
-To smoke test the optional bridge without a model runtime, run the bridge in a
-third terminal:
+To smoke test the optional bridge without a model runtime, run the published
+bridge package in a third terminal:
 
 ```sh
-cd ../llmwiki-agent-bridge
-npm ci
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 Send an evidence-only request:
@@ -363,21 +361,24 @@ profile only when the bridge should synthesize the final answer.
 
 ## Chat Workbench
 
-`llmwiki-chat` does not require a separate example fixture. Start the sample
-wiki server, run the chat client, and use the default direct Knowledge Source
-URL:
+`llmwiki-chat` does not require a separate example fixture. The published
+package is a static browser artifact with no CLI `bin`. Start the source
+server, install the chat artifact, host its `dist/` directory, and use the
+default direct Knowledge Source URL:
 
 ```sh
-cd ../llmwiki-chat
-npm ci
-npm run dev
+mkdir llmwiki-chat-static
+cd llmwiki-chat-static
+npm init -y
+npm install llmwiki-chat@0.1.6
+python -m http.server 5173 --directory node_modules/llmwiki-chat/dist --bind 127.0.0.1
 ```
 
 The default direct source URL is `http://127.0.0.1:8765`.
 
 In the browser workbench:
 
-1. Open the Vite URL printed by `npm run dev`.
+1. Open `http://127.0.0.1:5173` or the URL for your static host.
 2. For direct source testing, confirm the Knowledge Source reports `ready`.
 3. Use the Knowledge map, Pages, and Details panels to inspect graph context,
    source refs, and page details before asking.

@@ -236,23 +236,28 @@ setup, runtime installation is an approval gate. It downloads and runs a
 documented installer only after explicit approval; `--yes` automation does not
 run runtime installers unless `--install-runtime` is also supplied.
 
-Manual source-checkout bridge start:
+Start the published bridge package:
 
 ```sh
-cd ..
-git clone https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge.git
-cd llmwiki-agent-bridge
-npm ci
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
-Or run the published package:
+Pin the current public-preview bridge when you need reproducible checks:
 
 ```sh
 npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
 
-Windows PowerShell:
+Use a source checkout only for bridge development, bundled examples, or
+repository-local checks:
+
+```sh
+cd ../llmwiki-agent-bridge
+npm ci
+node ./bin/llmwiki-agent-bridge.mjs
+```
+
+From Windows PowerShell in a source checkout:
 
 ```powershell
 node .\bin\llmwiki-agent-bridge.mjs
@@ -261,29 +266,16 @@ node .\bin\llmwiki-agent-bridge.mjs
 If port `8788` is busy, set a bridge port before starting it:
 
 ```sh
-LLMWIKI_AGENT_BRIDGE_PORT=39188 npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
+LLMWIKI_AGENT_BRIDGE_PORT=39188 npx llmwiki-agent-bridge@latest
 ```
 
 ```powershell
 $env:LLMWIKI_AGENT_BRIDGE_PORT = '39188'
-npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
+npx llmwiki-agent-bridge@latest
 ```
 
-From a source checkout, replace the final `npm exec ...` command with
-`node ./bin/llmwiki-agent-bridge.mjs` or
-`node .\bin\llmwiki-agent-bridge.mjs`.
-
-With the sample source on `127.0.0.1:8765` and the bridge on `127.0.0.1:8788`,
-send the bundled evidence-only request from the bridge checkout:
-
-```sh
-curl -s http://127.0.0.1:8788/message:send \
-  -H 'content-type: application/json' \
-  --data @examples/message-send.local.json
-```
-
-For your own graph or a non-default source URL, post an explicit source
-descriptor instead:
+With a source on `127.0.0.1:8765` and the bridge on `127.0.0.1:8788`, post an
+explicit source descriptor:
 
 ```sh
 curl -s http://127.0.0.1:8788/message:send \
@@ -304,6 +296,15 @@ curl -s http://127.0.0.1:8788/message:send \
       ]
     }
   }'
+```
+
+If you are working from a `llmwiki-agent-bridge` source checkout, you can use
+the bundled fixture instead:
+
+```sh
+curl -s http://127.0.0.1:8788/message:send \
+  -H 'content-type: application/json' \
+  --data @examples/message-send.local.json
 ```
 
 Bridge success means the returned `llmwiki_agent_result` has:
@@ -352,7 +353,7 @@ macOS/Linux:
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
+npx llmwiki-agent-bridge@latest
 ```
 
 Windows PowerShell:
@@ -361,7 +362,7 @@ Windows PowerShell:
 $env:LLMWIKI_AGENT_BRIDGE_BASE_URL = 'http://127.0.0.1:8642/v1'
 $env:LLMWIKI_AGENT_BRIDGE_MODEL = 'local-model'
 $env:LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE = 'generic'
-npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
+npx llmwiki-agent-bridge@latest
 ```
 
 From a source checkout, use `node ./bin/llmwiki-agent-bridge.mjs` or
@@ -382,16 +383,29 @@ Knowledge Source URL, save the runtime profile/base URL/model, and run
 Use chat when a human needs to inspect source readiness, graph context,
 citations, artifacts, and run details.
 
+`llmwiki-chat@0.1.6` is a published static browser artifact, not a CLI package.
+It does not expose `npx llmwiki-chat`. Install it into a small workspace and
+serve the packaged `dist/` directory with a static file server:
+
 ```sh
-cd ..
-git clone https://github.com/knowledge-bridge-labs/llmwiki-chat.git
-cd llmwiki-chat
+mkdir llmwiki-chat-static
+cd llmwiki-chat-static
+npm init -y
+npm install llmwiki-chat@0.1.6
+python -m http.server 5173 --directory node_modules/llmwiki-chat/dist --bind 127.0.0.1
+```
+
+Open `http://127.0.0.1:5173`. The default direct Knowledge Source URL is
+`http://127.0.0.1:8765`.
+
+Use a source checkout only for chat UI development, screenshot refreshes, or
+repository-local checks:
+
+```sh
+cd ../llmwiki-chat
 npm ci
 npm run dev
 ```
-
-Open the Vite URL printed by the command. The default direct Knowledge Source
-URL is `http://127.0.0.1:8765`.
 
 First-run flow:
 
@@ -421,7 +435,7 @@ panel before shared-device demos. Redaction removes common credentials and
 credential-bearing URL parts before storage, but logged prompts and answers may
 still contain sensitive content.
 
-If the default Vite port is busy:
+If the source-checkout Vite port is busy:
 
 ```sh
 npm run dev -- --port 39173

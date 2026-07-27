@@ -38,6 +38,9 @@ and release verification.
 The initial bridge-start release was manually published;
 `llmwiki-bridge-start@0.0.2` is the current Trusted Publisher/OIDC-verified
 first-run baseline.
+`llmwiki-agent-bridge@0.2.1` exposes the `llmwiki-agent-bridge` CLI for
+`npx`/`npm exec` runs. `llmwiki-chat@0.1.6` is a static browser artifact with
+no CLI `bin`; install it when you want to host the packaged `dist/` directory.
 
 Shortest local path:
 
@@ -52,11 +55,12 @@ Shortest local path:
 5. Register `http://127.0.0.1:8765/mcp/stream` directly with clients that
    support MCP Streamable HTTP, without treating it as a protocol certification
    claim.
-6. Use `llmwiki-bridge-start` when you want a guided first-run path for
-   discovery, source startup, bridge registration, and smoke checks.
-7. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
-   bridge endpoint or browser workbench; source checkouts and the published npm
-   packages are both supported.
+6. Use `npx llmwiki-bridge-start@latest --path /path/to/your/wiki` when you
+   want guided discovery, source startup, bridge registration, and smoke
+   checks.
+7. Add `npx llmwiki-agent-bridge@latest` only when you need a companion bridge
+   endpoint, and install `llmwiki-chat@0.1.6` only when you need to host the
+   static browser workbench. Source checkouts remain development paths.
 
 ## Develop
 

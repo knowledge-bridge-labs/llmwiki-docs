@@ -21,12 +21,12 @@ llmwiki-serve manifest /path/to/your/wiki
 
 Use these runtime baselines:
 
-| Component | Source checkout setup | Package status |
+| Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | `uv sync --extra dev` from `llmwiki-serve` | PyPI published as `llmwiki-serve==0.2.2`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.2`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.2`; use it as the first-run entrypoint for discovery, source startup, optional bridge registration, and smoke checks. |
-| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` | npm published as `llmwiki-agent-bridge@0.2.1`; source checkout remains supported for local development. |
-| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.6`; source checkout remains supported for local development. |
+| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.2.1`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
+| `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
 Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. Treat
@@ -49,9 +49,10 @@ checkout and use the same command shapes.
 | `llmwiki-serve source-bundle <wiki-path>` | Any shell with the PyPI package installed | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
 | `llmwiki-serve serve <wiki-path>` | Any shell with the PyPI package installed | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
 | `npx llmwiki-bridge-start@latest --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
-| `npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge` | Any local workspace | Start the optional runtime companion bridge from the published package. |
+| `npx llmwiki-agent-bridge@latest` | Any local workspace | Start the optional runtime companion bridge from the published package. |
 | `node ./bin/llmwiki-agent-bridge.mjs` | `llmwiki-agent-bridge` checkout | Start the optional runtime companion bridge from a source checkout. |
-| `npm run dev` | `llmwiki-chat` checkout | Start the browser workbench through Vite. |
+| `npm install llmwiki-chat@0.1.6` | Static hosting workspace | Install the browser workbench artifact; serve `node_modules/llmwiki-chat/dist` with a static web server. |
+| `npm run dev` | `llmwiki-chat` checkout | Start the source-checkout browser workbench through Vite for UI development. |
 | `npm run check` | `llmwiki-docs` checkout | Validate license artifact freshness and build the Pages site. |
 
 ## `llmwiki-serve manifest`
@@ -350,10 +351,16 @@ runtime when synthesis is configured.
 Minimal local start for evidence-only mode:
 
 ```sh
+npx llmwiki-agent-bridge@latest
+```
+
+Pin the current public-preview package when reproducibility matters:
+
+```sh
 npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
 ```
 
-Source-checkout equivalent:
+Source-checkout development equivalent:
 
 ```sh
 cd ../llmwiki-agent-bridge
@@ -366,10 +373,10 @@ Runtime-backed start when an OpenAI-compatible local endpoint is available:
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge
+npx llmwiki-agent-bridge@latest
 ```
 
-From a source checkout, replace the final `npm exec ...` command with
+From a source checkout, replace the final `npx ...` command with
 `node ./bin/llmwiki-agent-bridge.mjs`.
 
 Core environment variables:
@@ -424,8 +431,8 @@ under diagnostics/advanced. Runtime and policy changes apply to the running
 bridge. Host and port edits are saved but require a restart before the listener
 moves.
 
-For multi-source requests, the current source-checkout bridge uses bounded
-concurrency for source fan-out rather than unbounded parallel requests.
+For multi-source requests, the bridge uses bounded concurrency for source
+fan-out rather than unbounded parallel requests.
 Responses are normalized back to the selected source order for citations, graph
 data, source bundles, trace steps, and per-source failures, so clients can keep
 a stable evidence order even when source calls complete at different times.
@@ -480,19 +487,32 @@ Common failures:
 Use the browser workbench to select Knowledge Sources, inspect graph/citation
 state, and choose an Agent Bridge or testing runtime.
 
+`llmwiki-chat@0.1.6` is a static browser artifact package. It does not expose a
+CLI `bin`, so there is no `npx llmwiki-chat` command. Install the package and
+serve its `dist/` directory with your preferred static web server:
+
+```sh
+mkdir llmwiki-chat-static
+cd llmwiki-chat-static
+npm init -y
+npm install llmwiki-chat@0.1.6
+python -m http.server 5173 --directory node_modules/llmwiki-chat/dist --bind 127.0.0.1
+```
+
+Open `http://127.0.0.1:5173`.
+
+Source-checkout development equivalent:
+
 ```sh
 cd ../llmwiki-chat
 npm ci
 npm run dev
 ```
 
-Open the Vite URL printed by the command. It is usually a loopback URL such as
-`http://127.0.0.1:5173`.
-
 Default local flow:
 
 1. Start `llmwiki-serve` on `http://127.0.0.1:8765`.
-2. Start `llmwiki-chat` with `npm run dev`.
+2. Start `llmwiki-chat` from the package `dist/` or a source-checkout dev server.
 3. Begin in the `First-run quickstart` panel. It shows the local source and
    bridge commands before you choose a runtime path.
 4. For direct source testing, confirm the default Knowledge Source is ready and

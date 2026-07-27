@@ -54,7 +54,7 @@ policy.
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-agent \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-node ./bin/llmwiki-agent-bridge.mjs
+npx llmwiki-agent-bridge@latest
 ```
 
 For shared hosts, review the bridge's `LLMWIKI_AGENT_BRIDGE_SOURCE_POLICY`,
