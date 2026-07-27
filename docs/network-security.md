@@ -9,7 +9,7 @@ developer workstation.
 `llmwiki-serve` should bind to loopback for local development:
 
 ```sh
-uv run llmwiki-serve serve ./wiki --host 127.0.0.1 --port 8765
+llmwiki-serve serve ./wiki --host 127.0.0.1 --port 8765
 ```
 
 Its default CORS policy is scoped to local browser origins such as

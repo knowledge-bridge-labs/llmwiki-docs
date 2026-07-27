@@ -29,30 +29,32 @@ implementation details in the owning repo README or docs directory.
 - [Network & Security](docs/network-security.md)
 - [Release Status & Compatibility](docs/status.md)
 
-The docs are intentionally local-first. Source checkouts remain supported for
-bundled samples, development scripts, and release verification. Package
-installs are also available for `llmwiki-serve==0.2.2`,
-`llmwiki-bridge-start@0.0.2`, `llmwiki-agent-bridge@0.2.1`, and
-`llmwiki-chat@0.1.6`; see
+The docs are intentionally local-first. The public first-run path uses package
+installs for `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
+`llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
+Source checkouts remain supported for bundled samples, development scripts,
+and release verification.
 The initial bridge-start release was manually published;
 `llmwiki-bridge-start@0.0.2` is the current Trusted Publisher/OIDC-verified
 first-run baseline.
 
 Shortest local path:
 
-1. Start with the bundled `./examples/sample-wiki` source from a
-   `llmwiki-serve` checkout when you want a known-good fixture.
-2. Run `llmwiki-serve manifest`, `query`, `source-refs`, and `source-bundle`
+1. Install `llmwiki-serve` from PyPI with `uv tool install llmwiki-serve`.
+2. Point it at an existing Markdown, Obsidian-style, or LLMWiki folder, or
+   create the clone-free tiny sample in
+   [10-Minute Agent Context Quickstart](docs/serve-agent-quickstart.md).
+3. Run `llmwiki-serve manifest`, `query`, `source-refs`, and `source-bundle`
    before starting the loopback server.
-3. Serve the same folder on `http://127.0.0.1:8765`, then verify `/health`,
+4. Serve the same folder on `http://127.0.0.1:8765`, then verify `/health`,
    `/manifest`, `/source-refs`, `/source-bundle`, and `/query`.
-4. Register `http://127.0.0.1:8765/mcp/stream` directly with clients that
+5. Register `http://127.0.0.1:8765/mcp/stream` directly with clients that
    support MCP Streamable HTTP, without treating it as a protocol certification
    claim.
-5. Use `llmwiki-bridge-start` when you want a guided first-run path for
+6. Use `llmwiki-bridge-start` when you want a guided first-run path for
    discovery, source startup, bridge registration, and smoke checks.
-6. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
+7. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
    bridge endpoint or browser workbench; source checkouts and the published npm
    packages are both supported.
 

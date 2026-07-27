@@ -14,14 +14,14 @@ serve several Markdown/wiki variants through one interface.
 Start the server with the directory that owns the wiki content:
 
 ```sh
-uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
+llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
 The same root is used by the CLI commands:
 
 ```sh
-uv run llmwiki-serve manifest ./examples/sample-wiki
-uv run llmwiki-serve query ./examples/sample-wiki "release readiness"
+llmwiki-serve manifest /path/to/your/wiki
+llmwiki-serve query /path/to/your/wiki "release readiness"
 ```
 
 One `llmwiki-serve` process is usually best matched to one Knowledge Source.

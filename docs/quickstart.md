@@ -8,20 +8,21 @@ This is the shortest public-preview path for an existing LLMWiki user:
 3. Add `llmwiki-agent-bridge` only when one endpoint should gather evidence or call a runtime.
 4. Add `llmwiki-chat` only when a human needs a browser workbench for source, citation, graph, and trace review.
 
-The supported first-run paths are source checkouts and the published package
-installs listed in [Release Status & Compatibility](/status). Current package
-versions are `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
+The supported first-run path uses the published packages listed in
+[Release Status & Compatibility](/status). Current package versions are
+`llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
 `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`. Use source checkouts
-when you want bundled fixtures and development scripts; use package installs
-when you already have a wiki path to serve.
+only when you want bundled fixtures, development scripts, or contribution
+workflow checks.
 
-For the source-only path that exercises `manifest`, `query`, `source-refs`,
-`source-bundle`, loopback HTTP, and MCP Streamable HTTP before any bridge or
-chat layer, use [10-Minute Agent Context Quickstart](/serve-agent-quickstart).
+For the package-installed source-only path that exercises `manifest`, `query`,
+`source-refs`, `source-bundle`, loopback HTTP, and MCP Streamable HTTP before
+any bridge or chat layer, use
+[10-Minute Agent Context Quickstart](/serve-agent-quickstart).
 
 ## Prerequisites
 
-- Git
+- Git only for optional source checkouts
 - `uv`
 - Python `>=3.11` for `llmwiki-serve`
 - Node.js `>=22.12` and npm `>=10` for the optional bridge, chat, and docs repositories
@@ -42,18 +43,21 @@ Shell snippets use POSIX syntax unless marked `Windows PowerShell`.
 
 ## Choose A Knowledge Graph
 
-Use your own graph when you already have one. Use the bundled samples when you
-want a known-good smoke before pointing at private or larger content.
+Use your own graph when you already have one. If you do not have a wiki yet,
+the [10-Minute Agent Context Quickstart](/serve-agent-quickstart) includes a
+tiny copy-paste local sample that works with the installed PyPI package.
+Bundled repository fixtures are optional source-checkout examples.
 
 | Graph path | Use when | Notes |
 | --- | --- | --- |
-| `/path/to/your/wiki` | You already have a Markdown, Obsidian, or LLMWiki-style graph. | Replace the sample path in the commands below. The server treats the folder as read-only input. |
+| `/path/to/your/wiki` | You already have a Markdown, Obsidian, or LLMWiki-style graph. | Default public path. The server treats the folder as read-only input. |
+| `llmwiki-quickstart-wiki` | You want a clone-free smoke test. | Create it from the 10-minute quickstart, then reuse the commands below. |
 | `/path/to/repo` with `openwiki/quickstart.md` | You generated repository documentation with OpenWiki. | Point at the repo root or directly at `openwiki/`; `quickstart.md` is served as the index entrypoint. |
-| `./examples/sample-wiki` | You want the fastest known-good first run. | Stable public sample in the `llmwiki-serve` checkout; includes approved pages, links, source refs, and one withheld draft. |
-| `./tests/fixtures/obsidian-vault` | You want to smoke an Obsidian-shaped vault. | Source-checkout fixture for preview validation. |
-| `./tests/fixtures/llmwiki-compiler-output` | You want to smoke compiler-style topic wiki output. | Source-checkout fixture for preview validation. |
+| `./examples/sample-wiki` | You want the bundled repository sample. | Optional `llmwiki-serve` source-checkout fixture; includes approved pages, links, source refs, and one withheld draft. |
+| `./tests/fixtures/obsidian-vault` | You want to smoke an Obsidian-shaped vault. | Optional source-checkout fixture for preview validation. |
+| `./tests/fixtures/llmwiki-compiler-output` | You want to smoke compiler-style topic wiki output. | Optional source-checkout fixture for preview validation. |
 
-Fixture paths are relative to the `llmwiki-serve` checkout.
+Source-checkout fixture paths are relative to the `llmwiki-serve` checkout.
 
 ::: tip Compiler output quickstart
 If you are starting from raw sources instead of an existing Markdown wiki, run
@@ -66,40 +70,36 @@ workflow.
 
 ## Start `llmwiki-serve`
 
-Create a workspace for sibling checkouts:
+Install the published CLI from PyPI:
 
 ```sh
-mkdir llmwiki-workspace
-cd llmwiki-workspace
+uv tool install llmwiki-serve
 ```
 
-Clone and start the sample Knowledge Source:
+Alternatives:
 
 ```sh
-git clone https://github.com/knowledge-bridge-labs/llmwiki-serve.git
-cd llmwiki-serve
-uv sync --extra dev
-uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
+pipx install llmwiki-serve
+# or install inside an activated virtual environment
+python -m pip install llmwiki-serve
 ```
 
-If you already have a wiki path and prefer the published CLI, start it without a
-checkout:
+Start a source endpoint for your wiki folder:
 
 ```sh
-uvx --from llmwiki-serve==0.2.2 llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
+llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
-To serve your own graph, replace `./examples/sample-wiki` with the folder that
-contains your wiki:
+Pin the command when you need exact public-preview reproduction:
 
 ```sh
-uv run llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
+uv tool install llmwiki-serve==0.2.2
 ```
 
 Leave this terminal running. Use one `llmwiki-serve` process per source folder
 when different graphs have different lifecycle, draft, or network policies.
 By default, `llmwiki-serve` checks source freshness on every request. For large
-local graphs, source-checkout builds also expose
+local graphs, the CLI also exposes
 `--refresh-interval-seconds <seconds>` as an opt-in local-performance knob. A
 positive value reuses the in-memory projection between checks, so recent edits
 may not appear until the interval expires or the process restarts.
@@ -122,7 +122,7 @@ If port `8765` is busy, choose another loopback port and use that URL everywhere
 below:
 
 ```sh
-uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 39165
+llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 39165
 ```
 
 ## Verify The Source
