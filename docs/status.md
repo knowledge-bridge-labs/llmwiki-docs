@@ -13,6 +13,9 @@ runtime profile configuration, and normalized answer artifacts.
 `llmwiki-chat@0.1.6` is the current browser workbench package.
 The `llmwiki-bridge-start@0.0.2` and `llmwiki-chat@0.1.6` npm publishes were
 verified with Trusted Publisher/OIDC via workflow_dispatch on 2026-07-27.
+Public registry checks on 2026-07-27 confirmed `llmwiki-serve 0.2.2`,
+`llmwiki-bridge-start 0.0.2`, `llmwiki-agent-bridge 0.2.1`, and
+`llmwiki-chat 0.1.6`.
 
 The project is independent community tooling for LLM Wiki-style Markdown
 knowledge folders and agent-readable context. It is not an official project
@@ -40,7 +43,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
 | `llmwiki-serve` | Python package 0.2.2, Apache-2.0, CLI entrypoint | PyPI published 0.2.2 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
-| `llmwiki-bridge-start` | npm package 0.0.2, Apache-2.0, CLI entrypoint | npm published 0.0.2; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --help` or repository `npm run check` |
+| `llmwiki-bridge-start` | npm package 0.0.2, Apache-2.0, CLI entrypoint | npm published 0.0.2; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npx llmwiki-bridge-start@latest --help` or repository `npm run check` |
 | `llmwiki-agent-bridge` | npm package 0.2.1, Apache-2.0, CLI entrypoint | npm published 0.2.1 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package 0.1.6, Apache-2.0, Vite browser workbench artifact | npm published 0.1.6; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-docs` | VitePress docs portal, Apache-2.0 | GitHub Pages live | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
@@ -54,9 +57,9 @@ published. Source checkouts remain supported for development and release
 verification.
 
 ::: tip Historical publication note
-The initial `0.0.1` bridge-start release was manually published and is
-historical first-publish evidence only. `llmwiki-bridge-start@0.0.2` is the
-current Trusted Publisher/OIDC-verified first-run baseline.
+The initial bridge-start release was manually published and is historical
+first-publish evidence only. `llmwiki-bridge-start@0.0.2` is the current
+Trusted Publisher/OIDC-verified first-run baseline.
 :::
 
 ## Protocol Surfaces

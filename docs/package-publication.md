@@ -63,8 +63,8 @@ These checks should report `llmwiki-serve` `0.2.2`,
 successful current-state result for these packages; it means the package is
 unavailable from that registry view or the query failed.
 
-The initial `0.0.1` bridge-start release was manually first-published and
-remains historical first-publish evidence only. `llmwiki-bridge-start@0.0.2` is the
+The initial bridge-start release was manually first-published and remains
+historical first-publish evidence only. `llmwiki-bridge-start@0.0.2` is the
 current first-run package baseline and was verified through npm Trusted
 Publisher/OIDC via GitHub Actions workflow_dispatch on 2026-07-27.
 `llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
@@ -191,7 +191,7 @@ Before publishing a future version:
   content, generated logs, credentials, or OTP material are included.
 - Keep npm Trusted Publisher/OIDC configured. The `0.0.2` baseline verified
   this path via workflow_dispatch on 2026-07-27; the manually published initial
-  `0.0.1` release remains historical first-publish evidence only.
+  release remains historical first-publish evidence only.
 
 After publishing a future version, verify from a clean directory:
 
@@ -214,8 +214,9 @@ Before publishing:
 - Confirm the npm tarball contains `bin/`, `src/`, `docs/`, `integrations/`, and
   public release metadata only.
 - Confirm `CHANGELOG.md` no longer marks the published version as pending.
-- Keep npm Trusted Publisher/OIDC configured. The `0.1.6` baseline verified
-  this path via workflow_dispatch on 2026-07-27.
+- Keep npm Trusted Publisher/OIDC configured for future owner-approved releases
+  where available. The current `0.2.1` baseline was confirmed by public npm
+  registry version check.
 - Keep npm tokens out of commits, logs, shell history, and CI variables unless a
   maintainer has explicitly approved that fallback.
 
@@ -261,8 +262,8 @@ Before publishing:
   `--list` should not start local sample servers.
 - Confirm no Playwright traces, local artifacts, credentials, private URLs, or
   screenshots with private infrastructure are included.
-- Prefer npm provenance or trusted publishing once the organization and
-  repository ownership are stable.
+- Keep npm Trusted Publisher/OIDC configured. The `0.1.6` baseline verified
+  this path via workflow_dispatch on 2026-07-27.
 
 After publishing, verify from a clean directory:
 

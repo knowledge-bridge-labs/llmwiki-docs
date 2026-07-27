@@ -3,7 +3,8 @@
 This is the shortest public-preview path for an existing LLMWiki user:
 
 1. Start `llmwiki-serve` on one Markdown or LLMWiki-style knowledge graph.
-2. Prove the source works with `/health`, `/manifest`, and `/query`.
+2. Prove the source works with `/health`, `/manifest`, `/source-refs`,
+   `/source-bundle`, and `/query`.
 3. Add `llmwiki-agent-bridge` only when one endpoint should gather evidence or call a runtime.
 4. Add `llmwiki-chat` only when a human needs a browser workbench for source, citation, graph, and trace review.
 
@@ -13,6 +14,10 @@ versions are `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
 `llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`. Use source checkouts
 when you want bundled fixtures and development scripts; use package installs
 when you already have a wiki path to serve.
+
+For the source-only path that exercises `manifest`, `query`, `source-refs`,
+`source-bundle`, loopback HTTP, and MCP Streamable HTTP before any bridge or
+chat layer, use [10-Minute Agent Context Quickstart](/serve-agent-quickstart).
 
 ## Prerequisites
 
@@ -127,6 +132,7 @@ In another terminal:
 ```sh
 curl -s http://127.0.0.1:8765/health
 curl -s http://127.0.0.1:8765/manifest
+curl -s http://127.0.0.1:8765/source-refs
 curl -s http://127.0.0.1:8765/source-bundle
 ```
 
@@ -135,6 +141,8 @@ Expected signals:
 - `/health` returns `status: "ok"` plus service/version, source identity,
   capabilities, endpoint paths, and CORS discovery metadata.
 - `/manifest` returns title, adapter, page counts, capabilities, `source_id`, and a redacted network `root`.
+- `/source-refs` returns visible typed source-reference handles linked to
+  served pages.
 - `/source-bundle` returns `source_id`, `bundle_id`, projection metadata, and source refs when pages declare them.
 
 If `manifest` shows the wrong title or page count, restart the server at the
@@ -204,21 +212,29 @@ handoff.
 Run it against a known wiki folder:
 
 ```sh
-npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --path /path/to/your/wiki
+npx llmwiki-bridge-start@latest --path /path/to/your/wiki
 ```
 
 Or let it scan your workspace for candidate wiki folders:
 
 ```sh
-npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --workspace
+npx llmwiki-bridge-start@latest --workspace
 ```
 
-Minimum success is a healthy loopback `llmwiki-serve` source endpoint. If you
-skip the bridge, use the printed source URL or MCP Streamable HTTP URL directly
-with a coding agent or script. Add `llmwiki-agent-bridge` only when one local
-endpoint should gather evidence from selected Knowledge Sources, fan out across
-multiple sources, or call a runtime for a normalized artifact. Start with
-evidence-only mode; it proves source fan-out without calling a model runtime.
+The current `@latest` release resolves to `llmwiki-bridge-start@0.0.2` at this
+baseline; pin `0.0.2` only when you need reproducible release checks. Minimum
+success is a healthy loopback `llmwiki-serve` source endpoint. If you skip the
+bridge, use the printed source URL or MCP Streamable HTTP handoff URL
+(`<source>/mcp/stream`) directly with a coding agent or script. Add
+`llmwiki-agent-bridge` only when one local endpoint should gather evidence from
+selected Knowledge Sources, fan out across multiple sources, or call a runtime
+for a normalized artifact. Start with evidence-only mode; it proves source
+fan-out without calling a model runtime.
+
+When bridge-start offers to configure Hermes or DeepAgents during interactive
+setup, runtime installation is an approval gate. It downloads and runs a
+documented installer only after explicit approval; `--yes` automation does not
+run runtime installers unless `--install-runtime` is also supplied.
 
 Manual source-checkout bridge start:
 
@@ -471,6 +487,7 @@ the public quickstart defaults shown above.
 | Goal | Page |
 | --- | --- |
 | See representative JSON output and copyable transcripts | [Examples](/examples) |
+| Exercise source-only agent context | [10-Minute Agent Context Quickstart](/serve-agent-quickstart) |
 | Understand raw sources to compiler output to served projection | [Data Flow](/data-flow) |
 | Check exact command behavior and failures | [CLI Reference](/cli-reference) |
 | Understand source folder shape | [Knowledge Source Format](/knowledge-source-format) |

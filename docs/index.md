@@ -7,8 +7,8 @@ hero:
   tagline: Run llmwiki-serve beside an existing LLMWiki, Markdown, or Obsidian folder. Agents retrieve project context over HTTP and MCP. Bridge and chat stay optional.
   actions:
     - theme: brand
-      text: Serve a folder in 10 minutes
-      link: /quickstart
+      text: Serve agent context
+      link: /serve-agent-quickstart
     - theme: alt
       text: Use with coding agents
       link: /direct-agent-integrations
@@ -57,7 +57,7 @@ import { withBase } from 'vitepress'
 </section>
 
 <div class="intro-feature-grid">
-  <a href="./quickstart">
+  <a href="./serve-agent-quickstart">
     <strong>Use the folder you already have</strong>
     <span>Keep project knowledge in its current LLMWiki, Markdown, or Obsidian folder. Serve it read-only instead of migrating it into a hosted RAG app.</span>
   </a>
@@ -102,7 +102,7 @@ import { withBase } from 'vitepress'
 <div class="preview-panel">
   <div>
     <strong>Minimum useful path</strong>
-    <span>Run <code>llmwiki-serve</code> on your own wiki folder or <code>./examples/sample-wiki</code>, then query <code>/query</code>. Stop there if direct retrieval is enough.</span>
+    <span>Start with <code>./examples/sample-wiki</code>, run <code>manifest</code>, <code>query</code>, <code>source-refs</code>, and <code>source-bundle</code>, then serve <code>127.0.0.1:8765</code>. Stop there if direct retrieval is enough.</span>
   </div>
   <div>
     <strong>Public-preview install</strong>
@@ -117,15 +117,15 @@ import { withBase } from 'vitepress'
 ## First Run At A Glance
 
 <div class="quickstart-track">
-  <a class="quickstart-step" href="./quickstart#start-llmwiki-serve">
+  <a class="quickstart-step" href="./serve-agent-quickstart">
     <span>Step 1</span>
     <strong>Start your source</strong>
-    <p>Serve an existing wiki folder, or use <code>./examples/sample-wiki</code> for a known-good smoke.</p>
+    <p>Use <code>./examples/sample-wiki</code> first, then point the same commands at an existing wiki folder.</p>
   </a>
   <a class="quickstart-step" href="./quickstart#query-it-directly">
     <span>Step 2</span>
     <strong>Verify served view</strong>
-    <p>Call <code>/health</code>, <code>/manifest</code>, and <code>/query</code>. Stop here if direct retrieval is enough.</p>
+    <p>Call <code>/health</code>, <code>/manifest</code>, <code>/source-refs</code>, <code>/source-bundle</code>, and <code>/query</code>. Stop here if direct retrieval is enough.</p>
   </a>
   <a class="quickstart-step" href="./quickstart#optional-agent-bridge">
     <span>Optional</span>
@@ -213,6 +213,11 @@ flowchart LR
     <strong>Serve and query a wiki</strong>
     <p>Use your existing graph, or start with the bundled sample for the fastest known-good smoke.</p>
   </a>
+  <a class="route-card" href="./serve-agent-quickstart">
+    <span>Source-only agent context</span>
+    <strong>Run the CLI and loopback server</strong>
+    <p>Exercise <code>manifest</code>, <code>query</code>, <code>source-refs</code>, <code>source-bundle</code>, HTTP, and MCP Streamable HTTP before adding bridge or chat.</p>
+  </a>
   <a class="route-card" href="./direct-agent-integrations">
     <span>Codex, Claude Code, IDE agents</span>
     <strong>Call the source directly</strong>
@@ -234,7 +239,7 @@ flowchart LR
 
 | Goal | Page |
 | --- | --- |
-| Run the first local path | [Quickstart](/quickstart) |
+| Run the first local path | [Quickstart](/quickstart) and [10-Minute Agent Context](/serve-agent-quickstart) |
 | Understand the data flow | [Demo](/demo) and [Data Flow](/data-flow) |
 | Understand the vocabulary | [Core Concepts](/core-concepts) |
 | Decide direct source vs bridge vs chat | [Architecture](/architecture) and [Runtime Adapters](/runtime-adapters) |

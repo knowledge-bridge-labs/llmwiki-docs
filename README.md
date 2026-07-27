@@ -22,6 +22,7 @@ implementation details in the owning repo README or docs directory.
 - [Overview](docs/index.md)
 - [Demo](docs/demo.md)
 - [Quickstart](docs/quickstart.md)
+- [10-Minute Agent Context Quickstart](docs/serve-agent-quickstart.md)
 - [Data Flow](docs/data-flow.md)
 - [Architecture](docs/architecture.md)
 - [Runtime Adapters](docs/runtime-adapters.md)
@@ -34,19 +35,24 @@ installs are also available for `llmwiki-serve==0.2.2`,
 `llmwiki-bridge-start@0.0.2`, `llmwiki-agent-bridge@0.2.1`, and
 `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
-The initial `0.0.1` bridge-start release was manually published;
+The initial bridge-start release was manually published;
 `llmwiki-bridge-start@0.0.2` is the current Trusted Publisher/OIDC-verified
 first-run baseline.
 
 Shortest local path:
 
-1. Run `llmwiki-serve` from a source checkout or the published package against
-   your existing wiki folder. Use the bundled `./examples/sample-wiki` source
-   from a checkout when you want a known-good fixture.
-2. Query `http://127.0.0.1:8765/query`.
-3. Use `llmwiki-bridge-start` when you want a guided first-run path for
+1. Start with the bundled `./examples/sample-wiki` source from a
+   `llmwiki-serve` checkout when you want a known-good fixture.
+2. Run `llmwiki-serve manifest`, `query`, `source-refs`, and `source-bundle`
+   before starting the loopback server.
+3. Serve the same folder on `http://127.0.0.1:8765`, then verify `/health`,
+   `/manifest`, `/source-refs`, `/source-bundle`, and `/query`.
+4. Register `http://127.0.0.1:8765/mcp/stream` directly with clients that
+   support MCP Streamable HTTP, without treating it as a protocol certification
+   claim.
+5. Use `llmwiki-bridge-start` when you want a guided first-run path for
    discovery, source startup, bridge registration, and smoke checks.
-4. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
+6. Add `llmwiki-agent-bridge` and `llmwiki-chat` only when you need a companion
    bridge endpoint or browser workbench; source checkouts and the published npm
    packages are both supported.
 
@@ -100,7 +106,7 @@ public-preview docs entrypoint.
 
 | Area | Pages |
 | --- | --- |
-| Start | `docs/index.md`, `docs/demo.md`, `docs/quickstart.md`, `docs/examples.md` |
+| Start | `docs/index.md`, `docs/demo.md`, `docs/quickstart.md`, `docs/serve-agent-quickstart.md`, `docs/examples.md` |
 | Understand | `docs/core-concepts.md`, `docs/data-flow.md`, `docs/architecture.md`, `docs/positioning.md` |
 | Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |
