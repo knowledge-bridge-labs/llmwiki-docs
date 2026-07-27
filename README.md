@@ -31,12 +31,12 @@ implementation details in the owning repo README or docs directory.
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
 installs are also available for `llmwiki-serve==0.2.2`,
-`llmwiki-bridge-start@0.0.1`, `llmwiki-agent-bridge@0.2.1`, and
-`llmwiki-chat@0.1.4`; see
+`llmwiki-bridge-start@0.0.2`, `llmwiki-agent-bridge@0.2.1`, and
+`llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
-`llmwiki-bridge-start@0.0.1` was the manually published first release; the
-next real package version is the one that should validate Trusted
-Publisher/OIDC publishing.
+The initial `0.0.1` bridge-start release was manually published;
+`llmwiki-bridge-start@0.0.2` is the current Trusted Publisher/OIDC-verified
+first-run baseline.
 
 Shortest local path:
 

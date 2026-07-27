@@ -4,12 +4,12 @@ Use this runbook when a maintainer is preparing a future package release or
 verifying the current public-preview package baseline. The current public
 package baseline is published:
 
-| Package | Published baseline | Registry |
-| --- | --- | --- |
-| `llmwiki-serve` | `0.2.2` | PyPI |
-| `llmwiki-bridge-start` | `0.0.1` | npm |
-| `llmwiki-agent-bridge` | `0.2.1` | npm |
-| `llmwiki-chat` | `0.1.4` | npm |
+| Package | Published baseline | Registry | Publication evidence |
+| --- | --- | --- | --- |
+| `llmwiki-serve` | `0.2.2` | PyPI | Public registry version check |
+| `llmwiki-bridge-start` | `0.0.2` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 |
+| `llmwiki-agent-bridge` | `0.2.1` | npm | Public registry version check |
+| `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 |
 
 Source checkouts remain supported for development, bundled fixtures, and
 release verification. Public-unpublished gates that expected PyPI `404` or npm
@@ -58,16 +58,17 @@ try {
 ```
 
 These checks should report `llmwiki-serve` `0.2.2`,
-`llmwiki-bridge-start` `0.0.1`, `llmwiki-agent-bridge` `0.2.1`, and
-`llmwiki-chat` `0.1.4`. A PyPI HTTP `404` or npm `E404` is no longer a
+`llmwiki-bridge-start` `0.0.2`, `llmwiki-agent-bridge` `0.2.1`, and
+`llmwiki-chat` `0.1.6`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
 unavailable from that registry view or the query failed.
 
-`llmwiki-bridge-start@0.0.1` was manually first-published. Treat it as the
-current first-run package baseline, but do not cite it as Trusted
-Publisher/OIDC validation evidence. The next real `llmwiki-bridge-start`
-version should verify npm Trusted Publishing through GitHub Actions OIDC before
-the release is marked complete.
+The initial `0.0.1` bridge-start release was manually first-published and
+remains historical first-publish evidence only. `llmwiki-bridge-start@0.0.2` is the
+current first-run package baseline and was verified through npm Trusted
+Publisher/OIDC via GitHub Actions workflow_dispatch on 2026-07-27.
+`llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
+on 2026-07-27.
 
 Before publishing a future version, also verify that the target GitHub
 organization, repository URLs, Pages URL, and current package baseline resolve
@@ -188,9 +189,9 @@ Before publishing a future version:
   `local-model`, and `runtimeProfile=generic|hermes|deepagents`.
 - Confirm no private endpoints, concrete private model names, local vault
   content, generated logs, credentials, or OTP material are included.
-- Configure and verify npm Trusted Publishing/OIDC for the next real version.
-  The manually published `0.0.1` baseline is not Trusted Publisher/OIDC
-  validation evidence.
+- Keep npm Trusted Publisher/OIDC configured. The `0.0.2` baseline verified
+  this path via workflow_dispatch on 2026-07-27; the manually published initial
+  `0.0.1` release remains historical first-publish evidence only.
 
 After publishing a future version, verify from a clean directory:
 
@@ -213,8 +214,8 @@ Before publishing:
 - Confirm the npm tarball contains `bin/`, `src/`, `docs/`, `integrations/`, and
   public release metadata only.
 - Confirm `CHANGELOG.md` no longer marks the published version as pending.
-- Prefer npm provenance or trusted publishing once the organization and
-  repository ownership are stable.
+- Keep npm Trusted Publisher/OIDC configured. The `0.1.6` baseline verified
+  this path via workflow_dispatch on 2026-07-27.
 - Keep npm tokens out of commits, logs, shell history, and CI variables unless a
   maintainer has explicitly approved that fallback.
 

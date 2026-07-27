@@ -7,8 +7,8 @@ page when you need exact command shapes, expected output, and failure behavior.
 Source checkout usage remains supported for local development, bundled
 fixtures, and release verification. Published package commands are also
 available for package-manager installs and install-smoke verification:
-`llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.1`,
-`llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.4`.
+`llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
+`llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`.
 
 ## Setup Context
 
@@ -27,9 +27,9 @@ Use these runtime baselines:
 | Component | Source checkout setup | Package status |
 | --- | --- | --- |
 | `llmwiki-serve` | `uv sync --extra dev` from `llmwiki-serve` | PyPI published as `llmwiki-serve==0.2.2`; package commands are available. |
-| `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.1`; use it as the first-run entrypoint for discovery, source startup, optional bridge registration, and smoke checks. |
+| `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.2`; use it as the first-run entrypoint for discovery, source startup, optional bridge registration, and smoke checks. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` | npm published as `llmwiki-agent-bridge@0.2.1`; source checkout remains supported for local development. |
-| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.4`; source checkout remains supported for local development. |
+| `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.6`; source checkout remains supported for local development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
 Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. The
@@ -48,7 +48,7 @@ shapes.
 | `uv run llmwiki-serve manifest <wiki-path>` | `llmwiki-serve` checkout | Print a local manifest for a compatible Markdown/wiki folder. |
 | `uv run llmwiki-serve query <wiki-path> <text>` | `llmwiki-serve` checkout | Build one context pack for an agent or smoke test. |
 | `uv run llmwiki-serve serve <wiki-path>` | `llmwiki-serve` checkout | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
-| `npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
+| `npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
 | `npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge` | Any local workspace | Start the optional runtime companion bridge from the published package. |
 | `node ./bin/llmwiki-agent-bridge.mjs` | `llmwiki-agent-bridge` checkout | Start the optional runtime companion bridge from a source checkout. |
 | `npm run dev` | `llmwiki-chat` checkout | Start the browser workbench through Vite. |
@@ -269,13 +269,13 @@ replacement for `llmwiki-agent-bridge`.
 Run against a known folder:
 
 ```sh
-npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --path /path/to/your/wiki
+npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --path /path/to/your/wiki
 ```
 
 Scan the user's workspace:
 
 ```sh
-npm exec --package llmwiki-bridge-start@0.0.1 -- llmwiki-bridge-start --workspace
+npm exec --package llmwiki-bridge-start@0.0.2 -- llmwiki-bridge-start --workspace
 ```
 
 Useful scriptable commands:
