@@ -14,20 +14,21 @@ transcript. The canonical shortest path remains:
 | --- | --- | --- |
 | `/path/to/your/wiki` | You already have a Markdown, Obsidian, or LLMWiki-style graph. | Detected from the folder layout. |
 | `/path/to/repo` with `openwiki/quickstart.md` | You want to serve OpenWiki-generated repository docs from a repo root or `openwiki/` folder. | `llmwiki-markdown` |
-| `./examples/sample-wiki` | You want the stable public first-run sample. | `llmwiki-markdown` |
+| `./examples/sample-wiki` | You want the bundled repository sample. | `llmwiki-markdown` |
 | `./tests/fixtures/obsidian-vault` | You want to smoke an Obsidian-shaped fixture. | `obsidian` |
 | `./tests/fixtures/llmwiki-compiler-output` | You want to smoke compiler-style topic wiki output. | `llmwiki-markdown` |
 
-The bundled paths are relative to the `llmwiki-serve` checkout. They are useful
-for preview validation; your own graph uses the same commands with the path
-replaced.
+The bundled paths are optional source-checkout fixtures relative to the
+`llmwiki-serve` checkout. They are useful for preview validation; the public
+first-run path uses the installed PyPI package and your own graph or the tiny
+local sample from [10-Minute Agent Context Quickstart](/serve-agent-quickstart).
 
 ## Sample Wiki Commands
 
-The stable sample contains approved pages, wikilinks, source references, and
+The bundled sample contains approved pages, wikilinks, source references, and
 one draft page that is withheld unless draft serving is explicitly enabled.
 
-Run it from a `llmwiki-serve` checkout:
+Run it only when you are using a `llmwiki-serve` source checkout:
 
 ```sh
 uv run llmwiki-serve manifest ./examples/sample-wiki
@@ -35,15 +36,15 @@ uv run llmwiki-serve query ./examples/sample-wiki "release readiness" --limit 4
 uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
 ```
 
-To use an existing graph, replace `./examples/sample-wiki` with the folder that
-contains your wiki.
+To use an existing graph from the PyPI package, use `llmwiki-serve` directly
+and replace `./examples/sample-wiki` with the folder that contains your wiki.
 
 ## Source And Bridge Transcript
 
-The transcript below assumes sibling source checkouts under one workspace. The
-commands are copy/paste friendly for the sample graph; the JSON blocks are
-representative, trimmed expected output. Field order, generated IDs, scores,
-and exact answer text can vary by release and runtime.
+The transcript below is a source-checkout sample transcript under one
+workspace. The JSON blocks are representative, trimmed expected output. Field
+order, generated IDs, scores, and exact answer text can vary by release and
+runtime.
 
 Start the read-only Knowledge Source:
 

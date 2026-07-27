@@ -4,22 +4,19 @@ This page is the operator reference for the public-preview command surfaces.
 Use [Quickstart](/quickstart) for the shortest successful path, then use this
 page when you need exact command shapes, expected output, and failure behavior.
 
-Source checkout usage remains supported for local development, bundled
-fixtures, and release verification. Published package commands are also
-available for package-manager installs and install-smoke verification:
+Published package commands are the public first-run path:
 `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
-`llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`.
+`llmwiki-agent-bridge@0.2.1`, and `llmwiki-chat@0.1.6`. Source checkout usage
+remains supported for local development, bundled fixtures, and release
+verification.
 
 ## Setup Context
 
-Most local smoke tests assume one workspace with sibling checkouts:
+Package-installed examples can run from any local shell:
 
-```text
-workspace/
-  llmwiki-serve/
-  llmwiki-agent-bridge/
-  llmwiki-chat/
-  llmwiki-docs/
+```sh
+uv tool install llmwiki-serve
+llmwiki-serve manifest /path/to/your/wiki
 ```
 
 Use these runtime baselines:
@@ -32,24 +29,25 @@ Use these runtime baselines:
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` | npm published as `llmwiki-chat@0.1.6`; source checkout remains supported for local development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
-Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. The
-matching install-smoke commands for published packages should also pass from a
-clean temporary directory.
+Source checkout examples use `uv run`, `node ./bin/...`, and `npm run`. Treat
+those as development equivalents, not the public default. Package install-smoke
+commands should also pass from a clean temporary directory.
 
-Most examples use `./examples/sample-wiki`. Replace that path with your own
-Markdown, Obsidian, or LLMWiki-style graph after the sample source smoke passes.
-The additional bundled fixture paths from the quickstart use the same command
-shapes.
+Most examples below use `/path/to/your/wiki`. Replace it with an existing
+Markdown, Obsidian, or LLMWiki-style graph, or create the tiny local sample from
+[10-Minute Agent Context Quickstart](/serve-agent-quickstart). Optional bundled
+fixtures such as `./examples/sample-wiki` require a `llmwiki-serve` source
+checkout and use the same command shapes.
 
 ## Command Map
 
 | Command | Run from | Purpose |
 | --- | --- | --- |
-| `uv run llmwiki-serve manifest <wiki-path>` | `llmwiki-serve` checkout | Print a local manifest for a compatible Markdown/wiki folder. |
-| `uv run llmwiki-serve query <wiki-path> <text>` | `llmwiki-serve` checkout | Build one context pack for an agent or smoke test. |
-| `uv run llmwiki-serve source-refs <wiki-path>` | `llmwiki-serve` checkout | Print visible source-reference handles for cited source metadata. |
-| `uv run llmwiki-serve source-bundle <wiki-path>` | `llmwiki-serve` checkout | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
-| `uv run llmwiki-serve serve <wiki-path>` | `llmwiki-serve` checkout | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
+| `llmwiki-serve manifest <wiki-path>` | Any shell with the PyPI package installed | Print a local manifest for a compatible Markdown/wiki folder. |
+| `llmwiki-serve query <wiki-path> <text>` | Any shell with the PyPI package installed | Build one context pack for an agent or smoke test. |
+| `llmwiki-serve source-refs <wiki-path>` | Any shell with the PyPI package installed | Print visible source-reference handles for cited source metadata. |
+| `llmwiki-serve source-bundle <wiki-path>` | Any shell with the PyPI package installed | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
+| `llmwiki-serve serve <wiki-path>` | Any shell with the PyPI package installed | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
 | `npx llmwiki-bridge-start@latest --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
 | `npm exec --package llmwiki-agent-bridge@0.2.1 -- llmwiki-agent-bridge` | Any local workspace | Start the optional runtime companion bridge from the published package. |
 | `node ./bin/llmwiki-agent-bridge.mjs` | `llmwiki-agent-bridge` checkout | Start the optional runtime companion bridge from a source checkout. |
@@ -62,21 +60,21 @@ Use `manifest` to confirm that a folder is a supported Knowledge Source before
 starting a server or wiring an agent tool.
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve manifest ./examples/sample-wiki
+llmwiki-serve manifest /path/to/your/wiki
 ```
 
-Expected output is JSON with source metadata:
+Expected output is JSON with source metadata. This example uses the tiny local
+sample from the 10-minute quickstart:
 
 ```json
 {
-  "title": "Sample Packaging LLMWiki",
-  "description": "Synthetic packaging operations knowledge base.",
-  "root": "C:/absolute/path/to/llmwiki-serve/examples/sample-wiki",
+  "title": "Quickstart Agent Wiki",
+  "description": "Tiny local sample for llmwiki-serve package install.",
+  "root": "C:/absolute/path/to/llmwiki-quickstart-wiki",
   "adapter": "llmwiki-markdown",
   "implementation": "llmwiki-markdown",
-  "page_count": 5,
-  "approved_page_count": 4,
+  "page_count": 3,
+  "approved_page_count": 2,
   "capabilities": [
     "llmwiki_context",
     "llmwiki_search",
@@ -112,8 +110,7 @@ Use `query` when an agent, script, or release smoke needs context but not a
 long-running HTTP server.
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve query ./examples/sample-wiki "release readiness" --limit 4
+llmwiki-serve query /path/to/your/wiki "release readiness" --limit 4
 ```
 
 Command shape:
@@ -129,14 +126,14 @@ pages match the query.
 ```json
 {
   "query": "release readiness",
-  "wiki_title": "Sample Packaging LLMWiki",
+  "wiki_title": "Quickstart Agent Wiki",
   "answerable": true,
   "orientation": [],
   "evidence": [
     {
-      "page_id": "release-readiness",
-      "title": "Release Readiness",
-      "path": "release-readiness.md"
+      "page_id": "hot",
+      "title": "Current Agent Focus",
+      "path": "hot.md"
     }
   ],
   "limitations": [
@@ -178,8 +175,7 @@ Use `source-refs` when a client needs source-owned handles for cited metadata
 without the full source-bundle envelope.
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve source-refs ./examples/sample-wiki
+llmwiki-serve source-refs /path/to/your/wiki
 ```
 
 Expected output is JSON with `source_id` and visible `refs`. Each ref has a
@@ -196,8 +192,7 @@ Use `source-bundle` when an agent, bridge, or smoke test needs source identity
 and citation metadata before deciding whether to query or inspect pages.
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve source-bundle ./examples/sample-wiki
+llmwiki-serve source-bundle /path/to/your/wiki
 ```
 
 Expected output includes:
@@ -218,8 +213,7 @@ Use `serve` when a browser workbench, IDE agent, MCP-style client, or bridge
 needs a stable local Knowledge Source endpoint.
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
+llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
 Command shape:

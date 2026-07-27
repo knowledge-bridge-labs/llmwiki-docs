@@ -28,7 +28,7 @@ port. Then confirm the browser origin is allowed by the `serve` subcommand's
 explicit CORS origins are set:
 
 ```sh
-uv run llmwiki-serve serve /path/to/wiki --cors-origin http://127.0.0.1:5173
+llmwiki-serve serve /path/to/wiki --cors-origin http://127.0.0.1:5173
 ```
 
 If chat shows a diagnostic report, read `scope`, `phase`, `protocol`, and
@@ -63,8 +63,7 @@ from default network responses.
 For source layout issues, run the local CLI query against the same root:
 
 ```sh
-cd /path/to/llmwiki-serve
-uv run llmwiki-serve query /path/to/wiki "what is in this wiki?"
+llmwiki-serve query /path/to/wiki "what is in this wiki?"
 ```
 
 ## Recent Generated Output Is Not Visible

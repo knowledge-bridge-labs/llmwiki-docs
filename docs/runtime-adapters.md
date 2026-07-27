@@ -110,8 +110,7 @@ without operating a real model runtime or bridge.
 Run:
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
+llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
 ```sh

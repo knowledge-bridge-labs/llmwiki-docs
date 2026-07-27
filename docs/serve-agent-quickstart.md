@@ -2,98 +2,213 @@
 
 Use this path when you want a local coding agent, IDE agent, script, or
 workbench to read an existing Markdown, Obsidian-style, or LLMWiki folder as
-cited context. Start with the bundled `examples/sample-wiki` fixture before
-pointing the same commands at private notes or project docs.
+cited context. The default path uses the published PyPI package and a folder
+you already own. If you do not have a wiki yet, create the tiny local sample
+below and delete it after the smoke test.
 
 `llmwiki-serve` is the read-only source layer. It projects files you already
 own into cited context, source refs, and graph hints. It does not compile,
 ingest, author, crawl, embed, call a model, synthesize final answers, or claim
 certified MCP/A2A conformance.
 
-## 1. Start From The Sample
+## 1. Install The Published CLI
 
-Clone the source server and install its local development environment:
+Install the current public-preview CLI from PyPI:
 
 ```sh
-git clone https://github.com/knowledge-bridge-labs/llmwiki-serve.git
-cd llmwiki-serve
-uv sync --extra dev
+uv tool install llmwiki-serve
 ```
 
-Pick the synthetic public sample wiki:
+Alternatives:
+
+```sh
+pipx install llmwiki-serve
+# or install inside an activated virtual environment
+python -m pip install llmwiki-serve
+```
+
+Pin `llmwiki-serve==0.2.2` when you need to reproduce the current
+public-preview baseline exactly.
+
+Confirm the command is available:
+
+```sh
+llmwiki-serve --help
+```
+
+## 2. Choose Or Create A Wiki Folder
+
+If you already have a Markdown, Obsidian-style, or LLMWiki folder, point the
+commands at it:
 
 ```powershell
-$WikiRoot = ".\examples\sample-wiki"
+$WikiRoot = "C:\path\to\your\wiki"
 ```
 
 ```sh
-WIKI_ROOT=./examples/sample-wiki
+WIKI_ROOT=/path/to/your/wiki
 ```
 
-For your own folder later, replace the sample path with a local Markdown,
-Obsidian-style, or LLMWiki folder. Keep the server on `127.0.0.1` while you are
-validating first-run behavior.
+For a clone-free smoke test, create a tiny local wiki:
 
-## 2. Inspect The Source
+```powershell
+$WikiRoot = Join-Path (Get-Location) "llmwiki-quickstart-wiki"
+New-Item -ItemType Directory -Force $WikiRoot | Out-Null
+
+@'
+---
+wiki_title: Quickstart Agent Wiki
+description: Tiny local sample for llmwiki-serve package install.
+review_state: approved
+source_refs:
+  - SRC-INDEX
+---
+
+# Quickstart Agent Wiki
+
+This wiki tracks release readiness for an agent context smoke. Start with
+[[hot]] before packaging handoff.
+'@ | Set-Content -NoNewline -Encoding ascii (Join-Path $WikiRoot "index.md")
+
+@'
+---
+title: Current Agent Focus
+review_state: approved
+source_refs:
+  - SRC-HOT
+---
+
+# Current Agent Focus
+
+The current focus is release readiness, required copy, approved evidence, and
+handoff status before packaging release.
+'@ | Set-Content -NoNewline -Encoding ascii (Join-Path $WikiRoot "hot.md")
+
+@'
+---
+title: Draft Note
+review_state: draft
+draft: true
+source_refs:
+  - SRC-DRAFT
+---
+
+# Draft Note
+
+This page should be withheld unless draft serving is explicitly enabled.
+'@ | Set-Content -NoNewline -Encoding ascii (Join-Path $WikiRoot "draft-note.md")
+```
+
+```sh
+WIKI_ROOT="$PWD/llmwiki-quickstart-wiki"
+mkdir -p "$WIKI_ROOT"
+
+cat > "$WIKI_ROOT/index.md" <<'EOF'
+---
+wiki_title: Quickstart Agent Wiki
+description: Tiny local sample for llmwiki-serve package install.
+review_state: approved
+source_refs:
+  - SRC-INDEX
+---
+
+# Quickstart Agent Wiki
+
+This wiki tracks release readiness for an agent context smoke. Start with
+[[hot]] before packaging handoff.
+EOF
+
+cat > "$WIKI_ROOT/hot.md" <<'EOF'
+---
+title: Current Agent Focus
+review_state: approved
+source_refs:
+  - SRC-HOT
+---
+
+# Current Agent Focus
+
+The current focus is release readiness, required copy, approved evidence, and
+handoff status before packaging release.
+EOF
+
+cat > "$WIKI_ROOT/draft-note.md" <<'EOF'
+---
+title: Draft Note
+review_state: draft
+draft: true
+source_refs:
+  - SRC-DRAFT
+---
+
+# Draft Note
+
+This page should be withheld unless draft serving is explicitly enabled.
+EOF
+```
+
+Keep the server on `127.0.0.1` while you are validating first-run behavior.
+
+## 3. Inspect The Source
 
 Run `manifest` first to confirm what will be served:
 
 ```powershell
-uv run llmwiki-serve manifest $WikiRoot
+llmwiki-serve manifest $WikiRoot
 ```
 
 ```sh
-uv run llmwiki-serve manifest "$WIKI_ROOT"
+llmwiki-serve manifest "$WIKI_ROOT"
 ```
 
-Expected sample signals:
+Expected tiny-sample signals:
 
-- `title`: `Sample Packaging LLMWiki`
-- `source_id`: `sample-packaging-llmwiki`
-- `page_count`: `5`
-- `approved_page_count`: `4`
+- `title`: `Quickstart Agent Wiki`
+- `source_id`: `quickstart-agent-wiki`
+- `page_count`: `3`
+- `approved_page_count`: `2`
 - `capabilities` includes `llmwiki_context`, `llmwiki_source_bundle`, and
   `mcp-streamable-http`
 
 The CLI manifest includes the resolved local root for operator verification.
 Network `GET /manifest` responses redact the root.
 
-## 3. Build A Cited Context Pack
+## 4. Build A Cited Context Pack
 
 Ask one concrete question against the same folder:
 
 ```powershell
-uv run llmwiki-serve query $WikiRoot "required copy release readiness" --limit 4
+llmwiki-serve query $WikiRoot "release readiness required copy" --limit 4
 ```
 
 ```sh
-uv run llmwiki-serve query "$WIKI_ROOT" "required copy release readiness" --limit 4
+llmwiki-serve query "$WIKI_ROOT" "release readiness required copy" --limit 4
 ```
 
-In the sample response, check:
+In the tiny-sample response, check:
 
 - `answerable` is `true`
-- `evidence[].path` includes approved pages
+- `evidence[].path` includes approved pages such as `hot.md`
 - `evidence[].source_refs` includes labels such as `SRC-HOT`
 - `limitations` says one draft or unapproved page was withheld
-- `graph.nodes` includes source-ref or page nodes when graph context is present
+- `graph.nodes` includes page or source-ref nodes when graph context is present
 
 Treat this output as source evidence for the host agent. It is not a generated
 final answer.
 
-## 4. Inspect Source References
+## 5. Inspect Source References
 
 Use `source-refs` and `source-bundle` when a client needs stable source-owned
 identity and citation metadata:
 
 ```powershell
-uv run llmwiki-serve source-refs $WikiRoot
-uv run llmwiki-serve source-bundle $WikiRoot
+llmwiki-serve source-refs $WikiRoot
+llmwiki-serve source-bundle $WikiRoot
 ```
 
 ```sh
-uv run llmwiki-serve source-refs "$WIKI_ROOT"
-uv run llmwiki-serve source-bundle "$WIKI_ROOT"
+llmwiki-serve source-refs "$WIKI_ROOT"
+llmwiki-serve source-bundle "$WIKI_ROOT"
 ```
 
 `source-refs` maps labels such as `SRC-HOT` to `llmwiki://` URIs and linked
@@ -102,17 +217,17 @@ capabilities, raw-origin metadata, and visible source refs in one response.
 Handles are opaque; pass them back to the source endpoint instead of deriving
 file paths from them.
 
-## 5. Start The Loopback Server
+## 6. Start The Loopback Server
 
 Run the HTTP, MCP-style JSON-RPC, and MCP Streamable HTTP source server on
 loopback:
 
 ```powershell
-uv run llmwiki-serve serve $WikiRoot --host 127.0.0.1 --port 8765
+llmwiki-serve serve $WikiRoot --host 127.0.0.1 --port 8765
 ```
 
 ```sh
-uv run llmwiki-serve serve "$WIKI_ROOT" --host 127.0.0.1 --port 8765
+llmwiki-serve serve "$WIKI_ROOT" --host 127.0.0.1 --port 8765
 ```
 
 Leave that terminal running. By default, `serve` writes redacted local I/O
@@ -120,7 +235,7 @@ debugging events to `.runtime-logs/llmwiki-serve-io.jsonl`. Use `--io-log off`
 or `LLMWIKI_SERVE_IO_LOG=off` when you do not want local request/response
 debug logs.
 
-## 6. Verify HTTP Readiness
+## 7. Verify HTTP Readiness
 
 PowerShell:
 
@@ -132,7 +247,7 @@ Invoke-RestMethod "$Base/manifest"
 Invoke-RestMethod "$Base/source-bundle"
 Invoke-RestMethod "$Base/source-refs"
 
-$Body = @{ query = "required copy release readiness"; limit = 4 } |
+$Body = @{ query = "release readiness required copy"; limit = 4 } |
   ConvertTo-Json -Compress
 Invoke-RestMethod "$Base/query" -Method Post -ContentType "application/json" -Body $Body
 ```
@@ -148,7 +263,7 @@ curl -s "$BASE/source-bundle"
 curl -s "$BASE/source-refs"
 curl -s "$BASE/query" \
   -H 'content-type: application/json' \
-  -d '{"query":"required copy release readiness","limit":4}'
+  -d '{"query":"release readiness required copy","limit":4}'
 ```
 
 You have a working source server when `/health` reports `status: ok`,
@@ -156,7 +271,7 @@ You have a working source server when `/health` reports `status: ok`,
 returns visible refs, and `/query` returns evidence with page paths and source
 ref labels.
 
-## 7. Connect An Agent Or Client
+## 8. Connect An Agent Or Client
 
 For direct HTTP use, set the local base URL:
 
@@ -183,7 +298,7 @@ For an MCP Streamable HTTP client, configure the source URL when the client
 supports that transport:
 
 ```text
-Name: sample-packaging-llmwiki
+Name: quickstart-agent-wiki
 Transport: Streamable HTTP
 URL: http://127.0.0.1:8765/mcp/stream
 First tool: llmwiki_context
@@ -198,3 +313,10 @@ runtime.
 Stop here if the agent can retrieve evidence and synthesize its own answer.
 Add `llmwiki-agent-bridge` only when one local endpoint should fan out across
 multiple sources or call a configured runtime for a normalized cited artifact.
+
+## Optional: Source Checkout
+
+Use a source checkout only when you want bundled repository fixtures such as
+`examples/sample-wiki`, development scripts, or contribution workflow checks.
+Package-installed users should point `llmwiki-serve` at an existing Markdown
+folder or the tiny local sample above.

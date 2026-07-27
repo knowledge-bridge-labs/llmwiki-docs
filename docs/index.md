@@ -102,11 +102,11 @@ import { withBase } from 'vitepress'
 <div class="preview-panel">
   <div>
     <strong>Minimum useful path</strong>
-    <span>Start with <code>./examples/sample-wiki</code>, run <code>manifest</code>, <code>query</code>, <code>source-refs</code>, and <code>source-bundle</code>, then serve <code>127.0.0.1:8765</code>. Stop there if direct retrieval is enough.</span>
+    <span>Install <code>llmwiki-serve</code> from PyPI, point it at an existing folder or the clone-free quickstart sample, run <code>manifest</code>, <code>query</code>, <code>source-refs</code>, and <code>source-bundle</code>, then serve <code>127.0.0.1:8765</code>. Stop there if direct retrieval is enough.</span>
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use source checkouts or the published packages: <code>llmwiki-serve==0.2.2</code>, <code>llmwiki-bridge-start@0.0.2</code>, <code>llmwiki-agent-bridge@0.2.1</code>, and <code>llmwiki-chat@0.1.6</code>.</span>
+    <span>Use the published packages first: <code>llmwiki-serve==0.2.2</code>, <code>llmwiki-bridge-start@0.0.2</code>, <code>llmwiki-agent-bridge@0.2.1</code>, and <code>llmwiki-chat@0.1.6</code>. Source checkouts are for bundled fixtures and development.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>
@@ -120,7 +120,7 @@ import { withBase } from 'vitepress'
   <a class="quickstart-step" href="./serve-agent-quickstart">
     <span>Step 1</span>
     <strong>Start your source</strong>
-    <p>Use <code>./examples/sample-wiki</code> first, then point the same commands at an existing wiki folder.</p>
+    <p>Install the PyPI package, then point <code>llmwiki-serve</code> at an existing wiki folder or the clone-free quickstart sample.</p>
   </a>
   <a class="quickstart-step" href="./quickstart#query-it-directly">
     <span>Step 2</span>
@@ -211,7 +211,7 @@ flowchart LR
   <a class="route-card" href="./quickstart">
     <span>First 10 minutes</span>
     <strong>Serve and query a wiki</strong>
-    <p>Use your existing graph, or start with the bundled sample for the fastest known-good smoke.</p>
+    <p>Use your existing graph, or create the tiny local sample without cloning a repository.</p>
   </a>
   <a class="route-card" href="./serve-agent-quickstart">
     <span>Source-only agent context</span>
