@@ -58,8 +58,9 @@ checkouts or accessible mirrored remotes.
 
 ## What runtime requirements do I need for first run?
 
-For the minimum `llmwiki-serve` path, install Git, `uv`, and Python `>=3.11`.
-`uv` can install and manage the Python version on supported platforms.
+For the minimum `llmwiki-serve` path, install `uv` and Python `>=3.11`. `uv`
+can install and manage the Python version on supported platforms. Git is needed
+only for optional source checkouts or contribution workflows.
 
 For optional JavaScript packages, install Node.js `>=22.12` with npm `>=10`.
 `llmwiki-agent-bridge` also expects an externally managed OpenAI-compatible chat
@@ -157,6 +158,6 @@ separate conformance effort.
 ## Why a separate docs repository?
 
 The three runtime repositories have different jobs and release gates. A
-separate GitHub Pages portal gives users one first-10-minute path, one
+separate GitHub Pages portal gives users one serve-first onboarding path, one
 architecture map, one protocol reference, and one release checklist without
 making any runtime package depend on the docs site.

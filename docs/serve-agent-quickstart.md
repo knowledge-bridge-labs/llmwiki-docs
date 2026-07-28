@@ -1,10 +1,14 @@
-# 10-Minute Agent Context Quickstart
+# `llmwiki-serve` QuickStart
 
-Use this path when you want a local coding agent, IDE agent, script, or
-workbench to read an existing Markdown, Obsidian-style, or LLMWiki folder as
-cited context. The default path uses the published PyPI package and a folder
-you already own. If you do not have a wiki yet, create the tiny local sample
-below and delete it after the smoke test.
+Use this detailed serve-first path when you want a local coding agent, IDE
+agent, script, or workbench to read an existing Markdown, Obsidian-style, or
+LLMWiki folder as cited context. The default path uses the published PyPI
+package and a folder you already own. If you do not have a wiki yet, create the
+tiny local sample below and delete it after the smoke test.
+
+The generic [Quickstart](/quickstart) route points here so first-run users have
+one primary path. Add bridge, bridge-start, or chat only after the source layer
+works and you know which later hurdle they remove.
 
 `llmwiki-serve` is the read-only source layer. It projects files you already
 own into cited context, source refs, and graph hints. It does not compile,

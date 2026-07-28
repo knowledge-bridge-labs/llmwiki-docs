@@ -1,8 +1,8 @@
 # Examples
 
-Use this page after the [Quickstart](/quickstart) when you want concrete graph
-choices, representative JSON output, or a copyable source-plus-bridge
-transcript. The canonical shortest path remains:
+Use this page after the [`llmwiki-serve` QuickStart](/serve-agent-quickstart)
+when you want concrete graph choices, representative JSON output, or a
+copyable source-plus-bridge transcript. The canonical shortest path remains:
 
 1. Start `llmwiki-serve`.
 2. Verify `/query`.
@@ -21,7 +21,7 @@ transcript. The canonical shortest path remains:
 The bundled paths are optional source-checkout fixtures relative to the
 `llmwiki-serve` checkout. They are useful for preview validation; the public
 first-run path uses the installed PyPI package and your own graph or the tiny
-local sample from [10-Minute Agent Context Quickstart](/serve-agent-quickstart).
+local sample from [`llmwiki-serve` QuickStart](/serve-agent-quickstart).
 
 ## Sample Wiki Commands
 

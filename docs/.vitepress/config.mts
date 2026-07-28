@@ -62,8 +62,7 @@ export default defineConfig({
       provider: 'local'
     },
     nav: [
-      { text: 'First 10 Minutes', link: '/quickstart' },
-      { text: 'Agent Context', link: '/serve-agent-quickstart' },
+      { text: 'Serve QuickStart', link: '/serve-agent-quickstart' },
       { text: 'Status', link: '/status' },
       {
         text: 'Learn',
@@ -123,8 +122,7 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/' },
           { text: 'Demo', link: '/demo' },
-          { text: 'First 10-Minute Path', link: '/quickstart' },
-          { text: '10-Minute Agent Context', link: '/serve-agent-quickstart' },
+          { text: 'llmwiki-serve QuickStart', link: '/serve-agent-quickstart' },
           { text: 'Examples', link: '/examples' },
           { text: 'Release Status & Compatibility', link: '/status' }
         ]
