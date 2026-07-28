@@ -1,8 +1,9 @@
 # CLI Reference
 
 This page is the operator reference for the public-preview command surfaces.
-Use [Quickstart](/quickstart) for the shortest successful path, then use this
-page when you need exact command shapes, expected output, and failure behavior.
+Use [`llmwiki-serve` QuickStart](/serve-agent-quickstart) for the shortest
+successful source path, then use this page when you need exact command shapes,
+expected output, and failure behavior.
 
 Published package commands are the public first-run path:
 `llmwiki-serve==0.2.2`, `llmwiki-bridge-start@0.0.2`,
@@ -35,7 +36,7 @@ commands should also pass from a clean temporary directory.
 
 Most examples below use `/path/to/your/wiki`. Replace it with an existing
 Markdown, Obsidian, or LLMWiki-style graph, or create the tiny local sample from
-[10-Minute Agent Context Quickstart](/serve-agent-quickstart). Optional bundled
+[`llmwiki-serve` QuickStart](/serve-agent-quickstart). Optional bundled
 fixtures such as `./examples/sample-wiki` require a `llmwiki-serve` source
 checkout and use the same command shapes.
 
@@ -65,7 +66,7 @@ llmwiki-serve manifest /path/to/your/wiki
 ```
 
 Expected output is JSON with source metadata. This example uses the tiny local
-sample from the 10-minute quickstart:
+sample from the `llmwiki-serve` QuickStart:
 
 ```json
 {

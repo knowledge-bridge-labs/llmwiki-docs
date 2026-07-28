@@ -21,8 +21,8 @@ implementation details in the owning repo README or docs directory.
 
 - [Overview](docs/index.md)
 - [Demo](docs/demo.md)
-- [Quickstart](docs/quickstart.md)
-- [10-Minute Agent Context Quickstart](docs/serve-agent-quickstart.md)
+- [`llmwiki-serve` QuickStart](docs/serve-agent-quickstart.md)
+- [Quickstart gateway](docs/quickstart.md)
 - [Data Flow](docs/data-flow.md)
 - [Architecture](docs/architecture.md)
 - [Runtime Adapters](docs/runtime-adapters.md)
@@ -47,7 +47,7 @@ Shortest local path:
 1. Install `llmwiki-serve` from PyPI with `uv tool install llmwiki-serve`.
 2. Point it at an existing Markdown, Obsidian-style, or LLMWiki folder, or
    create the clone-free tiny sample in
-   [10-Minute Agent Context Quickstart](docs/serve-agent-quickstart.md).
+   [`llmwiki-serve` QuickStart](docs/serve-agent-quickstart.md).
 3. Run `llmwiki-serve manifest`, `query`, `source-refs`, and `source-bundle`
    before starting the loopback server.
 4. Serve the same folder on `http://127.0.0.1:8765`, then verify `/health`,
@@ -92,7 +92,7 @@ site from `docs/`.
 
 This portal is:
 
-- a first-10-minute path across `serve`, optional `agent-bridge`, and optional `chat`
+- a serve-first onboarding path for one existing Markdown, Obsidian-style, or LLMWiki folder
 - a protocol and runtime role map
 - a network/security posture guide
 - a release-status, deployment, and troubleshooting reference for operators
@@ -112,7 +112,7 @@ public-preview docs entrypoint.
 
 | Area | Pages |
 | --- | --- |
-| Start | `docs/index.md`, `docs/demo.md`, `docs/quickstart.md`, `docs/serve-agent-quickstart.md`, `docs/examples.md` |
+| Start | `docs/index.md`, `docs/demo.md`, `docs/serve-agent-quickstart.md`, `docs/quickstart.md`, `docs/examples.md` |
 | Understand | `docs/core-concepts.md`, `docs/data-flow.md`, `docs/architecture.md`, `docs/positioning.md` |
 | Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |

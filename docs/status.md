@@ -1,9 +1,10 @@
 # Release Status & Compatibility
 
-This toolchain is in public preview. The supported public first-run paths use
+This toolchain is in public preview. The supported public first-run path uses
 the published package installs shown below. Source checkouts remain supported
 for bundled fixtures, development scripts, and release verification. Use
-[Quickstart](/quickstart) for the shortest local checks.
+[`llmwiki-serve` QuickStart](/serve-agent-quickstart) for the shortest local
+source checks.
 `llmwiki-serve==0.2.2` is the current source-server package baseline.
 `llmwiki-bridge-start@0.0.2` is the current first-run entrypoint for local
 discovery, source startup, optional bridge registration, and smoke checks.
