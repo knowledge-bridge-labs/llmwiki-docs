@@ -30,7 +30,7 @@ implementation details in the owning repo README or docs directory.
 - [Release Status & Compatibility](docs/status.md)
 
 The docs are intentionally local-first. The public first-run path uses package
-installs for `llmwiki-serve==0.2.3`, `llmwiki-bridge-start@0.0.3`,
+installs for `llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
 Source checkouts remain supported for bundled samples, development scripts,

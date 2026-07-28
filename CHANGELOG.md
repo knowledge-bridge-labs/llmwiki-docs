@@ -4,6 +4,8 @@ All notable changes to the documentation portal will be recorded here.
 
 ## Unreleased
 
+- Updated the public docs baseline to `llmwiki-serve==0.2.4` and documented
+  literal search, search/query payload controls, and read field projection.
 - Aligned public release docs with the PyPI `llmwiki-serve==0.2.2` baseline
   and published the package-publication runbook in the Pages navigation.
 - Documented the manual owner-provided security and conduct reporting route gate
