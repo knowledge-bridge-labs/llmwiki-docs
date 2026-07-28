@@ -69,13 +69,19 @@ llmwiki-serve query /path/to/wiki "what is in this wiki?"
 ## `llmwiki-serve status` Shows Stale Or Overlapping Instances
 
 `llmwiki-serve status` and `ls` read a best-effort local instance registry that
-running `serve` processes write for operator discovery. A terminal crash,
-forced process kill, or reboot can leave stale records behind.
+running `serve` processes write for operator discovery. In 0.2.5 and newer,
+they also inspect local OS process command lines for `llmwiki-serve serve`
+processes and probe only discovered local endpoints by default. They do not use
+fixed-port probing unless `--probe-port <port>` is supplied. A terminal crash,
+forced process kill, or reboot
+can leave stale registry records behind.
 
 Use:
 
 ```sh
 llmwiki-serve status --json
+llmwiki-serve status --no-processes
+llmwiki-serve status --probe-port 8765
 llmwiki-serve ls --prune-stale
 ```
 
@@ -83,7 +89,9 @@ Inspect before pruning. If the command reports duplicate source IDs, duplicate
 bundle IDs, or parent/subfolder overlap hints, either stop the extra server or
 restart each intended server with distinct source identity. Do not paste raw
 local roots from this output into public issues or docs; replace them with
-placeholders such as `<wiki-root>`.
+placeholders such as `<wiki-root>`. JSON output can include
+`discovery_source` and `root_source` to show whether data came from the
+registry, process discovery, or an explicit manual probe.
 
 ## Recent Generated Output Is Not Visible
 

@@ -20,10 +20,10 @@ llmwiki-serve --help
 For a reproducible check against the current public baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.4 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.5 llmwiki-serve --help
 ```
 
-Pin `llmwiki-serve==0.2.4` only when you need to reproduce the current
+Pin `llmwiki-serve==0.2.5` only when you need to reproduce the current
 released baseline exactly. Use [Release Status & Compatibility](/status) before
 publishing docs or release notes.
 
@@ -213,10 +213,14 @@ llmwiki-serve ls
 llmwiki-serve status --json
 ```
 
-`status` is an alias for `ls`. These commands read local operator registry
-state written by running `serve` processes, probe `/health` by default, and can
-report stale records or overlapping source roots. Redact real local roots from
-public issues, logs, and screenshots.
+`status` is an alias for `ls`. These commands combine local registry records
+written by `serve` with OS process command-line discovery for
+`llmwiki-serve serve` processes, then probe discovered local `/health`
+endpoints by default. They do not use default fixed-port probing. Use
+`--no-processes` for registry-only output and `--probe-port <port>` only for a
+manual loopback diagnostic. JSON output can include `discovery_source` and
+`root_source`. Redact real local roots from public issues, logs, and
+screenshots.
 
 ## 5. Verify HTTP
 
@@ -352,14 +356,14 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.4 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.5 llmwiki-serve --help` | Help prints. |
 | Choose source | Existing folder or tiny local sample above | `SOURCE_PATH` points at Markdown content. |
 | Inspect source | `llmwiki-serve manifest "$SOURCE_PATH"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --limit 4` | Approved evidence returns. |
 | Inspect refs | `llmwiki-serve source-refs "$SOURCE_PATH"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$SOURCE_PATH"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765` | Loopback server starts. |
-| Inspect registry | `llmwiki-serve ls` or `llmwiki-serve status --json` | Running instances report health or stale state. |
+| Inspect discovery | `llmwiki-serve ls` or `llmwiki-serve status --json` | Running instances report health, stale state, and registry/process discovery source. |
 | Verify HTTP | `/health`, `/manifest`, `/query`, `/source-refs`, `/source-bundle` | Endpoints return source data. |
 | Optionally verify MCP | `/mcp/stream` `initialize`, `tools/list`, and `llmwiki_context` | MCP source smoke passes where supported. |
 | Add guided handoff | `npx --yes llmwiki-bridge-start@latest --path "$SOURCE_PATH"` | Guided source startup and handoff checks run. |

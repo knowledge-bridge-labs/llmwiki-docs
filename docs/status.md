@@ -4,14 +4,14 @@ This toolchain is in public preview. The supported public first-run path uses
 the published package installs shown below. Source checkouts remain supported
 for bundled fixtures, development scripts, and release verification. Use
 [QuickStart](/quickstart) for the shortest local source checks.
-`llmwiki-serve==0.2.4` is the current source-server package baseline.
+`llmwiki-serve==0.2.5` is the current source-server package baseline.
 `llmwiki-bridge-start@0.0.3` is the current guided handoff package for local
 discovery, source startup, optional bridge registration, and smoke checks after
 the source layer works.
 `llmwiki-agent-bridge@0.3.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
 `llmwiki-chat@0.1.6` is the current browser workbench static artifact package.
-Public registry checks on 2026-07-28 confirmed `llmwiki-serve 0.2.4`,
+Public registry checks on 2026-07-29 KST confirmed `llmwiki-serve 0.2.5`,
 `llmwiki-bridge-start 0.0.3`, `llmwiki-agent-bridge 0.3.0`, and
 `llmwiki-chat 0.1.6`.
 
@@ -19,7 +19,7 @@ Publication evidence:
 
 | Package | Current version | Evidence |
 | --- | --- | --- |
-| `llmwiki-serve` | `0.2.4` | PyPI latest verified; publish workflow [`30363556613`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30363556613). |
+| `llmwiki-serve` | `0.2.5` | PyPI latest verified; release PR [`#31`](https://github.com/knowledge-bridge-labs/llmwiki-serve/pull/31), merge `af48100d627bd9bbda9ee0860b72ceb1be5051aa`, publish workflow [`30371543484`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30371543484). |
 | `llmwiki-bridge-start` | `0.0.3` | npm latest verified; publish workflow [`30357056742`](https://github.com/knowledge-bridge-labs/llmwiki-bridge-start/actions/runs/30357056742). |
 | `llmwiki-agent-bridge` | `0.3.0` | npm latest verified; publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156). |
 | `llmwiki-chat` | `0.1.6` | npm latest verified; unchanged static artifact package. |
@@ -34,7 +34,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported development path | You want bundled fixtures, source-level development scripts, screenshot refreshes, or release verification. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.3.0`, and the static `llmwiki-chat@0.1.6` artifact. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.3.0`, and the static `llmwiki-chat@0.1.6` artifact. |
 
 ## Package Roles
 
@@ -49,7 +49,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
-| `llmwiki-serve` | Python package 0.2.4, Apache-2.0, CLI entrypoint | PyPI published 0.2.4 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
+| `llmwiki-serve` | Python package 0.2.5, Apache-2.0, CLI entrypoint | PyPI published 0.2.5 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-bridge-start` | npm package 0.0.3, Apache-2.0, CLI entrypoint | npm published 0.0.3 | Package CLI through `npx llmwiki-bridge-start@latest`; source checkout for harness development | Node.js 22.12+ | `npx llmwiki-bridge-start@latest --help` or repository `npm run check` |
 | `llmwiki-agent-bridge` | npm package 0.3.0, Apache-2.0, CLI entrypoint | npm published 0.3.0 | Package CLI through `npx llmwiki-agent-bridge@latest` or pinned `npm exec`; source checkout for development | Node.js 22.12+ | `npx llmwiki-agent-bridge@latest --help` or repository `npm run check` |
 | `llmwiki-chat` | npm package 0.1.6, Apache-2.0, static Vite browser workbench artifact, no CLI `bin` | npm published 0.1.6; Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 | Package `dist/` static hosting or source checkout for UI development | Node.js 22.12+ | package install-smoke for `dist/`, or repository `npm run check` |
@@ -58,7 +58,16 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 The primary gate column is a status-oriented smoke signal. Each repository also
 keeps its own README, changelog, package metadata, license files, and CI gates.
 
-The `llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-serve` 0.2.5 updates local `ls`/`status` discovery. It combines the
+per-user registry written by `serve` with local OS process command-line
+discovery for `llmwiki-serve serve` processes, then probes discovered local
+endpoints unless probing is disabled. It does not use default fixed-port
+heuristic probing. Use `--no-processes` for registry-only output,
+`--processes` to keep process discovery explicit, and `--probe-port <port>`
+only for a manual loopback diagnostic. JSON output can include
+`discovery_source` and `root_source`.
+
+The `llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6` packages are
 published. Source checkouts remain supported for development and release
 verification.

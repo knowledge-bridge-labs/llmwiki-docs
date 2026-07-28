@@ -6,7 +6,7 @@ successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
@@ -24,7 +24,7 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.4`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.5`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the guided handoff for discovery, source startup, optional bridge registration, and smoke checks after the source layer works. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.3.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
@@ -49,7 +49,7 @@ checkout and use the same command shapes.
 | `llmwiki-serve search <wiki-path> <text>` | Any shell with the PyPI package installed | Search pages directly, including exact literal and projected-result checks. |
 | `llmwiki-serve source-refs <wiki-path>` | Any shell with the PyPI package installed | Print visible source-reference handles for cited source metadata. |
 | `llmwiki-serve source-bundle <wiki-path>` | Any shell with the PyPI package installed | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
-| `llmwiki-serve ls` / `llmwiki-serve status` | Any shell with the PyPI package installed | List local registered `serve` instances, probe `/health` by default, and report stale or overlapping records. |
+| `llmwiki-serve ls` / `llmwiki-serve status` | Any shell with the PyPI package installed | Discover local `serve` instances from registry records and OS process command lines, probe `/health` by default, and report stale or overlapping records. |
 | `llmwiki-serve serve <wiki-path>` | Any shell with the PyPI package installed | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
 | `npx llmwiki-bridge-start@latest --path <wiki-path>` | Any local workspace | Run the guided handoff harness against an existing wiki folder after source checks pass. |
 | `npx llmwiki-bridge-start@latest status` / `ls` | Any local workspace | Inspect bridge-start's started-source config, live source health, and bridge registration state. |
@@ -273,19 +273,27 @@ llmwiki-serve status --json
 Command shape:
 
 ```text
-llmwiki-serve ls [--json] [--probe|--no-probe] [--prune-stale] [--state-dir <path>]
-llmwiki-serve status [--json] [--probe|--no-probe] [--prune-stale] [--state-dir <path>]
+llmwiki-serve ls [--json] [--probe|--no-probe] [--processes|--no-processes] [--probe-port <port>] [--prune-stale] [--state-dir <path>]
+llmwiki-serve status [--json] [--probe|--no-probe] [--processes|--no-processes] [--probe-port <port>] [--prune-stale] [--state-dir <path>]
 ```
 
 `serve` writes a best-effort local registry record under per-user state before
-the HTTP server starts. `ls` reads those records, probes each local `/health`
-endpoint by default, and reports whether a record is healthy, unhealthy,
-running without a probe, or stale. Hard-killed processes can leave stale
-records; inspect them first, then use `--prune-stale` when you intend to remove
-those records.
+the HTTP server starts. In 0.2.5 and newer, `ls` reads those records and also
+inspects the local OS process table for command lines that identify
+`llmwiki-serve serve` processes. For unregistered legacy or orphan processes,
+it parses the root argument plus `--host` and `--port` when present, then
+probes only those discovered local endpoints unless probing is disabled. It
+does not use default fixed-port probing.
 
-Use `--json` for scripts and status dashboards. Public docs, issues, and
-screenshots should redact the local `root` field:
+Use `--no-processes` when you want registry-only output. Use
+`--probe-port <port>` only for an explicit manual loopback diagnostic. Use
+`--json` for scripts and status dashboards. Public docs, issues, and
+screenshots should redact the local `root` field.
+
+The command reports whether a discovered instance is healthy, unhealthy,
+running without a probe, or stale. Hard-killed processes can leave stale
+registry records; inspect them first, then use `--prune-stale` when you intend
+to remove those records.
 
 ```json
 {
@@ -300,17 +308,19 @@ screenshots should redact the local `root` field:
       "adapter": "llmwiki-markdown",
       "page_count": 42,
       "approved_page_count": 40,
+      "discovery_source": "registry",
+      "root_source": "registry",
       "warnings": []
     }
   ]
 }
 ```
 
-When multiple registered instances point at the same source identity, bundle,
+When multiple discovered instances point at the same source identity, bundle,
 or ancestor/child roots, the command reports warnings so operators can choose
-one server or intentionally keep separate source IDs. The registry is local
-diagnostic state only; network `/health` and `/manifest` responses continue to
-redact the local root.
+one server or intentionally keep separate source IDs. Registry records and
+process command lines are local diagnostic state only; network `/health` and
+`/manifest` responses continue to redact the local root.
 
 ## `llmwiki-serve serve`
 

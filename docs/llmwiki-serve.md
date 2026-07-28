@@ -59,7 +59,8 @@ pages to be visible.
 
 CLI commands such as `manifest`, `query`, `search`, `source-refs`, and
 `source-bundle` run directly against a local source path. `serve` starts the
-HTTP/MCP source server. `ls` and `status` inspect local running instances.
+HTTP/MCP source server. `ls` and `status` inspect local running instances from
+registry records and OS process command lines.
 
 ## Redaction And Security
 
@@ -75,6 +76,13 @@ issues, screenshots, or traces.
 Local I/O debug logging is operator state. It may include user queries and
 approved wiki content even when credential-shaped fields are redacted. Disable
 or redirect it when that is not appropriate for the environment.
+
+Local discovery is also operator state. `llmwiki-serve ls/status` reads the
+per-user registry written by `serve` and can inspect local process command
+lines to find unregistered `llmwiki-serve serve` processes. It does not use
+default fixed-port heuristic probing; `--probe-port <port>` is only an explicit
+manual diagnostic. JSON output can mark where a record came from with
+`discovery_source` and where a root came from with `root_source`.
 
 ## Freshness And Caching
 
