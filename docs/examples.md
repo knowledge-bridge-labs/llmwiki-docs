@@ -56,10 +56,26 @@ uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
 In another terminal, verify the HTTP surface:
 
 ```sh
+llmwiki-serve status --json
 curl -s http://127.0.0.1:8765/health
 ```
 
 Representative output:
+
+```json
+{
+  "instances": [
+    {
+      "status": "healthy",
+      "url": "http://127.0.0.1:8765",
+      "root": "<wiki-root>",
+      "source_id": "sample-packaging-llmwiki",
+      "page_count": 5,
+      "approved_page_count": 4
+    }
+  ]
+}
+```
 
 ```json
 { "status": "ok" }
@@ -260,6 +276,38 @@ bridge package in a third terminal:
 npx llmwiki-agent-bridge@latest
 ```
 
+Inspect the bridge registry with a redacted HTTP view:
+
+```sh
+curl -s 'http://127.0.0.1:8788/sources?probe=1'
+```
+
+Representative output:
+
+```json
+{
+  "schemaVersion": "llmwiki.agent-bridge.sources.v1",
+  "healthBasis": "live_probe",
+  "registeredCount": 1,
+  "selectedReadySourceCount": 1,
+  "sources": [
+    {
+      "id": "sample-wiki",
+      "name": "Sample Wiki",
+      "protocol": "llmwiki-http",
+      "status": "ready",
+      "selected": true,
+      "url": "http://127.0.0.1:8765",
+      "rootLabel": "wiki",
+      "rootRedacted": true,
+      "health": { "ok": true, "basis": "live_probe", "endpoint": "source-bundle" },
+      "bundleId": "sample-packaging-llmwiki:sha256:abc123..."
+    }
+  ],
+  "warnings": []
+}
+```
+
 Send an evidence-only request:
 
 ```sh
@@ -335,6 +383,23 @@ Representative output:
     }
   ]
 }
+```
+
+MCP-style bridge clients can perform lifecycle checks before listing tools or
+calling `llmwiki_agent_run`:
+
+```sh
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"bridge-example","version":"0.0.0"}}}'
+
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
+
+curl -s http://127.0.0.1:8788/mcp \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"ping"}'
 ```
 
 ## Bridge Request

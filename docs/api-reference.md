@@ -13,7 +13,7 @@ surface at `docs/openapi.json` in the server repository. In local sibling
 checkouts, read `../llmwiki-serve/docs/openapi.json`; the public repository
 path is
 `https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/main/docs/openapi.json`.
-The `llmwiki-serve` main branch now includes the 0.2.2 source release contract.
+The `llmwiki-serve` main branch now includes the 0.2.3 source release contract.
 
 The OpenAPI artifact is generated from the implemented FastAPI routes and data
 models by `scripts/export_openapi.py`, then checked by the server release smoke
@@ -62,7 +62,7 @@ brevity.
 {
   "status": "ok",
   "service": "llmwiki-serve",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "source": {
     "source_id": "sample-packaging-llmwiki",
     "bundle_id": "sample-packaging-llmwiki:sha256:abc123...",
@@ -369,13 +369,14 @@ Response:
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/health` | Reports bridge readiness, selected runtime profile, runtime identity, model configuration, allowed-origin count, source policy, and redacted `sourceRegistry` readiness counts. |
+| `GET` | `/sources` | Returns a redacted source registry view. Add `?probe=1` for live source health and safe manifest or source-bundle metadata. |
 | `GET` | `/.well-known/agent-card.json` | Returns the A2A-style runtime card with the bridge identity, `message:send` URL, and redacted `metadata.sourceRegistry` readiness counts. |
 | `POST` | `/message:send` | Accepts a query plus selected Knowledge Sources and returns a completed task with a `llmwiki_agent_result` artifact. |
 | `GET` | `/settings` | Serves the bridge-owned guided setup page: connect runtime, register Knowledge Sources, and verify with `POST /message:send`. |
 | `GET` | `/settings.json` | Returns redacted bridge settings and endpoint metadata. |
 | `PUT` | `/settings/config.json` | Persists runtime configuration plus advanced access, CORS, timeout, and source-policy settings. |
 | `GET/PUT` | `/settings/sources.json` | Reads or persists registered Knowledge Sources. |
-| `POST` | `/mcp` | Exposes `llmwiki_agent_run` plus read-only source tools for MCP bridge clients. |
+| `POST` | `/mcp` | Exposes lifecycle methods, `llmwiki_agent_run`, and read-only source tools for MCP bridge clients. |
 
 When `LLMWIKI_AGENT_BRIDGE_BEARER_TOKEN` is configured, every bridge HTTP
 request must include `Authorization: Bearer <token>`. Browser requests are also
@@ -390,6 +391,9 @@ Runtime and policy changes apply live, while host and port changes are saved
 for the next start and returned as restart-required fields. Registered sources
 are used when a bridge run omits `knowledgeSources`; a request can still
 provide its own source list.
+`PUT /settings/sources.json` rejects duplicate source IDs with HTTP `409` and
+`error.code: "duplicate_source_id"` so persisted registry state stays
+unambiguous.
 
 `/health` returns fields such as:
 
@@ -420,6 +424,42 @@ configured OpenAI-compatible endpoint.
 whether the bridge has registered, selected, and ready Knowledge Sources
 without returning local source endpoint URLs from `/health` or the agent card.
 
+`GET /sources` is the detailed redacted registry view:
+
+```json
+{
+  "schemaVersion": "llmwiki.agent-bridge.sources.v1",
+  "healthBasis": "last_known_status_bridge_policy",
+  "registeredCount": 1,
+  "selectedReadySourceCount": 1,
+  "sources": [
+    {
+      "id": "project-wiki",
+      "name": "Project Wiki",
+      "protocol": "llmwiki-http",
+      "status": "ready",
+      "selected": true,
+      "url": "http://127.0.0.1:8765",
+      "rootLabel": "wiki",
+      "rootRedacted": true,
+      "health": {
+        "ok": true,
+        "basis": "last_known_status_bridge_policy"
+      }
+    }
+  ],
+  "warnings": []
+}
+```
+
+With `GET /sources?probe=1`, the bridge performs live source checks when
+allowed by source policy and may add safe fields such as `adapter`,
+`implementation`, `bundleId`, `pageCount`, `approvedPageCount`, and
+`health.endpoint`. Local roots stay redacted. Read-only registry views may
+include warnings for duplicate source IDs, duplicate bundle IDs, or overlapping
+source roots; use those warnings as repair guidance, not as a certification
+signal.
+
 ## Agent Bridge Message And MCP Tools
 
 `llmwiki-agent-bridge` accepts the same logical run through A2A-style
@@ -436,6 +476,30 @@ The bridge MCP surface has two layers:
 | --- | --- | --- | --- |
 | Full grounded answer path | `llmwiki_agent_run` | Evidence-only mode skips the runtime; delegated-runtime and hybrid modes call the configured runtime. | The client wants the bridge to gather evidence, assemble trace steps, and return one `llmwiki_agent_result`. |
 | Progressive source exploration | `llmwiki_list_sources`, `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, `llmwiki_source_bundle` | No runtime call. | The host agent wants to list registered or inline Knowledge Sources, inspect context/search/read/graph/source-bundle data, then decide whether to keep exploring or call `llmwiki_agent_run`. |
+
+MCP-style clients can send `initialize`, `notifications/initialized`, and
+`ping` before tool calls:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "initialize",
+  "params": {
+    "protocolVersion": "2025-06-18",
+    "capabilities": {},
+    "clientInfo": { "name": "bridge-client", "version": "0.0.0" }
+  }
+}
+```
+
+```json
+{ "jsonrpc": "2.0", "method": "notifications/initialized" }
+```
+
+```json
+{ "jsonrpc": "2.0", "id": 2, "method": "ping" }
+```
 
 Source-specific tools accept `sourceId` or `source_id` and optional inline
 `knowledgeSources` or `knowledge_sources`. If no inline sources are supplied,

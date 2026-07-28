@@ -66,6 +66,25 @@ For source layout issues, run the local CLI query against the same root:
 llmwiki-serve query /path/to/wiki "what is in this wiki?"
 ```
 
+## `llmwiki-serve status` Shows Stale Or Overlapping Instances
+
+`llmwiki-serve status` and `ls` read a best-effort local instance registry that
+running `serve` processes write for operator discovery. A terminal crash,
+forced process kill, or reboot can leave stale records behind.
+
+Use:
+
+```sh
+llmwiki-serve status --json
+llmwiki-serve ls --prune-stale
+```
+
+Inspect before pruning. If the command reports duplicate source IDs, duplicate
+bundle IDs, or parent/subfolder overlap hints, either stop the extra server or
+restart each intended server with distinct source identity. Do not paste raw
+local roots from this output into public issues or docs; replace them with
+placeholders such as `<wiki-root>`.
+
 ## Recent Generated Output Is Not Visible
 
 Keep the default strict source scan for local authoring and most generated
@@ -95,6 +114,26 @@ the run still has usable evidence from other sources, per-source failures appear
 as warning or error trace steps inside the returned answer artifact instead of
 failing the whole request.
 
+For a redacted registry view, check:
+
+```sh
+curl -s http://127.0.0.1:8788/sources
+curl -s 'http://127.0.0.1:8788/sources?probe=1'
+npx llmwiki-agent-bridge@latest sources --probe --json
+```
+
+`GET /sources?probe=1` adds live source health when policy allows the probe.
+The CLI reads local settings and is meant for operator terminals; redact local
+paths before sharing output.
+
+## Duplicate Bridge Sources Are Rejected
+
+`PUT /settings/sources.json` rejects duplicate source IDs with HTTP `409` and
+`duplicate_source_id`. Keep each persisted Knowledge Source ID unique. If a
+read-only registry view reports duplicate bundle IDs or overlapping source
+roots, treat it as a repair warning: select one folder from the overlap group
+or intentionally assign separate source IDs to truly separate served sources.
+
 ## Bridge MCP Source Tools Cannot Select a Source
 
 Check the bridge registry first:
@@ -120,6 +159,15 @@ page/source-ref seed.
 These source tools do not call the configured runtime. If you need the bridge
 to produce one grounded answer artifact with citations and trace steps, call
 `llmwiki_agent_run` or `POST /message:send` instead.
+
+## Bridge-Start Status Does Not Match Runtime Readiness
+
+`llmwiki-bridge-start status` and `ls` report local started sources, source
+health, and bridge registration state. They do not make a configured model
+endpoint usable by themselves. Delegated-runtime smoke requires a reachable
+runtime: generic OpenAI-compatible endpoints must answer a `/models` probe, and
+Hermes endpoints must answer `/health` or `/v1/health`. Evidence-only smoke
+intentionally skips this runtime check and verifies source retrieval only.
 
 ## CI Fails After Documentation Edits
 

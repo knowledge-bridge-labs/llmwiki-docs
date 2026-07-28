@@ -83,6 +83,10 @@ the bridge are displayed in chat as bridge-managed, read-only source cards.
 Edit or remove those sources in bridge settings. Use direct source cards in
 chat only when you want to test or debug a `llmwiki-serve` endpoint without
 going through a bridge.
+Operators can inspect the same bridge registry with `GET /sources`,
+`GET /sources?probe=1`, or `npx llmwiki-agent-bridge@latest sources --probe`.
+HTTP registry views redact local roots; CLI output is local operator output and
+may include local settings paths or stored roots.
 
 Diagnostics/advanced contains network, auth, CORS, timeout, source-policy, and
 bind controls. Host and port changes are saved for the next bridge start, so
@@ -206,6 +210,12 @@ Minimum readiness checks:
 | MCP tools | `/mcp` `tools/list` returns `llmwiki_agent_run` when MCP bridge mode is enabled. |
 | Source policy | Selected Knowledge Source URLs pass `LLMWIKI_AGENT_BRIDGE_SOURCE_POLICY`. |
 | Settings verify | Step 3 of `/settings` sends `POST /message:send` and returns `llmwiki_agent_result` with answer, citations, graph, and steps. |
+
+Configured runtime settings and reachable runtime service are separate states.
+Bridge-start delegated-runtime smoke checks reachability before reporting that
+path ready. Evidence-only smoke is still useful when no runtime is configured
+because it verifies source selection, policy, citations, graph data, and trace
+shape without making a model call.
 
 Source protocols accepted by the bridge:
 
