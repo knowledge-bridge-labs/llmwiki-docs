@@ -62,12 +62,13 @@ export default defineConfig({
       provider: 'local'
     },
     nav: [
-      { text: 'Serve QuickStart', link: '/serve-agent-quickstart' },
+      { text: 'QuickStart', link: '/quickstart' },
       { text: 'Status', link: '/status' },
       {
         text: 'Learn',
         items: [
           { text: 'Core Concepts', link: '/core-concepts' },
+          { text: 'llmwiki-serve', link: '/llmwiki-serve' },
           { text: 'Demo', link: '/demo' },
           { text: 'Data Flow', link: '/data-flow' },
           { text: 'Positioning', link: '/positioning' },
@@ -122,7 +123,7 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/' },
           { text: 'Demo', link: '/demo' },
-          { text: 'llmwiki-serve QuickStart', link: '/serve-agent-quickstart' },
+          { text: 'QuickStart', link: '/quickstart' },
           { text: 'Examples', link: '/examples' },
           { text: 'Release Status & Compatibility', link: '/status' }
         ]
@@ -131,6 +132,7 @@ export default defineConfig({
         text: 'Understand the Layer',
         items: [
           { text: 'Core Concepts', link: '/core-concepts' },
+          { text: 'llmwiki-serve', link: '/llmwiki-serve' },
           { text: 'Demo', link: '/demo' },
           { text: 'Data Flow', link: '/data-flow' },
           { text: 'Positioning', link: '/positioning' },

@@ -1,6 +1,6 @@
 # Examples
 
-Use this page after the [`llmwiki-serve` QuickStart](/serve-agent-quickstart)
+Use this page after [QuickStart](/quickstart)
 when you want concrete graph choices, representative JSON output, or a
 copyable source-plus-bridge transcript. The canonical shortest path remains:
 
@@ -21,7 +21,7 @@ copyable source-plus-bridge transcript. The canonical shortest path remains:
 The bundled paths are optional source-checkout fixtures relative to the
 `llmwiki-serve` checkout. They are useful for preview validation; the public
 first-run path uses the installed PyPI package and your own graph or the tiny
-local sample from [`llmwiki-serve` QuickStart](/serve-agent-quickstart).
+local sample from [QuickStart](/quickstart).
 
 ## Sample Wiki Commands
 
@@ -41,23 +41,26 @@ and replace `./examples/sample-wiki` with the folder that contains your wiki.
 
 ## Source And Bridge Transcript
 
-The transcript below is a source-checkout sample transcript under one
-workspace. The JSON blocks are representative, trimmed expected output. Field
-order, generated IDs, scores, and exact answer text can vary by release and
-runtime.
+The transcript below uses the published packages and one local source. The JSON
+blocks are representative, trimmed expected output. Field order, generated IDs,
+scores, and exact answer text can vary by release and runtime.
 
 Start the read-only Knowledge Source:
 
 ```sh
-cd ../llmwiki-serve
-uv run llmwiki-serve serve ./examples/sample-wiki --host 127.0.0.1 --port 8765
+SOURCE_PATH=/path/to/your/wiki
+SOURCE_URL=http://127.0.0.1:8765
+
+llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765
 ```
 
 In another terminal, verify the HTTP surface:
 
 ```sh
+SOURCE_URL=http://127.0.0.1:8765
+
 llmwiki-serve status --json
-curl -s http://127.0.0.1:8765/health
+curl -s "$SOURCE_URL/health"
 ```
 
 Representative output:
@@ -82,7 +85,7 @@ Representative output:
 ```
 
 ```sh
-curl -s http://127.0.0.1:8765/manifest
+curl -s "$SOURCE_URL/manifest"
 ```
 
 Representative output:
@@ -128,7 +131,7 @@ Representative output:
 ```
 
 ```sh
-curl -s http://127.0.0.1:8765/source-bundle
+curl -s "$SOURCE_URL/source-bundle"
 ```
 
 Representative output:
@@ -154,7 +157,7 @@ Representative output:
 ```
 
 ```sh
-curl -s http://127.0.0.1:8765/query \
+curl -s "$SOURCE_URL/query" \
   -H 'content-type: application/json' \
   -d '{"query":"required copy release readiness","limit":4}'
 ```
@@ -219,7 +222,7 @@ Representative output:
 ```
 
 ```sh
-curl -s http://127.0.0.1:8765/mcp \
+curl -s "$SOURCE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"required copy release readiness","limit":4}}}'
 ```
@@ -279,7 +282,9 @@ npx llmwiki-agent-bridge@latest
 Inspect the bridge registry with a redacted HTTP view:
 
 ```sh
-curl -s 'http://127.0.0.1:8788/sources?probe=1'
+BRIDGE_URL=http://127.0.0.1:8788
+
+curl -s "$BRIDGE_URL/sources?probe=1"
 ```
 
 Representative output:
@@ -311,7 +316,7 @@ Representative output:
 Send an evidence-only request:
 
 ```sh
-curl -s http://127.0.0.1:8788/message:send \
+curl -s "$BRIDGE_URL/message:send" \
   -H 'content-type: application/json' \
   -d '{
     "data": {
@@ -389,15 +394,15 @@ MCP-style bridge clients can perform lifecycle checks before listing tools or
 calling `llmwiki_agent_run`:
 
 ```sh
-curl -s http://127.0.0.1:8788/mcp \
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"bridge-example","version":"0.0.0"}}}'
 
-curl -s http://127.0.0.1:8788/mcp \
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
 
-curl -s http://127.0.0.1:8788/mcp \
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":2,"method":"ping"}'
 ```
@@ -410,11 +415,11 @@ curl -s http://127.0.0.1:8788/mcp \
 examples/message-send.local.json
 ```
 
-After starting `llmwiki-serve` on `127.0.0.1:8765` and the bridge on
-`127.0.0.1:8788`, send the payload:
+After starting `llmwiki-serve` on `SOURCE_URL` and the bridge on `BRIDGE_URL`,
+send the payload:
 
 ```sh
-curl -s http://127.0.0.1:8788/message:send \
+curl -s "$BRIDGE_URL/message:send" \
   -H 'content-type: application/json' \
   --data @examples/message-send.local.json
 ```

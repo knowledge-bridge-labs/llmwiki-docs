@@ -131,7 +131,9 @@ npx llmwiki-agent-bridge@latest
 Send a message with `mode: "evidence-only"`:
 
 ```sh
-curl -s http://127.0.0.1:8788/message:send \
+BRIDGE_URL=http://127.0.0.1:8788
+
+curl -s "$BRIDGE_URL/message:send" \
   -H 'content-type: application/json' \
   -d '{
     "data": {
@@ -160,8 +162,8 @@ LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
 npx llmwiki-agent-bridge@latest
 ```
 
-For a first run, open `http://127.0.0.1:8788/settings`: Step 1 connects the
-runtime through `PUT /settings/config.json`, Step 2 registers sources through
+For bridge setup, open `$BRIDGE_URL/settings`: Step 1 connects the runtime
+through `PUT /settings/config.json`, Step 2 registers sources through
 `GET/PUT /settings/sources.json`, and Step 3 verifies the bridge with
 `POST /message:send`. Advanced network/auth controls are under
 diagnostics/advanced.
@@ -169,7 +171,7 @@ diagnostics/advanced.
 Send a runtime-backed message directly when automating the same verify path:
 
 ```sh
-curl -s http://127.0.0.1:8788/message:send \
+curl -s "$BRIDGE_URL/message:send" \
   -H 'content-type: application/json' \
   -d '{
     "data": {
@@ -381,9 +383,9 @@ Before wiring a tool into an AI workflow:
 
 Some exact live tests use non-default ports, saved bridge source registration,
 or runtime environment variables to isolate test processes. Those requirements
-belong to the test harness; the public quickstart defaults remain the loopback
-source on `127.0.0.1:8765`, bridge on `127.0.0.1:8788`, and evidence-only
-bridge smoke before configuring a runtime.
+belong to the test harness; the public QuickStart defaults remain
+`SOURCE_URL=http://127.0.0.1:8765`, `BRIDGE_URL=http://127.0.0.1:8788`, and
+evidence-only bridge smoke before configuring a runtime.
 
 ## Compatibility Posture
 
@@ -404,8 +406,8 @@ Public preview language should stay conservative:
 For private or personal knowledge folders, start with loopback URLs:
 
 ```text
-http://127.0.0.1:8765  llmwiki-serve
-http://127.0.0.1:8788  llmwiki-agent-bridge
+SOURCE_URL=http://127.0.0.1:8765  llmwiki-serve
+BRIDGE_URL=http://127.0.0.1:8788  llmwiki-agent-bridge
 ```
 
 Move to a private network, HTTPS reverse proxy, or public deployment only after

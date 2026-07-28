@@ -3,11 +3,11 @@
 This toolchain is in public preview. The supported public first-run path uses
 the published package installs shown below. Source checkouts remain supported
 for bundled fixtures, development scripts, and release verification. Use
-[`llmwiki-serve` QuickStart](/serve-agent-quickstart) for the shortest local
-source checks.
+[QuickStart](/quickstart) for the shortest local source checks.
 `llmwiki-serve==0.2.4` is the current source-server package baseline.
-`llmwiki-bridge-start@0.0.3` is the current first-run entrypoint for local
-discovery, source startup, optional bridge registration, and smoke checks.
+`llmwiki-bridge-start@0.0.3` is the current guided handoff package for local
+discovery, source startup, optional bridge registration, and smoke checks after
+the source layer works.
 `llmwiki-agent-bridge@0.3.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
 `llmwiki-chat@0.1.6` is the current browser workbench static artifact package.
@@ -36,12 +36,12 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
 | PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.3.0`, and the static `llmwiki-chat@0.1.6` artifact. |
 
-## First-Run Roles
+## Package Roles
 
 | Need | Start with | Add later |
 | --- | --- | --- |
 | Serve and query one existing knowledge graph. | `llmwiki-serve` | Nothing else is required when your agent or script can synthesize answers directly. |
-| Discover local wiki folders and get a guided first-run handoff. | `llmwiki-bridge-start` | Add the bridge when you want one endpoint across sources or runtime-backed answers. |
+| Discover local wiki folders and get a guided handoff after source checks pass. | `llmwiki-bridge-start` | Add the bridge when you want one endpoint across sources or runtime-backed answers. |
 | Return one cited artifact through a companion endpoint. | `llmwiki-agent-bridge` after the source works | Add a runtime profile only after evidence-only bridge smoke passes. |
 | Inspect source readiness, citations, graph context, and run traces in a browser. | `llmwiki-chat` after the source works | Add a bridge when the browser should test the real bridge path instead of the local development runtime. |
 
@@ -66,7 +66,7 @@ verification.
 ::: tip Historical publication note
 The initial bridge-start release was manually published and is historical
 first-publish evidence only. Use `llmwiki-bridge-start@0.0.3` for the current
-first-run baseline.
+guided handoff baseline.
 :::
 
 ## Protocol Surfaces

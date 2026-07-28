@@ -65,7 +65,7 @@ unavailable from that registry view or the query failed.
 
 The initial bridge-start release was manually first-published and remains
 historical first-publish evidence only. `llmwiki-bridge-start@0.0.3` is the
-current first-run package baseline. It uses `llmwiki-agent-bridge@0.3.0` as the
+current guided handoff package baseline. It uses `llmwiki-agent-bridge@0.3.0` as the
 default bridge package when bridge setup is selected.
 `llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
 on 2026-07-27.
@@ -191,7 +191,7 @@ Before publishing a future version:
   content, generated logs, credentials, or OTP material are included.
 - Keep npm Trusted Publisher/OIDC configured. The manually published initial
   release remains historical first-publish evidence only; the current
-  first-run package baseline is `0.0.3`.
+  guided handoff package baseline is `0.0.3`.
 
 After publishing a future version, verify from a clean directory:
 
