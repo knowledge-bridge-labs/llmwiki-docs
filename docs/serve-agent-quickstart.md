@@ -27,7 +27,7 @@ For a pinned, no-shim reproducibility check against the current public-preview
 baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.2 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.3 llmwiki-serve --help
 ```
 
 Alternatives:
@@ -38,7 +38,7 @@ pipx install llmwiki-serve
 python -m pip install llmwiki-serve
 ```
 
-Pin `llmwiki-serve==0.2.2` when you need to reproduce the current
+Pin `llmwiki-serve==0.2.3` when you need to reproduce the current
 public-preview baseline exactly.
 
 Confirm the command is available:
@@ -250,6 +250,44 @@ debugging events to `.runtime-logs/llmwiki-serve-io.jsonl`. Use `--io-log off`
 or `LLMWIKI_SERVE_IO_LOG=off` when you do not want local request/response
 debug logs.
 
+In another terminal, inspect the local instance registry:
+
+```powershell
+llmwiki-serve status
+llmwiki-serve status --json
+```
+
+```sh
+llmwiki-serve status
+llmwiki-serve status --json
+```
+
+`status` is an alias for `ls`. The registry is local operator state written by
+running `serve` processes. It reports PID, URL, source identity, page counts,
+health or stale status, and duplicate or parent/subfolder overlap hints. Public
+docs and issue reports should replace real roots with placeholders such as
+`<wiki-root>`:
+
+```json
+{
+  "instances": [
+    {
+      "status": "healthy",
+      "url": "http://127.0.0.1:8765",
+      "root": "<wiki-root>",
+      "source_id": "quickstart-agent-wiki",
+      "page_count": 3,
+      "approved_page_count": 2,
+      "warnings": []
+    }
+  ]
+}
+```
+
+Use `llmwiki-serve ls --no-probe` when you need a fast registry read without
+calling `/health`. Use `llmwiki-serve ls --prune-stale` only when you intend to
+remove records left by hard-killed processes.
+
 ## 7. Verify HTTP Readiness
 
 PowerShell:
@@ -398,13 +436,14 @@ The public package-first path has been validated with these clone-free smokes:
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.2 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.3 llmwiki-serve --help` | Help prints. |
 | Create sample wiki | Tiny local Markdown sample above | Files are local and clone-free. |
 | Inspect source | `llmwiki-serve manifest "$WIKI_ROOT"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$WIKI_ROOT" "release readiness required copy" --limit 4` | Approved evidence returns. |
 | Inspect refs | `llmwiki-serve source-refs "$WIKI_ROOT"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$WIKI_ROOT"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$WIKI_ROOT" --host 127.0.0.1 --port 8765` | Loopback server starts. |
+| Inspect local server registry | `llmwiki-serve status --json` | Running instances report health or stale state without publishing local roots. |
 | Verify HTTP | `/health`, `/manifest`, `/query`, `/source-refs`, `/source-bundle` | Endpoints return source data. |
 | Verify MCP Streamable HTTP | `/mcp/stream` `initialize`, `tools/list`, and `llmwiki_context` | MCP source tool smoke passes. |
 | Check guided startup package | `npx --yes llmwiki-bridge-start@latest --help` | Help prints. |

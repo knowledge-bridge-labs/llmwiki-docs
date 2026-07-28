@@ -6,9 +6,9 @@ package baseline is published:
 
 | Package | Published baseline | Registry | Publication evidence |
 | --- | --- | --- | --- |
-| `llmwiki-serve` | `0.2.2` | PyPI | Public registry version check |
-| `llmwiki-bridge-start` | `0.0.2` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27 |
-| `llmwiki-agent-bridge` | `0.2.1` | npm | Public registry version and CLI metadata check |
+| `llmwiki-serve` | `0.2.3` | PyPI | Public registry version check; publish workflow [`30356643454`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30356643454) |
+| `llmwiki-bridge-start` | `0.0.3` | npm | Public registry version check; publish workflow [`30357056742`](https://github.com/knowledge-bridge-labs/llmwiki-bridge-start/actions/runs/30357056742) |
+| `llmwiki-agent-bridge` | `0.3.0` | npm | Public registry version and CLI metadata check; publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
 | `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27; static artifact package with no CLI `bin` |
 
 Source checkouts remain supported for development, bundled fixtures, and
@@ -57,16 +57,16 @@ try {
 }
 ```
 
-These checks should report `llmwiki-serve` `0.2.2`,
-`llmwiki-bridge-start` `0.0.2`, `llmwiki-agent-bridge` `0.2.1`, and
+These checks should report `llmwiki-serve` `0.2.3`,
+`llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.3.0`, and
 `llmwiki-chat` `0.1.6`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
 unavailable from that registry view or the query failed.
 
 The initial bridge-start release was manually first-published and remains
-historical first-publish evidence only. `llmwiki-bridge-start@0.0.2` is the
-current first-run package baseline and was verified through npm Trusted
-Publisher/OIDC via GitHub Actions workflow_dispatch on 2026-07-27.
+historical first-publish evidence only. `llmwiki-bridge-start@0.0.3` is the
+current first-run package baseline. It uses `llmwiki-agent-bridge@0.3.0` as the
+default bridge package when bridge setup is selected.
 `llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
 on 2026-07-27.
 
@@ -189,9 +189,9 @@ Before publishing a future version:
   `local-model`, and `runtimeProfile=generic|hermes|deepagents`.
 - Confirm no private endpoints, concrete private model names, local vault
   content, generated logs, credentials, or OTP material are included.
-- Keep npm Trusted Publisher/OIDC configured. The `0.0.2` baseline verified
-  this path via workflow_dispatch on 2026-07-27; the manually published initial
-  release remains historical first-publish evidence only.
+- Keep npm Trusted Publisher/OIDC configured. The manually published initial
+  release remains historical first-publish evidence only; the current
+  first-run package baseline is `0.0.3`.
 
 After publishing a future version, verify from a clean directory:
 
@@ -215,7 +215,7 @@ Before publishing:
   public release metadata only.
 - Confirm `CHANGELOG.md` no longer marks the published version as pending.
 - Keep npm Trusted Publisher/OIDC configured for future owner-approved releases
-  where available. The current `0.2.1` baseline was confirmed by public npm
+  where available. The current `0.3.0` baseline was confirmed by public npm
   registry version check.
 - Keep npm tokens out of commits, logs, shell history, and CI variables unless a
   maintainer has explicitly approved that fallback.
@@ -276,8 +276,8 @@ npm install llmwiki-chat@<version>
 node -e "const fs = require('node:fs'); const root = require.resolve('llmwiki-chat/package.json').replace('package.json', ''); const pkg = require('llmwiki-chat/package.json'); if (pkg.bin) process.exit(1); if (!fs.existsSync(root + 'dist/index.html')) process.exit(1); if (!fs.existsSync(root + 'dist/THIRD_PARTY_LICENSES.md')) process.exit(1); console.log('llmwiki-chat package metadata and dist ok')"
 ```
 
-Do not document or test `npx llmwiki-chat`: the current package is a static
-browser artifact and intentionally has no executable `bin`.
+Do not document or test a chat package `npx` command: the current package is a
+static browser artifact and intentionally has no executable `bin`.
 
 ## Do Not Publish Yet If
 

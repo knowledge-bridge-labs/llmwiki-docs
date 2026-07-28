@@ -27,6 +27,14 @@ llmwiki-serve source-bundle /path/to/your/wiki
 llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 ```
 
+In another terminal, use the local instance registry when you need to confirm
+which source servers are running:
+
+```sh
+llmwiki-serve status
+llmwiki-serve status --json
+```
+
 If you do not have a wiki folder yet, the
 [`llmwiki-serve` QuickStart](/serve-agent-quickstart) includes a tiny local
 sample you can create without cloning any repository.
@@ -39,13 +47,13 @@ call a model, or write to the source folder.
 
 | Later hurdle | Add | Default command or install |
 | --- | --- | --- |
-| You want guided discovery, source startup, and handoff from local folders. | `llmwiki-bridge-start` | `npx llmwiki-bridge-start@latest --path /path/to/your/wiki` |
-| A client needs one companion endpoint across sources or a runtime escalation path. | `llmwiki-agent-bridge` | `npx llmwiki-agent-bridge@latest` |
+| You want guided discovery, source startup, and handoff from local folders. | `llmwiki-bridge-start` | `npx llmwiki-bridge-start@latest --path /path/to/your/wiki`; use `status` or `ls` for started-source state. |
+| A client needs one companion endpoint across sources or a runtime escalation path. | `llmwiki-agent-bridge` | `npx llmwiki-agent-bridge@latest`; use `sources --probe --json` for registry checks. |
 | A human needs to inspect source readiness, pages, citations, graph context, or bridge traces in a browser. | `llmwiki-chat` | `npm install llmwiki-chat@0.1.6`, then host `node_modules/llmwiki-chat/dist` |
 
 Current package baselines are listed in
 [Release Status & Compatibility](/status). At this baseline,
-`llmwiki-agent-bridge@0.2.1` exposes a package CLI for `npx`/`npm exec`.
+`llmwiki-agent-bridge@0.3.0` exposes a package CLI for `npx`/`npm exec`.
 `llmwiki-chat@0.1.6` is a static browser artifact with no CLI `bin`, so do not
 try to run it through `npx`.
 
