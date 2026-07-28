@@ -23,6 +23,13 @@ Install the current public-preview CLI from PyPI:
 uv tool install llmwiki-serve
 ```
 
+For a pinned, no-shim reproducibility check against the current public-preview
+baseline:
+
+```sh
+uvx --from llmwiki-serve==0.2.2 llmwiki-serve --help
+```
+
 Alternatives:
 
 ```sh
@@ -39,6 +46,10 @@ Confirm the command is available:
 ```sh
 llmwiki-serve --help
 ```
+
+The remaining commands use the installed `llmwiki-serve` CLI directly. Use
+`uv run` only when you intentionally switch to the optional source-checkout
+development path near the end.
 
 ## 2. Choose Or Create A Wiki Folder
 
@@ -277,6 +288,68 @@ ref labels.
 
 ## 8. Connect An Agent Or Client
 
+Before wiring a client, smoke the MCP Streamable HTTP endpoint if your client
+will use that transport. The package-first validation checks `initialize`,
+`tools/list`, and one `llmwiki_context` call against `/mcp/stream`.
+
+PowerShell:
+
+```powershell
+$McpHeaders = @{ Accept = "application/json, text/event-stream" }
+
+$InitializeBody = @{
+  jsonrpc = "2.0"
+  id = 1
+  method = "initialize"
+  params = @{
+    protocolVersion = "2025-06-18"
+    capabilities = @{}
+    clientInfo = @{ name = "llmwiki-quickstart-smoke"; version = "0.0.0" }
+  }
+} | ConvertTo-Json -Depth 6 -Compress
+Invoke-RestMethod "$Base/mcp/stream" -Method Post -Headers $McpHeaders `
+  -ContentType "application/json" -Body $InitializeBody
+
+Invoke-RestMethod "$Base/mcp/stream" -Method Post -Headers $McpHeaders `
+  -ContentType "application/json" `
+  -Body '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+
+$ContextBody = @{
+  jsonrpc = "2.0"
+  id = 3
+  method = "tools/call"
+  params = @{
+    name = "llmwiki_context"
+    arguments = @{ query = "release readiness required copy"; limit = 4 }
+  }
+} | ConvertTo-Json -Depth 6 -Compress
+Invoke-RestMethod "$Base/mcp/stream" -Method Post -Headers $McpHeaders `
+  -ContentType "application/json" -Body $ContextBody
+```
+
+POSIX shell:
+
+```sh
+curl -s "$BASE/mcp/stream" \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"llmwiki-quickstart-smoke","version":"0.0.0"}}}'
+
+curl -s "$BASE/mcp/stream" \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+
+curl -s "$BASE/mcp/stream" \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness required copy","limit":4}}}'
+```
+
+The smoke passes when `tools/list` includes `llmwiki_context` and the
+`llmwiki_context` response returns structured content with answerable evidence
+from the approved tiny-sample pages.
+
 For direct HTTP use, set the local base URL:
 
 ```powershell
@@ -317,6 +390,26 @@ runtime.
 Stop here if the agent can retrieve evidence and synthesize its own answer.
 Add `llmwiki-agent-bridge` only when one local endpoint should fan out across
 multiple sources or call a configured runtime for a normalized cited artifact.
+
+## Package Smoke Checklist
+
+The public package-first path has been validated with these clone-free smokes:
+
+| Check | Command or action | Expected result |
+| --- | --- | --- |
+| Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.2 llmwiki-serve --help` | Help prints. |
+| Create sample wiki | Tiny local Markdown sample above | Files are local and clone-free. |
+| Inspect source | `llmwiki-serve manifest "$WIKI_ROOT"` | Manifest prints source metadata. |
+| Query source | `llmwiki-serve query "$WIKI_ROOT" "release readiness required copy" --limit 4` | Approved evidence returns. |
+| Inspect refs | `llmwiki-serve source-refs "$WIKI_ROOT"` | Visible source refs return. |
+| Inspect bundle | `llmwiki-serve source-bundle "$WIKI_ROOT"` | Source bundle returns. |
+| Serve source | `llmwiki-serve serve "$WIKI_ROOT" --host 127.0.0.1 --port 8765` | Loopback server starts. |
+| Verify HTTP | `/health`, `/manifest`, `/query`, `/source-refs`, `/source-bundle` | Endpoints return source data. |
+| Verify MCP Streamable HTTP | `/mcp/stream` `initialize`, `tools/list`, and `llmwiki_context` | MCP source tool smoke passes. |
+| Check guided startup package | `npx --yes llmwiki-bridge-start@latest --help` | Help prints. |
+| Check bridge package | `npx --yes llmwiki-agent-bridge@latest --help` | Help prints. |
+| Check chat artifact | `npm install llmwiki-chat@0.1.6` | Static `dist/` artifact exists. |
 
 ## Optional: Source Checkout
 
