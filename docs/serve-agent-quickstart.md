@@ -27,7 +27,7 @@ For a pinned, no-shim reproducibility check against the current public-preview
 baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.3 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.4 llmwiki-serve --help
 ```
 
 Alternatives:
@@ -38,7 +38,7 @@ pipx install llmwiki-serve
 python -m pip install llmwiki-serve
 ```
 
-Pin `llmwiki-serve==0.2.3` when you need to reproduce the current
+Pin `llmwiki-serve==0.2.4` when you need to reproduce the current
 public-preview baseline exactly.
 
 Confirm the command is available:
@@ -210,6 +210,24 @@ In the tiny-sample response, check:
 
 Treat this output as source evidence for the host agent. It is not a generated
 final answer.
+
+Optional exact lookup and payload-control smoke:
+
+```powershell
+llmwiki-serve search $WikiRoot "release readiness" --mode literal `
+  --fields page_id,title,route --snippet-chars 0
+```
+
+```sh
+llmwiki-serve search "$WIKI_ROOT" "release readiness" \
+  --mode literal \
+  --fields page_id,title,route \
+  --snippet-chars 0
+```
+
+Use `search` with `--mode literal` when an agent or script needs a cheap exact
+substring check. Add `--exclude-page-id <id>` on a follow-up `query` or
+`search` call when that page has already been inspected.
 
 ## 5. Inspect Source References
 
@@ -436,10 +454,11 @@ The public package-first path has been validated with these clone-free smokes:
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.3 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.4 llmwiki-serve --help` | Help prints. |
 | Create sample wiki | Tiny local Markdown sample above | Files are local and clone-free. |
 | Inspect source | `llmwiki-serve manifest "$WIKI_ROOT"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$WIKI_ROOT" "release readiness required copy" --limit 4` | Approved evidence returns. |
+| Exact projected search | `llmwiki-serve search "$WIKI_ROOT" "release readiness" --mode literal --fields page_id,title,route --snippet-chars 0` | Literal route returns with only requested result fields. |
 | Inspect refs | `llmwiki-serve source-refs "$WIKI_ROOT"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$WIKI_ROOT"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$WIKI_ROOT" --host 127.0.0.1 --port 8765` | Loopback server starts. |

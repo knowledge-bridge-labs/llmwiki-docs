@@ -6,7 +6,7 @@ successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.3`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
@@ -24,7 +24,7 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.3`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.4`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the first-run entrypoint for discovery, source startup, optional bridge registration, and smoke checks. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.3.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
@@ -46,6 +46,7 @@ checkout and use the same command shapes.
 | --- | --- | --- |
 | `llmwiki-serve manifest <wiki-path>` | Any shell with the PyPI package installed | Print a local manifest for a compatible Markdown/wiki folder. |
 | `llmwiki-serve query <wiki-path> <text>` | Any shell with the PyPI package installed | Build one context pack for an agent or smoke test. |
+| `llmwiki-serve search <wiki-path> <text>` | Any shell with the PyPI package installed | Search pages directly, including exact literal and projected-result checks. |
 | `llmwiki-serve source-refs <wiki-path>` | Any shell with the PyPI package installed | Print visible source-reference handles for cited source metadata. |
 | `llmwiki-serve source-bundle <wiki-path>` | Any shell with the PyPI package installed | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
 | `llmwiki-serve ls` / `llmwiki-serve status` | Any shell with the PyPI package installed | List local registered `serve` instances, probe `/health` by default, and report stale or overlapping records. |
@@ -121,7 +122,7 @@ llmwiki-serve query /path/to/your/wiki "release readiness" --limit 4
 Command shape:
 
 ```text
-llmwiki-serve query <wiki-path> <text> [--limit <1-30>]
+llmwiki-serve query <wiki-path> <text> [--limit <1-30>] [--mode lexical|literal] [--fields <result-fields>] [--snippet-chars <0-2000>] [--min-score <score>] [--exclude-page-id <page-id> ...]
 ```
 
 Expected output is a `ContextPack` JSON object. This example is abbreviated;
@@ -159,6 +160,14 @@ Important behavior:
 
 - `--limit` controls the number of query-ranked evidence items and is clamped
   by the CLI to `1..30`.
+- `--mode literal` performs exact case-folded substring retrieval. Use it for
+  cheap yes/no checks before asking an agent to spend more context.
+- `--fields` accepts comma-separated or repeated `SearchResult` fields and
+  always includes `page_id` when projection is requested.
+- `--snippet-chars 0` removes result snippets; positive values cap snippet
+  length.
+- `--min-score` drops lower-scoring results.
+- `--exclude-page-id` omits already-seen page IDs or paths from query evidence.
 - `orientation` gives hot, index, or overview pages before query-ranked
   evidence when those pages exist.
 - `answerable: false` with an empty `evidence` array is a valid response when
@@ -173,6 +182,45 @@ Common failures:
 | `Invalid value for '--limit'` | The limit is outside `1..30` or not an integer. | Use a small bounded limit such as `4`, `6`, or `8`. |
 | `No matching approved LLMWiki page was found.` | The source loaded, but the query did not match approved pages. | Try a broader query or inspect draft filtering. |
 | `No supported wiki files were found...` | The source root is unsupported. | Run `manifest` on the same root. |
+
+## `llmwiki-serve search`
+
+Use `search` when a script or agent needs candidates without the full
+`ContextPack` graph and limitations envelope.
+
+```sh
+llmwiki-serve search /path/to/your/wiki "release readiness" --limit 4
+```
+
+Exact substring and projected-result smoke:
+
+```sh
+llmwiki-serve search /path/to/your/wiki "3차 계약" \
+  --mode literal \
+  --fields page_id,title,snippet,route \
+  --snippet-chars 80 \
+  --exclude-page-id index
+```
+
+Expected output:
+
+```json
+{
+  "results": [
+    {
+      "page_id": "contract-and-estimate",
+      "title": "Contract And Estimate",
+      "snippet": "행복ICT 3차 계약 조건...",
+      "route": "literal"
+    }
+  ]
+}
+```
+
+The same controls are available on HTTP `/search`, HTTP `/query`, MCP
+`llmwiki_search`, MCP `llmwiki_context`, and MCP Streamable HTTP tools. Use
+`llmwiki-serve query ... --exclude-page-id <id>` after a search result has
+already been inspected to avoid repeated evidence.
 
 ## `llmwiki-serve source-refs`
 

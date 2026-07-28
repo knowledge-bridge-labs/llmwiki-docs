@@ -13,7 +13,7 @@ surface at `docs/openapi.json` in the server repository. In local sibling
 checkouts, read `../llmwiki-serve/docs/openapi.json`; the public repository
 path is
 `https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/main/docs/openapi.json`.
-The `llmwiki-serve` main branch now includes the 0.2.3 source release contract.
+The `llmwiki-serve` main branch now includes the 0.2.4 source release contract.
 
 The OpenAPI artifact is generated from the implemented FastAPI routes and data
 models by `scripts/export_openapi.py`, then checked by the server release smoke
@@ -43,7 +43,7 @@ behind these responses.
 | `/source-refs` | `GET` | query `include_drafts` | `SourceRefsResponse` with opaque source-reference handles linked to served pages |
 | `/query` | `POST` | `QueryRequest` | `ContextPack` |
 | `/search` | `POST` | `QueryRequest` | `{ "results": SearchResult[] }` |
-| `/read/{page_id}` | `GET` | query `include_drafts` | page payload, HTTP 404 for a missing page, or withheld payload for a draft page |
+| `/read/{page_id}` | `GET` | query `include_drafts`, `fields` | page payload, projected page payload, HTTP 404 for a missing page, or withheld payload for a draft page |
 | `/graph` | `GET` | query `limit`, `include_drafts` | `{ "nodes": GraphNode[], "edges": GraphEdge[] }` |
 | `/graph/neighborhood` | `GET` | query `seed`, `depth`, `direction`, `relation`, `limit`, `include_drafts` | `GraphNeighborhoodResponse` |
 | `/mcp` | `POST` | JSON-RPC object | Legacy MCP-style JSON-RPC result envelope |
@@ -62,7 +62,7 @@ brevity.
 {
   "status": "ok",
   "service": "llmwiki-serve",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "source": {
     "source_id": "sample-packaging-llmwiki",
     "bundle_id": "sample-packaging-llmwiki:sha256:abc123...",
@@ -92,7 +92,12 @@ brevity.
 {
   "query": "release readiness",
   "limit": 8,
-  "include_drafts": false
+  "include_drafts": false,
+  "mode": "lexical",
+  "fields": null,
+  "snippet_chars": null,
+  "min_score": null,
+  "exclude_page_ids": []
 }
 ```
 
@@ -104,6 +109,27 @@ Graph neighborhood calls clamp `depth` to `0..4`, `limit` to `1..500`, and
 parameters select the starting nodes and relation filter.
 `include_drafts` only has effect when the server operator started
 `llmwiki-serve` with draft access enabled.
+
+Search and query controls are opt-in. Defaults preserve the full response
+shape. Use `mode: "literal"` for exact case-folded substring checks, including
+Korean/numeric phrases such as `3차 계약`. Use `snippet_chars` to cap snippets
+or set `0` for empty snippets, `fields` to project each `SearchResult`,
+`min_score` to drop lower-confidence matches, and `exclude_page_ids` to avoid
+already-seen page IDs or paths. When `fields` is set, `page_id` is always
+included.
+
+Example exact lookup with projected results:
+
+```json
+{
+  "query": "3차 계약",
+  "limit": 4,
+  "mode": "literal",
+  "fields": ["page_id", "title", "snippet", "route"],
+  "snippet_chars": 80,
+  "exclude_page_ids": ["index"]
+}
+```
 
 Evidence-routing guard for `/query`: `orientation` entries are navigation
 helpers for hot, index, or overview pages. They do not make a query answerable
@@ -123,6 +149,10 @@ filtering, the response is HTTP 200 with:
   "reason": "not approved for serving"
 }
 ```
+
+Add `?fields=id,title,summary` when a client needs only selected `WikiPage`
+fields. Projected reads omit unrequested fields such as `text`, `headings`, or
+frontmatter.
 
 `llmwiki-serve serve` defaults to strict per-request source freshness. The
 `--refresh-interval-seconds` option defaults to `0.0`, which checks the source
@@ -304,9 +334,9 @@ Available tools:
 
 | Tool | Arguments | Result |
 | --- | --- | --- |
-| `llmwiki_context` | `query`, `limit`, `include_drafts` | `ContextPack` |
-| `llmwiki_search` | `query`, `limit`, `include_drafts` | `{ "results": SearchResult[] }` |
-| `llmwiki_read` | `page_id` or `id`, `include_drafts` | page payload or not-found payload |
+| `llmwiki_context` | `query`, `limit`, `include_drafts`, optional `mode`, `fields`, `snippet_chars`, `min_score`, `exclude_page_ids` | `ContextPack` |
+| `llmwiki_search` | `query`, `limit`, `include_drafts`, optional `mode`, `fields`, `snippet_chars`, `min_score`, `exclude_page_ids` | `{ "results": SearchResult[] }` |
+| `llmwiki_read` | `page_id` or `id`, `include_drafts`, optional `fields` | page payload, projected page payload, or not-found payload |
 | `llmwiki_graph` | `limit`, `include_drafts` | graph payload |
 | `llmwiki_graph_neighbors` | `seed` or `seeds`, `depth`, `direction`, `relation` or `relations`, `limit`, `include_drafts` | graph neighborhood payload |
 | `llmwiki_source_refs` | `include_drafts` | `SourceRefsResponse` |

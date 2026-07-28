@@ -6,7 +6,7 @@ package baseline is published:
 
 | Package | Published baseline | Registry | Publication evidence |
 | --- | --- | --- | --- |
-| `llmwiki-serve` | `0.2.3` | PyPI | Public registry version check; publish workflow [`30356643454`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30356643454) |
+| `llmwiki-serve` | `0.2.4` | PyPI | Public registry version check; publish workflow [`30363556613`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30363556613) |
 | `llmwiki-bridge-start` | `0.0.3` | npm | Public registry version check; publish workflow [`30357056742`](https://github.com/knowledge-bridge-labs/llmwiki-bridge-start/actions/runs/30357056742) |
 | `llmwiki-agent-bridge` | `0.3.0` | npm | Public registry version and CLI metadata check; publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
 | `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27; static artifact package with no CLI `bin` |
@@ -57,7 +57,7 @@ try {
 }
 ```
 
-These checks should report `llmwiki-serve` `0.2.3`,
+These checks should report `llmwiki-serve` `0.2.4`,
 `llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.3.0`, and
 `llmwiki-chat` `0.1.6`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
