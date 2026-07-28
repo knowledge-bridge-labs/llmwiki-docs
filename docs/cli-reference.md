@@ -1,12 +1,12 @@
 # CLI Reference
 
 This page is the operator reference for the public-preview command surfaces.
-Use [`llmwiki-serve` QuickStart](/serve-agent-quickstart) for the shortest
+Use [QuickStart](/quickstart) for the shortest
 successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
@@ -24,8 +24,8 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.4`; package commands are available. |
-| `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the first-run entrypoint for discovery, source startup, optional bridge registration, and smoke checks. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.5`; package commands are available. |
+| `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the guided handoff for discovery, source startup, optional bridge registration, and smoke checks after the source layer works. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.3.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
@@ -36,7 +36,7 @@ commands should also pass from a clean temporary directory.
 
 Most examples below use `/path/to/your/wiki`. Replace it with an existing
 Markdown, Obsidian, or LLMWiki-style graph, or create the tiny local sample from
-[`llmwiki-serve` QuickStart](/serve-agent-quickstart). Optional bundled
+[QuickStart](/quickstart). Optional bundled
 fixtures such as `./examples/sample-wiki` require a `llmwiki-serve` source
 checkout and use the same command shapes.
 
@@ -49,9 +49,9 @@ checkout and use the same command shapes.
 | `llmwiki-serve search <wiki-path> <text>` | Any shell with the PyPI package installed | Search pages directly, including exact literal and projected-result checks. |
 | `llmwiki-serve source-refs <wiki-path>` | Any shell with the PyPI package installed | Print visible source-reference handles for cited source metadata. |
 | `llmwiki-serve source-bundle <wiki-path>` | Any shell with the PyPI package installed | Print source identity, projection metadata, capabilities, raw-origin metadata, and source refs. |
-| `llmwiki-serve ls` / `llmwiki-serve status` | Any shell with the PyPI package installed | List local registered `serve` instances, probe `/health` by default, and report stale or overlapping records. |
+| `llmwiki-serve ls` / `llmwiki-serve status` | Any shell with the PyPI package installed | Discover local `serve` instances from registry records and OS process command lines, probe `/health` by default, and report stale or overlapping records. |
 | `llmwiki-serve serve <wiki-path>` | Any shell with the PyPI package installed | Start the read-only HTTP and MCP source server, with A2A compatibility only when explicitly enabled. |
-| `npx llmwiki-bridge-start@latest --path <wiki-path>` | Any local workspace | Run the first-run onboarding harness against an existing wiki folder. |
+| `npx llmwiki-bridge-start@latest --path <wiki-path>` | Any local workspace | Run the guided handoff harness against an existing wiki folder after source checks pass. |
 | `npx llmwiki-bridge-start@latest status` / `ls` | Any local workspace | Inspect bridge-start's started-source config, live source health, and bridge registration state. |
 | `npx llmwiki-agent-bridge@latest` | Any local workspace | Start the optional runtime companion bridge from the published package. |
 | `npx llmwiki-agent-bridge@latest sources` / `ls` / `status` | Any local workspace | Print the bridge source registry from local settings; add `--probe` and `--json` for scriptable readiness checks. |
@@ -70,11 +70,11 @@ llmwiki-serve manifest /path/to/your/wiki
 ```
 
 Expected output is JSON with source metadata. This example uses the tiny local
-sample from the `llmwiki-serve` QuickStart:
+sample from QuickStart:
 
 ```json
 {
-  "title": "Quickstart Agent Wiki",
+  "title": "QuickStart Agent Wiki",
   "description": "Tiny local sample for llmwiki-serve package install.",
   "root": "<wiki-root>",
   "adapter": "llmwiki-markdown",
@@ -132,7 +132,7 @@ pages match the query.
 ```json
 {
   "query": "release readiness",
-  "wiki_title": "Quickstart Agent Wiki",
+  "wiki_title": "QuickStart Agent Wiki",
   "answerable": true,
   "orientation": [],
   "evidence": [
@@ -273,19 +273,27 @@ llmwiki-serve status --json
 Command shape:
 
 ```text
-llmwiki-serve ls [--json] [--probe|--no-probe] [--prune-stale] [--state-dir <path>]
-llmwiki-serve status [--json] [--probe|--no-probe] [--prune-stale] [--state-dir <path>]
+llmwiki-serve ls [--json] [--probe|--no-probe] [--processes|--no-processes] [--probe-port <port>] [--prune-stale] [--state-dir <path>]
+llmwiki-serve status [--json] [--probe|--no-probe] [--processes|--no-processes] [--probe-port <port>] [--prune-stale] [--state-dir <path>]
 ```
 
 `serve` writes a best-effort local registry record under per-user state before
-the HTTP server starts. `ls` reads those records, probes each local `/health`
-endpoint by default, and reports whether a record is healthy, unhealthy,
-running without a probe, or stale. Hard-killed processes can leave stale
-records; inspect them first, then use `--prune-stale` when you intend to remove
-those records.
+the HTTP server starts. In 0.2.5 and newer, `ls` reads those records and also
+inspects the local OS process table for command lines that identify
+`llmwiki-serve serve` processes. For unregistered legacy or orphan processes,
+it parses the root argument plus `--host` and `--port` when present, then
+probes only those discovered local endpoints unless probing is disabled. It
+does not use default fixed-port probing.
 
-Use `--json` for scripts and status dashboards. Public docs, issues, and
-screenshots should redact the local `root` field:
+Use `--no-processes` when you want registry-only output. Use
+`--probe-port <port>` only for an explicit manual loopback diagnostic. Use
+`--json` for scripts and status dashboards. Public docs, issues, and
+screenshots should redact the local `root` field.
+
+The command reports whether a discovered instance is healthy, unhealthy,
+running without a probe, or stale. Hard-killed processes can leave stale
+registry records; inspect them first, then use `--prune-stale` when you intend
+to remove those records.
 
 ```json
 {
@@ -300,17 +308,19 @@ screenshots should redact the local `root` field:
       "adapter": "llmwiki-markdown",
       "page_count": 42,
       "approved_page_count": 40,
+      "discovery_source": "registry",
+      "root_source": "registry",
       "warnings": []
     }
   ]
 }
 ```
 
-When multiple registered instances point at the same source identity, bundle,
+When multiple discovered instances point at the same source identity, bundle,
 or ancestor/child roots, the command reports warnings so operators can choose
-one server or intentionally keep separate source IDs. The registry is local
-diagnostic state only; network `/health` and `/manifest` responses continue to
-redact the local root.
+one server or intentionally keep separate source IDs. Registry records and
+process command lines are local diagnostic state only; network `/health` and
+`/manifest` responses continue to redact the local root.
 
 ## `llmwiki-serve serve`
 
@@ -405,9 +415,9 @@ Common failures:
 
 ## `llmwiki-bridge-start`
 
-Use `llmwiki-bridge-start` as the package-based first-run entrypoint when you
-already have one or more wiki folders and want the tooling to guide local
-discovery, source startup, bridge registration, and smoke checks. It is an
+Use `llmwiki-bridge-start` after the source layer works when you already have
+one or more wiki folders and want tooling to guide local discovery, source
+startup, bridge registration, and smoke checks. It is an
 onboarding harness, not a compiler, ingestion workflow, model runtime, or
 replacement for `llmwiki-agent-bridge`.
 
@@ -428,14 +438,18 @@ version only for reproducible release checks.
 
 Useful scriptable commands:
 
+```sh
+BRIDGE_URL=http://127.0.0.1:8788
+```
+
 | Command | Purpose |
 | --- | --- |
-| `llmwiki-bridge-start` or `llmwiki-bridge-start quickstart` | Guided first-run flow. |
+| `llmwiki-bridge-start` or `llmwiki-bridge-start quickstart` | Guided source startup and handoff flow. |
 | `llmwiki-bridge-start discover --path <dir> --validate` | Find candidate wiki roots and validate them with `llmwiki-serve manifest`. |
 | `llmwiki-bridge-start start --path <wiki-path> --port <port>` | Start `llmwiki-serve` for a selected source folder. |
-| `llmwiki-bridge-start register --bridge http://127.0.0.1:8788 --config .llmwiki-bridge-start/sources.json` | Register started source URLs with a local bridge. |
+| `llmwiki-bridge-start register --bridge "$BRIDGE_URL" --config .llmwiki-bridge-start/sources.json` | Register started source URLs with a local bridge. |
 | `llmwiki-bridge-start status --json` or `llmwiki-bridge-start ls --json` | List started sources, live health, and bridge registration state. |
-| `llmwiki-bridge-start smoke --bridge http://127.0.0.1:8788` | Run an evidence-only bridge smoke request. |
+| `llmwiki-bridge-start smoke --bridge "$BRIDGE_URL"` | Run an evidence-only bridge smoke request. |
 
 Minimum success is a healthy loopback source endpoint and a handoff URL that a
 coding agent or script can use directly. When bridge setup is skipped, the
@@ -454,7 +468,7 @@ logs publicly. Bridge registration is independent from source reachability:
 a source can be healthy but unregistered, registered at another URL, or unknown
 when the bridge is offline.
 
-Discovery and guided quickstart keep parent/child overlaps visible when both
+Discovery and guided startup keep parent/child overlaps visible when both
 paths look like plausible source roots. Select one source from an overlap group
 unless you intentionally want separate source IDs and separate servers.
 Delegated-runtime smoke treats configured and reachable as separate states:
@@ -536,7 +550,13 @@ agent-card metadata:
 | `LLMWIKI_AGENT_BRIDGE_AGENT_RUNTIME` | A2A-style agent runtime label. |
 | `LLMWIKI_AGENT_BRIDGE_PROVIDER_ORGANIZATION` | Provider or operator label. |
 
-Open `http://127.0.0.1:8788/settings` for the guided setup flow:
+Open the bridge settings page for the guided setup flow:
+
+```sh
+BRIDGE_URL=http://127.0.0.1:8788
+```
+
+Then open `$BRIDGE_URL/settings`.
 
 1. Choose the bridge mode. Evidence-only mode can verify source fan-out without
    runtime settings; runtime-backed modes need profile, base URL, and model.
@@ -561,20 +581,22 @@ a stable evidence order even when source calls complete at different times.
 Readiness checks:
 
 ```sh
-curl -s http://127.0.0.1:8788/health
-curl -s http://127.0.0.1:8788/sources
-curl -s 'http://127.0.0.1:8788/sources?probe=1'
-curl -s http://127.0.0.1:8788/.well-known/agent-card.json
-curl -s http://127.0.0.1:8788/mcp \
+BRIDGE_URL=http://127.0.0.1:8788
+
+curl -s "$BRIDGE_URL/health"
+curl -s "$BRIDGE_URL/sources"
+curl -s "$BRIDGE_URL/sources?probe=1"
+curl -s "$BRIDGE_URL/.well-known/agent-card.json"
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"bridge-smoke","version":"0.0.0"}}}'
-curl -s http://127.0.0.1:8788/mcp \
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","method":"notifications/initialized"}'
-curl -s http://127.0.0.1:8788/mcp \
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":2,"method":"ping"}'
-curl -s http://127.0.0.1:8788/mcp \
+curl -s "$BRIDGE_URL/mcp" \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":3,"method":"tools/list"}'
 ```
@@ -583,7 +605,7 @@ For an end-to-end run, use Step 3 in `/settings` or send the equivalent CLI
 request:
 
 ```sh
-curl -s http://127.0.0.1:8788/message:send \
+curl -s "$BRIDGE_URL/message:send" \
   -H 'content-type: application/json' \
   --data @examples/message-send.local.json
 ```
@@ -695,12 +717,12 @@ Default local flow:
 
 1. Start `llmwiki-serve` on `http://127.0.0.1:8765`.
 2. Start `llmwiki-chat` from the package `dist/` or a source-checkout dev server.
-3. Begin in the `First-run quickstart` panel. It shows the local source and
+3. Begin in the `QuickStart` panel. It shows the local source and
    bridge commands before you choose a runtime path.
 4. For direct source testing, confirm the default Knowledge Source is ready and
    click `Test sample source` or the source card's `Test source`.
-5. If `llmwiki-agent-bridge` is running at `http://127.0.0.1:8788`, click
-   `Test local bridge` from the quickstart panel or select the local Agent
+5. If `llmwiki-agent-bridge` is running at `BRIDGE_URL`, click
+   `Test local bridge` from the QuickStart panel or select the local Agent
    Bridge card, choose A2A or MCP mode, and run `Test bridge`.
 6. When the bridge is ready, its registered Knowledge Sources appear as
    bridge-managed, read-only source cards. Manage those sources in the bridge

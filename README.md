@@ -9,7 +9,7 @@ This repository is the GitHub Pages documentation portal for serving
 LLMWiki-style Markdown folders as agent-readable Knowledge Sources:
 
 - `llmwiki-serve`: read-only Knowledge Source server for one Markdown/wiki folder.
-- `llmwiki-bridge-start`: first-run entrypoint for discovering existing wiki folders, starting loopback sources, and handing them to agent clients or the bridge.
+- `llmwiki-bridge-start`: guided handoff for discovering existing wiki folders, starting loopback sources, and handing them to agent clients or the bridge after the source layer works.
 - `llmwiki-agent-bridge`: optional runtime companion that gathers source evidence and returns one cited answer artifact.
 - `llmwiki-chat`: optional browser workbench for source setup, bridge selection, graph/citation review, and run details.
 - `llmwiki-docs`: cross-repo onboarding, architecture, protocol posture, release status, and operations references.
@@ -21,8 +21,8 @@ implementation details in the owning repo README or docs directory.
 
 - [Overview](docs/index.md)
 - [Demo](docs/demo.md)
-- [`llmwiki-serve` QuickStart](docs/serve-agent-quickstart.md)
-- [Quickstart gateway](docs/quickstart.md)
+- [QuickStart](docs/quickstart.md)
+- [`llmwiki-serve`](docs/llmwiki-serve.md)
 - [Data Flow](docs/data-flow.md)
 - [Architecture](docs/architecture.md)
 - [Runtime Adapters](docs/runtime-adapters.md)
@@ -30,13 +30,13 @@ implementation details in the owning repo README or docs directory.
 - [Release Status & Compatibility](docs/status.md)
 
 The docs are intentionally local-first. The public first-run path uses package
-installs for `llmwiki-serve==0.2.4`, `llmwiki-bridge-start@0.0.3`,
+installs for `llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
 Source checkouts remain supported for bundled samples, development scripts,
 and release verification.
 The initial bridge-start release was manually published;
-`llmwiki-bridge-start@0.0.3` is the current first-run baseline and uses
+`llmwiki-bridge-start@0.0.3` is the current guided handoff baseline and uses
 `llmwiki-agent-bridge@0.3.0` as its default bridge package when bridge setup is
 selected. `llmwiki-agent-bridge@0.3.0` exposes the bridge CLI for
 `npx`/`npm exec` runs, including `sources`, `ls`, and `status` registry checks.
@@ -47,8 +47,7 @@ Shortest local path:
 
 1. Install `llmwiki-serve` from PyPI with `uv tool install llmwiki-serve`.
 2. Point it at an existing Markdown, Obsidian-style, or LLMWiki folder, or
-   create the clone-free tiny sample in
-   [`llmwiki-serve` QuickStart](docs/serve-agent-quickstart.md).
+   create the tiny sample in [QuickStart](docs/quickstart.md).
 3. Run `llmwiki-serve manifest`, `query`, `source-refs`, and `source-bundle`
    before starting the loopback server.
 4. Serve the same folder on `http://127.0.0.1:8765`, then verify `/health`,
@@ -59,10 +58,11 @@ Shortest local path:
 6. Register `http://127.0.0.1:8765/mcp/stream` directly with clients that
    support MCP Streamable HTTP, without treating it as a protocol certification
    claim.
-7. Use `npx llmwiki-bridge-start@latest --path /path/to/your/wiki` when you
-   want guided discovery, source startup, bridge registration, and smoke
-   checks. Use `npx llmwiki-bridge-start@latest status --json` or `ls` to
-   inspect started sources and bridge registration state.
+7. After the source works, use
+   `npx llmwiki-bridge-start@latest --path /path/to/your/wiki` when you want
+   guided discovery, source startup, bridge registration, and smoke checks.
+   Use `npx llmwiki-bridge-start@latest status --json` or `ls` to inspect
+   started sources and bridge registration state.
 8. Add `npx llmwiki-agent-bridge@latest` only when you need a companion bridge
    endpoint, and use `npx llmwiki-agent-bridge@latest sources --probe --json`
    to inspect registered source readiness. Install `llmwiki-chat@0.1.6` only
@@ -119,8 +119,8 @@ public-preview docs entrypoint.
 
 | Area | Pages |
 | --- | --- |
-| Start | `docs/index.md`, `docs/demo.md`, `docs/serve-agent-quickstart.md`, `docs/quickstart.md`, `docs/examples.md` |
-| Understand | `docs/core-concepts.md`, `docs/data-flow.md`, `docs/architecture.md`, `docs/positioning.md` |
+| Start | `docs/index.md`, `docs/demo.md`, `docs/quickstart.md`, `docs/examples.md` |
+| Understand | `docs/core-concepts.md`, `docs/llmwiki-serve.md`, `docs/data-flow.md`, `docs/architecture.md`, `docs/positioning.md` |
 | Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |
 | Operate | `docs/network-security.md`, `docs/deployment.md`, `docs/troubleshooting.md`, `docs/faq.md` |

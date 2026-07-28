@@ -13,12 +13,13 @@ Start with `llmwiki-serve` first. It is the minimum useful path because it can
 serve a wiki folder, answer `/query`, and expose MCP-style JSON-RPC without the
 bridge, chat workbench, or any model runtime.
 
-Use the published `llmwiki-serve==0.2.4` package for the default path. Clone
-the repository only when you want bundled fixtures or development scripts.
+Use the published `llmwiki-serve==0.2.5` package for the default path. Use a
+source checkout only when you want bundled fixtures or development scripts.
 
-Run `npx llmwiki-bridge-start@latest` when you want guided discovery and
-source startup. Run `npx llmwiki-agent-bridge@latest` only if you need a
-companion service for evidence-only, delegated-runtime, or hybrid answer loops.
+After the QuickStart source checks pass, run
+`npx llmwiki-bridge-start@latest` when you want guided discovery and source
+startup. Run `npx llmwiki-agent-bridge@latest` only if you need a companion
+service for evidence-only, delegated-runtime, or hybrid answer loops.
 Install `llmwiki-chat@0.1.6` only if you want to host the static browser
 workbench for source inspection, bridge selection, traces, citations, and graph
 context.
@@ -49,7 +50,7 @@ when you want to connect optional tools such as the bridge or chat workbench.
 
 Source checkouts remain supported because they include fixtures, development
 scripts, and release-smoke commands. Package installs are now available for the
-current public-preview baseline: `llmwiki-serve==0.2.4`,
+current public-preview baseline: `llmwiki-serve==0.2.5`,
 `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.3.0`, and
 `llmwiki-chat@0.1.6`.
 
@@ -71,10 +72,11 @@ browser client when its static package artifact is hosted; it does not start
 ## Can I install the packages instead of cloning?
 
 Yes. Use `uv tool install llmwiki-serve` or
-`uvx --from llmwiki-serve==0.2.4 llmwiki-serve ...` for the source server. Use
+`uvx --from llmwiki-serve==0.2.5 llmwiki-serve ...` for the source server. Use
 `npx llmwiki-bridge-start@latest --path /path/to/your/wiki` when you want the
-guided first-run entrypoint. Use `npx llmwiki-agent-bridge@latest` when you
-want to run the bridge directly for source fan-out or runtime-backed answers.
+guided handoff after source checks pass. Use `npx llmwiki-agent-bridge@latest`
+when you want to run the bridge directly for source fan-out or runtime-backed
+answers.
 Use `npm install llmwiki-chat@0.1.6` when you want the static browser
 workbench artifact; the current chat package has no CLI `bin`. Source checkouts
 remain the development path for bundled fixtures, Vite dev server work, or

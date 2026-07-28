@@ -51,7 +51,7 @@ They start after compatible Markdown or wiki files already exist.
 | Optional inspection | `llmwiki-chat` | A browser workbench can test the source, inspect pages and graph context, and review citations and traces. |
 
 For the text version of this flow, read [Data Flow](/data-flow). For the
-hands-on path, start with [Quickstart](/quickstart).
+hands-on path, start with [QuickStart](/quickstart).
 
 ## Regenerate The Demo
 

@@ -6,7 +6,7 @@ package baseline is published:
 
 | Package | Published baseline | Registry | Publication evidence |
 | --- | --- | --- | --- |
-| `llmwiki-serve` | `0.2.4` | PyPI | Public registry version check; publish workflow [`30363556613`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30363556613) |
+| `llmwiki-serve` | `0.2.5` | PyPI | Public registry version check; release PR [`#31`](https://github.com/knowledge-bridge-labs/llmwiki-serve/pull/31), merge `af48100d627bd9bbda9ee0860b72ceb1be5051aa`, publish workflow [`30371543484`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30371543484) |
 | `llmwiki-bridge-start` | `0.0.3` | npm | Public registry version check; publish workflow [`30357056742`](https://github.com/knowledge-bridge-labs/llmwiki-bridge-start/actions/runs/30357056742) |
 | `llmwiki-agent-bridge` | `0.3.0` | npm | Public registry version and CLI metadata check; publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
 | `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27; static artifact package with no CLI `bin` |
@@ -57,7 +57,7 @@ try {
 }
 ```
 
-These checks should report `llmwiki-serve` `0.2.4`,
+These checks should report `llmwiki-serve` `0.2.5`,
 `llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.3.0`, and
 `llmwiki-chat` `0.1.6`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
@@ -65,7 +65,7 @@ unavailable from that registry view or the query failed.
 
 The initial bridge-start release was manually first-published and remains
 historical first-publish evidence only. `llmwiki-bridge-start@0.0.3` is the
-current first-run package baseline. It uses `llmwiki-agent-bridge@0.3.0` as the
+current guided handoff package baseline. It uses `llmwiki-agent-bridge@0.3.0` as the
 default bridge package when bridge setup is selected.
 `llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
 on 2026-07-27.
@@ -191,7 +191,7 @@ Before publishing a future version:
   content, generated logs, credentials, or OTP material are included.
 - Keep npm Trusted Publisher/OIDC configured. The manually published initial
   release remains historical first-publish evidence only; the current
-  first-run package baseline is `0.0.3`.
+  guided handoff package baseline is `0.0.3`.
 
 After publishing a future version, verify from a clean directory:
 
