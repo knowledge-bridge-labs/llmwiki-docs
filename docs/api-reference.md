@@ -13,7 +13,9 @@ surface at `docs/openapi.json` in the server repository. In local sibling
 checkouts, read `../llmwiki-serve/docs/openapi.json`; the public repository
 path is
 `https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/main/docs/openapi.json`.
-The `llmwiki-serve` main branch now includes the 0.2.5 source release contract.
+That server-repository OpenAPI artifact is the current source contract;
+[Release Status & Compatibility](/status) tracks package-manager baselines
+separately.
 
 The OpenAPI artifact is generated from the implemented FastAPI routes and data
 models by `scripts/export_openapi.py`, then checked by the server release smoke
@@ -62,7 +64,7 @@ brevity.
 {
   "status": "ok",
   "service": "llmwiki-serve",
-  "version": "0.2.5",
+  "version": "current-server-version",
   "source": {
     "source_id": "sample-packaging-llmwiki",
     "bundle_id": "sample-packaging-llmwiki:sha256:abc123...",
