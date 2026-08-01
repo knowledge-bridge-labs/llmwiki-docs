@@ -10,7 +10,7 @@ Package registry status is tracked in
 [Release Status & Compatibility](/status). The live PyPI package baseline is
 still `llmwiki-serve==0.2.6` until the status page is updated after a package
 release. The SciFact rows below describe the `0.2.8` source candidate at commit
-[`0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08`](https://github.com/knowledge-bridge-labs/llmwiki-serve/tree/0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08),
+[`77e097451d5b496ced48b6d98e7427e7b54c5f26`](https://github.com/knowledge-bridge-labs/llmwiki-serve/tree/77e097451d5b496ced48b6d98e7427e7b54c5f26),
 not a live PyPI claim.
 
 ## SciFact Retrieval Benchmark
@@ -25,25 +25,25 @@ queries, and `339` qrels. The benchmark explicitly selects the `english`
 analyzer profile; the product default remains `legacy`.
 
 Both final reports use the same immutable implementation revision
-`git:0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08` and were committed on the
+`git:8d04e8a46487827ee488a7ddab005aaab8dd885d` and were committed on the
 public branch state linked above. Benchmark adapters are repository-level
 reproducibility tooling, not installed `llmwiki-serve` console commands.
 
 | Environment | nDCG@10 | Recall@100 | Recall@5 | Hit@5 | MRR@10 | Report |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| Windows local | `0.6905159872` | `0.9286666667` | `0.7459444444` | `0.7666666667` | `0.656265873` | [JSON report](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08/benchmarks/verified_sources/reports/beir-scifact-windows-2026-08-01.json) |
-| DGX Spark Ubuntu | `0.6905159872` | `0.9286666667` | `0.7459444444` | `0.7666666667` | `0.656265873` | [JSON report](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08/benchmarks/verified_sources/reports/beir-scifact-dgx-spark-ubuntu-2026-08-01.json) |
+| Windows local | `0.6905159872` | `0.9286666667` | `0.7459444444` | `0.7666666667` | `0.656265873` | [JSON report](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/77e097451d5b496ced48b6d98e7427e7b54c5f26/benchmarks/verified_sources/reports/beir-scifact-windows-2026-08-01.json) |
+| DGX Spark Ubuntu | `0.6905159872` | `0.9286666667` | `0.7459444444` | `0.7666666667` | `0.656265873` | [JSON report](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/77e097451d5b496ced48b6d98e7427e7b54c5f26/benchmarks/verified_sources/reports/beir-scifact-dgx-spark-ubuntu-2026-08-01.json) |
 
 Quality metrics match exactly across Windows and DGX Spark Ubuntu. Latency is
-environment-specific and is recorded only as run context: Windows local indexed
-in `65.34s` with search p50/p95 `268.315ms` / `659.773ms`; DGX Spark Ubuntu
-indexed in `2.311s` with search p50/p95 `59.232ms` / `120.958ms`.
+environment-specific and is recorded only as run context: Windows local run 1
+index build/search p50/p95 was `65413.866ms` / `272.541ms` / `535.246ms`; DGX
+Spark Ubuntu run 1 was `2458.894ms` / `58.054ms` / `118.213ms`.
 
 The reports also link the official BEIR SciFact archive and normalized artifact
 checksums. See the source-repo
-[README benchmark section](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08/README.md#benchmark-evidence)
+[README benchmark section](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/77e097451d5b496ced48b6d98e7427e7b54c5f26/README.md#benchmark-evidence)
 and
-[verified report README](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/0f38fcbdf0c5a90c07a5f23e057df48e0bc3ef08/benchmarks/verified_sources/reports/README.md)
+[verified report README](https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/77e097451d5b496ced48b6d98e7427e7b54c5f26/benchmarks/verified_sources/reports/README.md)
 for provenance, validation, rerun notes, and limitations.
 
 ### Published Reference Rows
