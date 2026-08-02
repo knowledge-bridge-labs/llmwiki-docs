@@ -13,7 +13,9 @@ surface at `docs/openapi.json` in the server repository. In local sibling
 checkouts, read `../llmwiki-serve/docs/openapi.json`; the public repository
 path is
 `https://github.com/knowledge-bridge-labs/llmwiki-serve/blob/main/docs/openapi.json`.
-The `llmwiki-serve` main branch now includes the 0.2.5 source release contract.
+That server-repository OpenAPI artifact is the current source contract;
+[Release Status & Compatibility](/status) tracks package-manager baselines
+separately.
 
 The OpenAPI artifact is generated from the implemented FastAPI routes and data
 models by `scripts/export_openapi.py`, then checked by the server release smoke
@@ -62,7 +64,7 @@ brevity.
 {
   "status": "ok",
   "service": "llmwiki-serve",
-  "version": "0.2.5",
+  "version": "current-server-version",
   "source": {
     "source_id": "sample-packaging-llmwiki",
     "bundle_id": "sample-packaging-llmwiki:sha256:abc123...",
@@ -130,6 +132,10 @@ Example exact lookup with projected results:
   "exclude_page_ids": ["index"]
 }
 ```
+
+`mode: "lexical"` is the compatibility default for raw lexical ranking.
+Hybrid, vector, or runtime-backed fallbacks are outside the default source
+contract unless a client or bridge profile explicitly documents them.
 
 Evidence-routing guard for `/query`: `orientation` entries are navigation
 helpers for hot, index, or overview pages. They do not make a query answerable
@@ -226,6 +232,50 @@ Network responses intentionally omit the local source root from `/manifest`.
 Client code should rely on `source_id`, `bundle_id`, `page_id`, `path`,
 `title`, `source_refs`, and `llmwiki://...` handles for citations rather than
 absolute local file paths.
+
+Agent-guided lexical retrieval guidance is returned by HTTP `POST /query` and
+MCP `llmwiki_context`. There is no HTTP `/context` route. Serve-owned response
+fields are snake_case:
+
+```json
+{
+  "retrieval_guidance": {
+    "schema_version": "llmwiki.retrieval_guidance.v1",
+    "orientation_source": "authored",
+    "content_trust": "untrusted_source_evidence",
+    "max_query_variants": 2,
+    "character_budget": 4000,
+    "folder_cards": [],
+    "page_cards": [],
+    "suggested_terms": ["release", "릴리스"],
+    "exact_identifiers": ["publish.yml"],
+    "fallback_modes": ["literal"]
+  }
+}
+```
+
+Query variants are request fields, not guidance fields. A follow-up HTTP
+`POST /query` or `POST /search` request uses:
+
+```json
+{
+  "query": "release readiness",
+  "mode": "lexical",
+  "query_variants": ["릴리스 체크리스트", "publish.yml"]
+}
+```
+
+The guidance is strict retrieval advice for the client search loop, not a final
+answer. It must be treated as untrusted source evidence. Clients should keep
+the original query as primary, add no more than two exact lexical variants, and
+use `/search`, `/read/{page_id}`, or the matching MCP tools before composing an
+answer.
+
+For authored sources, orientation comes from source-owned entry pages such as
+`hot.md`, `index.md`, `overview.md`, or OpenWiki `quickstart.md`. For generic
+Markdown without those entry pages, any projection-extractive sketch is
+transient and zero-write: it is not a model call, not a downloaded model, not a
+saved page, and not a mutation of the served folder.
 
 ## Graph Neighborhood
 
@@ -538,6 +588,54 @@ ready selected source is available, source-specific tools require `sourceId`.
 `llmwiki_list_sources` returns a URL-free text summary; structured descriptors
 are meant for local workbenches that need to pass selected bridge-managed
 sources back to `/message:send` or `llmwiki_agent_run`.
+
+The bridge maps valid Serve guidance from snake_case to the exact closed
+camelCase `retrievalGuidance` shape:
+
+```json
+{
+  "structuredContent": {
+    "llmwiki_context": {
+      "retrievalGuidance": {
+        "schemaVersion": "llmwiki.retrieval_guidance.v1",
+        "orientationSource": "authored",
+        "contentTrust": "untrusted_source_evidence",
+        "maxQueryVariants": 2,
+        "characterBudget": 4000,
+        "folderCards": [],
+        "pageCards": [],
+        "suggestedTerms": ["release", "릴리스"],
+        "exactIdentifiers": ["publish.yml"],
+        "fallbackModes": ["literal"]
+      }
+    }
+  }
+}
+```
+
+Bridge retrieval intent is separate. `/message:send` places this under
+`data.retrieval`; MCP source tools use the same object as an `arguments.retrieval`
+value:
+
+```json
+{
+  "data": {
+    "query": "release readiness",
+    "retrieval": {
+      "schemaVersion": "llmwiki.retrieval.v1",
+      "searchMode": "lexical",
+      "search": {
+        "queryVariants": ["릴리스 체크리스트", "publish.yml"]
+      }
+    }
+  }
+}
+```
+
+The bridge forwards `retrieval.search.queryVariants` only when the selected
+source advertises the exact `llmwiki_agent_guided_lexical_v1` capability. Do
+not send bridge camelCase names to `llmwiki-serve` HTTP. Older sources keep the
+query-only behavior, and absent guidance remains absent.
 
 Read-only source tool results use these structured keys:
 

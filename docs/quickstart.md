@@ -7,6 +7,8 @@ the next handoff step.
 
 The default source URL in this page is `http://127.0.0.1:8765`. Keep the first
 run on loopback while you verify behavior.
+Package versions and compatibility evidence are tracked in
+[Release Status & Compatibility](/status) and [Evidence](/evidence).
 
 ## 1. Install `llmwiki-serve`
 
@@ -20,10 +22,10 @@ llmwiki-serve --help
 For a reproducible check against the current public baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.5 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.6 llmwiki-serve --help
 ```
 
-Pin `llmwiki-serve==0.2.5` only when you need to reproduce the current
+Pin `llmwiki-serve==0.2.6` only when you need to reproduce the current
 released baseline exactly. Use [Release Status & Compatibility](/status) before
 publishing docs or release notes.
 
@@ -253,6 +255,9 @@ curl -s "$SOURCE_URL/query" \
 You have a working source when `/health` reports `status: ok`, `/manifest` and
 `/source-bundle` agree on the source identity, `/source-refs` returns visible
 refs, and `/query` returns evidence with page paths and source-ref labels.
+For coding agents that should turn `/query` or MCP `llmwiki_context` guidance
+into follow-up lexical search/read calls, see
+[Direct Agent Integrations](/direct-agent-integrations#agent-guided-lexical-loop).
 
 ## 6. Optional MCP Smoke
 
@@ -356,7 +361,7 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.5 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.6 llmwiki-serve --help` | Help prints. |
 | Choose source | Existing folder or tiny local sample above | `SOURCE_PATH` points at Markdown content. |
 | Inspect source | `llmwiki-serve manifest "$SOURCE_PATH"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --limit 4` | Approved evidence returns. |

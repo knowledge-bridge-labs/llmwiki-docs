@@ -64,6 +64,7 @@ export default defineConfig({
     nav: [
       { text: 'QuickStart', link: '/quickstart' },
       { text: 'Status', link: '/status' },
+      { text: 'Evidence', link: '/evidence' },
       {
         text: 'Learn',
         items: [
@@ -125,7 +126,8 @@ export default defineConfig({
           { text: 'Demo', link: '/demo' },
           { text: 'QuickStart', link: '/quickstart' },
           { text: 'Examples', link: '/examples' },
-          { text: 'Release Status & Compatibility', link: '/status' }
+          { text: 'Release Status & Compatibility', link: '/status' },
+          { text: 'Evidence', link: '/evidence' }
         ]
       },
       {
