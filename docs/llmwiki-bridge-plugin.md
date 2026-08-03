@@ -75,7 +75,7 @@ Use the llmwiki-bridge:doctor skill for a read-only readiness check.
 
 ## Skill Usage
 
-The plugin ID is `llmwiki-bridge`. Version `0.1.0` includes three skills:
+The plugin ID is `llmwiki-bridge`. Version `0.1.1` includes three skills:
 
 | Skill | Use | Safety posture |
 | --- | --- | --- |
@@ -121,12 +121,14 @@ before using it with private or team sources.
 
 ## Validation Status
 
-Release `llmwiki-bridge v0.1.0` was published on
-`2026-08-03T16:28:31Z`. The release asset is
-`llmwiki-bridge-0.1.0-codex-skills.zip`.
+Release `llmwiki-bridge v0.1.1` was published on
+`2026-08-03T17:03:25Z`. The release asset is
+`llmwiki-bridge-0.1.1-codex-skills.zip`.
 
 Windows x64 and Ubuntu 24.04 ARM64/DGX Spark marketplace install and
-plugin-skill validation were verified for v0.1.0. This is validation of the
+plugin-skill validation were verified for v0.1.0. v0.1.1 is an OpenAI
+directory metadata/test documentation patch; runtime and skill behavior are
+identical to v0.1.0. This is validation of the
 marketplace install path and plugin skills, not vendor certification, hosted
 runtime certification, or model answer quality evidence.
 
@@ -135,6 +137,6 @@ runtime certification, or model answer quality evidence.
 | Resource | Link |
 | --- | --- |
 | Plugin repository | [knowledge-bridge-labs/llmwiki-plugins](https://github.com/knowledge-bridge-labs/llmwiki-plugins) |
-| v0.1.0 release | [llmwiki-bridge v0.1.0](https://github.com/knowledge-bridge-labs/llmwiki-plugins/releases/tag/v0.1.0) |
+| v0.1.1 release | [llmwiki-bridge v0.1.1](https://github.com/knowledge-bridge-labs/llmwiki-plugins/releases/tag/v0.1.1) |
 | Privacy | [PRIVACY.md](https://github.com/knowledge-bridge-labs/llmwiki-plugins/blob/main/PRIVACY.md) |
 | Terms | [TERMS.md](https://github.com/knowledge-bridge-labs/llmwiki-plugins/blob/main/TERMS.md) |
