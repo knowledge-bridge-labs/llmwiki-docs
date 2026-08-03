@@ -51,8 +51,8 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 The primary gate column is a status-oriented smoke signal. Each repository also
 keeps its own README, changelog, package metadata, license files, and CI gates.
 
-`llmwiki-serve` 0.2.5 and newer include local `ls`/`status` discovery. It combines the
-per-user registry written by `serve` with local OS process command-line
+Since the `llmwiki-serve` 0.2.5 release, local `ls`/`status` discovery combines
+the per-user registry written by `serve` with local OS process command-line
 discovery for `llmwiki-serve serve` processes, then probes discovered local
 endpoints unless probing is disabled. It does not use default fixed-port
 heuristic probing. Use `--no-processes` for registry-only output,

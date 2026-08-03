@@ -69,11 +69,11 @@ llmwiki-serve query /path/to/wiki "what is in this wiki?"
 ## `llmwiki-serve status` Shows Stale Or Overlapping Instances
 
 `llmwiki-serve status` and `ls` read a best-effort local instance registry that
-running `serve` processes write for operator discovery. In 0.2.5 and newer,
-they also inspect local OS process command lines for `llmwiki-serve serve`
-processes and probe only discovered local endpoints by default. They do not use
-fixed-port probing unless `--probe-port <port>` is supplied. A terminal crash,
-forced process kill, or reboot
+running `serve` processes write for operator discovery. Since the
+`llmwiki-serve` 0.2.5 release, they also inspect local OS process command lines
+for `llmwiki-serve serve` processes and probe only discovered local endpoints
+by default. They do not use fixed-port probing unless `--probe-port <port>` is
+supplied. A terminal crash, forced process kill, or reboot
 can leave stale registry records behind.
 
 Use:
