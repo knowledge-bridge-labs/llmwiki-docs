@@ -32,8 +32,8 @@ implementation details in the owning repo README or docs directory.
 
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
-installs are also available for `llmwiki-serve==0.2.6`,
-`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.3.0`, and
+installs are also available for `llmwiki-serve==0.2.9`,
+`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
 `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
 Compatibility-smoke and deterministic benchmark summaries are recorded in
@@ -41,7 +41,7 @@ Compatibility-smoke and deterministic benchmark summaries are recorded in
 metrics are summarized there, no quality pass is claimed, and Qwen agent-tier
 validation remains pending. Version `0.0.1` of `llmwiki-bridge-start` was the
 manually published first release, and the current package baseline is
-`llmwiki-bridge-start@0.0.3`. `llmwiki-agent-bridge@0.3.0` exposes the bridge
+`llmwiki-bridge-start@0.0.3`. `llmwiki-agent-bridge@0.4.0` exposes the bridge
 CLI for `npx`/`npm exec` runs, including `sources`, `ls`, and `status`
 registry checks. `llmwiki-chat@0.1.6` is a static browser artifact with no CLI
 `bin`; install it when you want to host the packaged `dist/` directory.

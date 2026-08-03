@@ -22,10 +22,10 @@ llmwiki-serve --help
 For a reproducible check against the current public baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.6 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.9 llmwiki-serve --help
 ```
 
-Pin `llmwiki-serve==0.2.6` only when you need to reproduce the current
+Pin `llmwiki-serve==0.2.9` only when you need to reproduce the current
 released baseline exactly. Use [Release Status & Compatibility](/status) before
 publishing docs or release notes.
 
@@ -361,7 +361,7 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.6 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.9 llmwiki-serve --help` | Help prints. |
 | Choose source | Existing folder or tiny local sample above | `SOURCE_PATH` points at Markdown content. |
 | Inspect source | `llmwiki-serve manifest "$SOURCE_PATH"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --limit 4` | Approved evidence returns. |
