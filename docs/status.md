@@ -10,6 +10,9 @@ installs.
 discovery, source startup, optional bridge registration, and smoke checks.
 `llmwiki-agent-bridge@0.4.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
+Registry verification is current: PyPI reports `llmwiki-serve==0.2.9`, and npm
+reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
+`llmwiki-chat@0.1.6`.
 Compatibility-smoke and deterministic benchmark summaries are recorded in
 [Evidence](/evidence). Treat compatibility-smoke evidence as projection
 compatibility only. Windows and Ubuntu/DGX deterministic retrieval metrics are
@@ -51,7 +54,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 The primary gate column is a status-oriented smoke signal. Each repository also
 keeps its own README, changelog, package metadata, license files, and CI gates.
 
-Since the `llmwiki-serve` 0.2.5 release, local `ls`/`status` discovery combines
+Since release 0.2.5, local `ls`/`status` discovery combines
 the per-user registry written by `serve` with local OS process command-line
 discovery for `llmwiki-serve serve` processes, then probes discovered local
 endpoints unless probing is disabled. It does not use default fixed-port
@@ -62,8 +65,8 @@ only for a manual loopback diagnostic. JSON output can include
 
 The `llmwiki-serve==0.2.9`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6` packages are
-published. Source checkouts remain supported for development and release
-verification.
+published and registry-verified for this public-preview baseline. Source
+checkouts remain supported for development and release verification.
 
 ::: warning Publication caveat
 Version `0.0.1` of `llmwiki-bridge-start` was the manually published first

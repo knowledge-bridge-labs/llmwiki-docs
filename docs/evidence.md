@@ -12,6 +12,33 @@ current package baseline or claim package quality for that baseline. The smoke
 report summary below is compatibility-only; the deterministic benchmark rows
 remain strict quality-gate records and do not create a public quality claim.
 
+## 0.2.9 Lexical-Default Regression Gate
+
+Before `llmwiki-serve==0.2.9` was published, the default lexical retrieval path
+was compared against released version 0.2.6 with no vector, hybrid, or
+agent-guided mode enabled. The adoption signal is practical: users can upgrade
+to 0.2.9 for the new integration surface while preserving default lexical
+quality in this gate.
+
+| Dataset | Queries | Version | nDCG@10 | Recall@100 | MAP@100 | qrel-positive Precision@10 | Negative FP | Latency p50 / p95 ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| SciFact full | 300 | 0.2.6 | 0.6023109375 | 0.8274444444 | 0.5638599941 | 0.0800000000 | N/A | 552.942 / 848.620 |
+| SciFact full | 300 | 0.2.9 | 0.6023109375 | 0.8274444444 | 0.5638599941 | 0.0800000000 | N/A | 481.893 / 730.956 |
+| NoMIRACL-ko judged pool | 426 | 0.2.6 | 0.5519753228 | 0.9788732394 | 0.4925625209 | 0.1713615023 | 0.9530516432 | 116.242 / 368.255 |
+| NoMIRACL-ko judged pool | 426 | 0.2.9 | 0.5519753228 | 0.9788732394 | 0.4925625209 | 0.1713615023 | 0.9530516432 | 100.144 / 386.182 |
+
+Quality metrics matched exactly for both datasets in the retained summaries.
+SciFact latency was lower at both p50 and p95. Korean judged-pool p50 latency
+was lower, while p95 increased by 17.927 ms (+4.9%), so that remains a
+monitoring signal rather than a release blocker.
+
+Limitations: this was a Windows local run with two repetitions; NoMIRACL-ko is
+a judged-pool fixture, not a full-corpus Korean benchmark; raw per-query
+rankings and latency vectors were not retained; and no OS cold-cache,
+superiority, model-answer quality, or vendor-runtime claim is made. Vector,
+hybrid, and agent-guided candidate-only arms are separate engineering evidence
+and are not used here as a released-vs-released superiority claim.
+
 The compatibility-smoke input summarized here is a Windows upstream
 compatibility-smoke report with schema
 `llmwiki-serve-upstream-candidate-smoke-v1`, mode `smoke`, and evidence track
@@ -101,6 +128,11 @@ Tokenizer accounting used
 The reports record local Qwen tokenizer-load verification and no byte/mock
 token-count proxy.
 
+`qrel-positive` metrics below are judged-positive retrieval metrics over
+returned corpus or page IDs. They are not citation metadata validation; true
+source-reference and citation-contract checks are described separately where
+they are explicitly named.
+
 | Case | Variant | Corpus records | Queries | Qrels | Gate | `public_quality_claim` |
 | --- | --- | ---: | ---: | ---: | --- | --- |
 | OpenWiki | native | 13 | 57 | 164 | fail | false |
@@ -110,9 +142,10 @@ token-count proxy.
 
 Native cold evidence rows use `service_context` runs. Native managed-on
 evidence is an exact no-op versus managed off for these reports: ranking,
-citation metrics, negative FPR, and payload tokens are unchanged.
+qrel-positive precision/recall metrics, negative FPR, and payload tokens are
+unchanged.
 
-| Case | Managed | Recall@5 | MRR | nDCG@10 | Citation P/R | Negative FPR | Payload p50/p95 tokens | Gate |
+| Case | Managed | Recall@5 | MRR | nDCG@10 | qrel-positive Precision/Recall | Negative FPR | Payload p50/p95 tokens | Gate |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | OpenWiki | off | 0.9169 | 0.9054 | 0.8424 | 0.4877 / 0.8742 | 1.0000 | 8400 / 8410 | fail |
 | OpenWiki | on | 0.9169 | 0.9054 | 0.8424 | 0.4877 / 0.8742 | 1.0000 | 8400 / 8410 | fail |
@@ -124,7 +157,7 @@ citation metrics, negative FPR, and payload tokens are unchanged.
 Generic-shadow cold evidence rows use `service_context` runs. Managed-on
 evidence is unchanged versus managed off; only payload tokens changed.
 
-| Case | Managed | Recall@5 | MRR | nDCG@10 | Citation P/R | Negative FPR | Payload p50/p95 tokens | Gate |
+| Case | Managed | Recall@5 | MRR | nDCG@10 | qrel-positive Precision/Recall | Negative FPR | Payload p50/p95 tokens | Gate |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
 | OpenWiki | off | 0.9960 | 0.9667 | 0.9200 | 0.4909 / 0.9926 | 1.0000 | 7386 / 7397 | fail |
 | OpenWiki | on | 0.9960 | 0.9667 | 0.9200 | 0.4909 / 0.9926 | 1.0000 | 7319 / 7330 | fail |
@@ -140,7 +173,7 @@ Generic-shadow cold orientation rows use `service_context_orientation` runs.
 Managed context improved orientation retrieval, but negative FPR stayed at
 `1.0000` and all quality gates still failed.
 
-| Case | Managed | Recall@5 | MRR | nDCG@10 | Citation precision | Citation recall | Negative FPR | Payload p50/p95 tokens |
+| Case | Managed | Recall@5 | MRR | nDCG@10 | qrel-positive Precision | qrel-positive Recall | Negative FPR | Payload p50/p95 tokens |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | OpenWiki | off | 0.1527 | 0.1600 | 0.0955 | 0.1455 | 0.1765 | 1.0000 | 7386 / 7397 |
 | OpenWiki | on | 0.5153 | 0.7200 | 0.5140 | 0.6091 | 0.4926 | 1.0000 | 7319 / 7330 |
@@ -161,10 +194,10 @@ in CI, but OpenWiki evidence and orientation cold latency worsened.
 
 No public retrieval-quality claim is made. The current blockers are:
 negative FPR is `1.0000` for all listed cold evidence and orientation rows,
-above the `<=0.05` threshold; citation precision is below `0.95` in all listed
+above the `<=0.05` threshold; qrel-positive precision is below `0.95` in all listed
 evidence and orientation rows; OpenWiki native evidence `nDCG@10` is `0.8424`,
 below `0.85`; Pratiyush native and generic-shadow evidence miss recall and/or
-nDCG/citation-recall thresholds as listed by report gates; selected
+nDCG/qrel-positive recall thresholds as listed by report gates; selected
 search-read token p95 gates still fail in the verified reports; Qwen agent-tier
 validation is pending; and macOS remains untested.
 

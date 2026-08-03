@@ -76,7 +76,7 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use the published packages first: <code>llmwiki-serve==0.2.9</code>, <code>npx llmwiki-bridge-start@latest</code> resolving to <code>0.0.3</code>, <code>npx llmwiki-agent-bridge@latest</code> resolving to <code>0.4.0</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
+    <span>Use the published, registry-verified packages first: <code>llmwiki-serve==0.2.9</code>, <code>npx llmwiki-bridge-start@latest</code> resolving to <code>0.0.3</code>, <code>npx llmwiki-agent-bridge@latest</code> resolving to <code>0.4.0</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>
