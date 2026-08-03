@@ -28,20 +28,23 @@ implementation details in the owning repo README or docs directory.
 - [Runtime Adapters](docs/runtime-adapters.md)
 - [Network & Security](docs/network-security.md)
 - [Release Status & Compatibility](docs/status.md)
+- [Evidence](docs/evidence.md)
 
-The docs are intentionally local-first. The public first-run path uses package
-installs for `llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`,
-`llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`; see
+The docs are intentionally local-first. Source checkouts remain supported for
+bundled samples, development scripts, and release verification. Package
+installs are also available for `llmwiki-serve==0.2.9`,
+`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
+`llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
-Source checkouts remain supported for bundled samples, development scripts,
-and release verification.
-The initial bridge-start release was manually published;
-`llmwiki-bridge-start@0.0.3` is the current guided handoff baseline and uses
-`llmwiki-agent-bridge@0.3.0` as its default bridge package when bridge setup is
-selected. `llmwiki-agent-bridge@0.3.0` exposes the bridge CLI for
-`npx`/`npm exec` runs, including `sources`, `ls`, and `status` registry checks.
-`llmwiki-chat@0.1.6` is a static browser artifact with no CLI `bin`; install
-it when you want to host the packaged `dist/` directory.
+Compatibility-smoke and deterministic benchmark summaries are recorded in
+[Evidence](docs/evidence.md). Windows and Ubuntu/DGX deterministic retrieval
+metrics are summarized there, no quality pass is claimed, and Qwen agent-tier
+validation remains pending. Version `0.0.1` of `llmwiki-bridge-start` was the
+manually published first release, and the current package baseline is
+`llmwiki-bridge-start@0.0.3`. `llmwiki-agent-bridge@0.4.0` exposes the bridge
+CLI for `npx`/`npm exec` runs, including `sources`, `ls`, and `status`
+registry checks. `llmwiki-chat@0.1.6` is a static browser artifact with no CLI
+`bin`; install it when you want to host the packaged `dist/` directory.
 
 Shortest local path:
 
@@ -124,7 +127,7 @@ public-preview docs entrypoint.
 | Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |
 | Operate | `docs/network-security.md`, `docs/deployment.md`, `docs/troubleshooting.md`, `docs/faq.md` |
-| Status | `docs/status.md`, `docs/package-publication.md`, `docs/faq.md` |
+| Status | `docs/status.md`, `docs/evidence.md`, `docs/package-publication.md`, `docs/faq.md` |
 
 This is independent community documentation for LLM Wiki-style Markdown
 knowledge folders and agent-readable context. It is not an official project

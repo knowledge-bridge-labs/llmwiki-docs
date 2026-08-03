@@ -117,7 +117,7 @@ effort documents that status.
 | `llmwiki-bridge-start` | Guided next step after the source layer works. It discovers folders, starts loopback sources, registers optional bridge sources, and runs smoke checks. |
 | `llmwiki-agent-bridge` | Optional companion endpoint. It fans out across selected sources, can call a configured runtime, and returns a normalized cited artifact. It does not read local source files directly. |
 | `llmwiki-chat` | Optional browser workbench for humans to inspect source readiness, graph context, citations, bridge settings, and traces. It does not serve the wiki files. |
-| RAG apps and vector databases | Separate retrieval architectures. `llmwiki-serve` does not crawl, chunk for embeddings, manage vector indexes, or own answer quality. |
+| RAG apps and vector databases | Separate retrieval architectures. The default `llmwiki-serve` path remains lexical and read-only. Optional vector or hybrid retrieval, when installed and explicitly enabled, uses a source-owned local sidecar for derived chunk/index data; it does not write into the served source folder, imply a remote vector database, expose a private endpoint, or own answer quality. |
 | Upstream wiki producers | Own authoring, ingestion, compilation, and source file layout. `llmwiki-serve` reads the compatible output after it exists. |
 
 The practical rule is simple: start with one `SOURCE_PATH`, get one

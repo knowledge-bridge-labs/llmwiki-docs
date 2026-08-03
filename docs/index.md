@@ -76,7 +76,7 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use the published packages first: <code>llmwiki-serve==0.2.5</code>, <code>npx llmwiki-bridge-start@latest</code> resolving to <code>0.0.3</code>, <code>npx llmwiki-agent-bridge@latest</code> resolving to <code>0.3.0</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
+    <span>Use the published, registry-verified packages first: <code>llmwiki-serve==0.2.9</code>, <code>npx llmwiki-bridge-start@latest</code> resolving to <code>0.0.3</code>, <code>npx llmwiki-agent-bridge@latest</code> resolving to <code>0.4.0</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>
@@ -257,7 +257,7 @@ flowchart LR
 | Connect Codex, Claude Code, Copilot-style IDE agents, or scripts | [Direct Agent Integrations](/direct-agent-integrations) and [AI Tool Support](/ai-tools) |
 | Understand HTTP, MCP, and A2A-style compatibility surfaces | [Protocols](/protocols) and [API Reference](/api-reference) |
 | Expose endpoints beyond loopback | [Network & Security](/network-security) and [Deployment](/deployment) |
-| Check package/public-preview status | [Release Status & Compatibility](/status) |
+| Check package/public-preview status and evidence | [Release Status & Compatibility](/status) and [Evidence](/evidence) |
 | Prepare endpoint operations | [Deployment](/deployment), [Network & Security](/network-security), and [Troubleshooting](/troubleshooting) |
 | Check public-preview support status | [Release Status & Compatibility](/status) and [FAQ](/faq) |
 

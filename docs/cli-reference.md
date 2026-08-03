@@ -6,8 +6,8 @@ successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.5`, `llmwiki-bridge-start@0.0.3`,
-`llmwiki-agent-bridge@0.3.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
+`llmwiki-serve==0.2.9`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
 
@@ -24,9 +24,9 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.5`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.9`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the guided handoff for discovery, source startup, optional bridge registration, and smoke checks after the source layer works. |
-| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.3.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
+| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.4.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
@@ -424,13 +424,13 @@ replacement for `llmwiki-agent-bridge`.
 Run against a known folder:
 
 ```sh
-npx llmwiki-bridge-start@latest --path /path/to/your/wiki
+npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --path /path/to/your/wiki
 ```
 
 Scan the user's workspace:
 
 ```sh
-npx llmwiki-bridge-start@latest --workspace
+npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --workspace
 ```
 
 At this baseline, `@latest` resolves to `llmwiki-bridge-start@0.0.3`. Pin the
@@ -455,7 +455,7 @@ Minimum success is a healthy loopback source endpoint and a handoff URL that a
 coding agent or script can use directly. When bridge setup is skipped, the
 handoff can be a direct source URL or an MCP Streamable HTTP URL such as
 `http://127.0.0.1:<port>/mcp/stream`. Optional bridge setup starts or uses
-`llmwiki-agent-bridge@0.3.0`; configure a runtime only when you need
+`llmwiki-agent-bridge@0.4.0`; configure a runtime only when you need
 runtime-backed synthesis. Interactive runtime installer steps require explicit
 approval, and `--yes` automation does not install runtimes unless
 `--install-runtime` is also supplied.
@@ -486,13 +486,13 @@ runtime when synthesis is configured.
 Minimal local start for evidence-only mode:
 
 ```sh
-npx llmwiki-agent-bridge@latest
+npm exec --package llmwiki-agent-bridge@0.4.0 -- llmwiki-agent-bridge
 ```
 
 Pin the current public-preview package when reproducibility matters:
 
 ```sh
-npm exec --package llmwiki-agent-bridge@0.3.0 -- llmwiki-agent-bridge
+npm exec --package llmwiki-agent-bridge@0.4.0 -- llmwiki-agent-bridge
 ```
 
 Source-checkout development equivalent:
@@ -508,7 +508,7 @@ Runtime-backed start when an OpenAI-compatible local endpoint is available:
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-npx llmwiki-agent-bridge@latest
+npm exec --package llmwiki-agent-bridge@0.4.0 -- llmwiki-agent-bridge
 ```
 
 From a source checkout, replace the final `npx ...` command with

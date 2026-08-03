@@ -28,6 +28,9 @@ For request and response examples, see [API Reference](/api-reference).
 For the disk format that feeds these endpoints, see
 [Knowledge Source Format](/knowledge-source-format).
 
+Context retrieval over HTTP is `POST /query`. `llmwiki_context` is the MCP tool
+name. Clients should not assume an HTTP `/context` route exists.
+
 ## MCP-Style JSON-RPC
 
 The MCP-style endpoint accepts JSON-RPC requests at `/mcp`. Typical tool calls
@@ -84,6 +87,49 @@ descriptors and receive a completed task containing text plus a
 | `llmwiki-http` | Calls `GET /source-bundle` for discovery when available, falls back to `GET /manifest`, then calls `POST /query` on the selected Knowledge Source. |
 | `mcp` | Calls `llmwiki_context` through the source `/mcp` endpoint. |
 | `a2a` | Discovers the agent card, posts a message, and prefers a context artifact. |
+
+Bridge MCP source-tool results may carry the closed camelCase guidance shape
+under `structuredContent.llmwiki_context`:
+
+```json
+{
+  "structuredContent": {
+    "llmwiki_context": {
+      "retrievalGuidance": {
+        "schemaVersion": "llmwiki.retrieval_guidance.v1",
+        "orientationSource": "authored",
+        "contentTrust": "untrusted_source_evidence",
+        "maxQueryVariants": 2,
+        "characterBudget": 4000,
+        "folderCards": [],
+        "pageCards": [],
+        "suggestedTerms": ["release"],
+        "exactIdentifiers": ["publish.yml"],
+        "fallbackModes": ["literal"]
+      }
+    }
+  }
+}
+```
+
+Search intent is a separate bridge source-tool argument:
+
+```json
+{
+  "query": "release readiness",
+  "retrieval": {
+    "schemaVersion": "llmwiki.retrieval.v1",
+    "searchMode": "lexical",
+    "search": {
+      "queryVariants": ["릴리스 체크리스트", "publish.yml"]
+    }
+  }
+}
+```
+
+The bridge forwards variants only when the source advertises
+`llmwiki_agent_guided_lexical_v1` exactly. Older sources keep query-only
+behavior.
 
 ## Versioning Guidance
 
