@@ -15,6 +15,9 @@
   --vp-c-text-3: #6f7f7c;
   --vp-c-border: #d9e2df;
   --vp-c-divider: #e7eeeb;
+  --vp-code-color: #0d6f67;
+  --vp-code-link-color: #0d6f67;
+  --vp-code-link-hover-color: #0b635c;
   --vp-code-block-bg: #fbfefd;
   --vp-code-tab-divider: var(--vp-c-divider);
   --vp-code-lang-color: var(--vp-c-text-2);
@@ -108,14 +111,17 @@
 }
 
 .vp-doc table {
-  display: table;
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   font-size: 14px;
 }
 
 .vp-doc th,
 .vp-doc td {
   border-color: var(--vp-c-border);
+  overflow-wrap: anywhere;
 }
 
 .vp-doc th {
@@ -131,6 +137,24 @@
 
 .vp-doc code {
   border-radius: 5px;
+}
+
+.vp-doc [class*="language-"] pre {
+  padding-top: 34px;
+}
+
+.vp-doc [class*="language-"] code {
+  padding-right: 84px;
+}
+
+.vp-doc [class*="language-"] > span.lang {
+  top: 8px;
+  right: 16px;
+  line-height: 1.4;
+}
+
+.vp-doc .line-numbers-wrapper {
+  padding-top: 34px;
 }
 
 .vp-doc .mermaid {
@@ -659,12 +683,6 @@
   .VPHero .action,
   .VPHero .VPButton {
     max-width: 100%;
-  }
-
-  .vp-doc table {
-    display: block;
-    max-width: 100%;
-    overflow-x: auto;
   }
 
   .vp-doc th,
