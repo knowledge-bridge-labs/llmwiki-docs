@@ -81,6 +81,7 @@ export default defineConfig({
         text: 'Connect',
         items: [
           { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' },
+          { text: 'LLMWiki Bridge Plugin', link: '/llmwiki-bridge-plugin' },
           { text: 'Runtime Adapters', link: '/runtime-adapters' },
           { text: 'AI Tool Support', link: '/ai-tools' }
         ]
@@ -125,6 +126,7 @@ export default defineConfig({
           { text: 'Overview', link: '/' },
           { text: 'Demo', link: '/demo' },
           { text: 'QuickStart', link: '/quickstart' },
+          { text: 'LLMWiki Bridge Plugin', link: '/llmwiki-bridge-plugin' },
           { text: 'Examples', link: '/examples' },
           { text: 'Release Status & Compatibility', link: '/status' },
           { text: 'Evidence', link: '/evidence' }
@@ -145,6 +147,7 @@ export default defineConfig({
         text: 'Connect Tools',
         items: [
           { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' },
+          { text: 'LLMWiki Bridge Plugin', link: '/llmwiki-bridge-plugin' },
           { text: 'Runtime Adapters', link: '/runtime-adapters' },
           { text: 'AI Tool Support', link: '/ai-tools' }
         ]

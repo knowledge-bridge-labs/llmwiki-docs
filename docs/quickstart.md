@@ -10,6 +10,15 @@ run on loopback while you verify behavior.
 Package versions and compatibility evidence are tracked in
 [Release Status & Compatibility](/status) and [Evidence](/evidence).
 
+::: tip Optional guided setup for Claude Code and Codex
+The direct `llmwiki-serve` flow below is the default. If you use Claude Code or
+Codex and want skills that guide setup, status, and read-only doctor checks
+with approvals before package installation, process start, config writes, broad
+discovery, or remote probing, install the released
+[LLMWiki Bridge Plugin](/llmwiki-bridge-plugin) from the public GitHub
+repository-backed marketplace, then return here to verify the served source.
+:::
+
 ## 1. Install `llmwiki-serve`
 
 Install the current public-preview CLI from PyPI:
