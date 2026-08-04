@@ -47,6 +47,9 @@ Run these as slash commands inside an active Claude Code session:
 /plugin install llmwiki-bridge@knowledge-bridge-labs
 ```
 
+Claude `/plugin install` opens the plugin details and asks you to choose the
+install scope.
+
 If the Claude Code session was already running when you installed the plugin,
 reload plugins before use:
 
@@ -60,8 +63,8 @@ A newly started Claude Code session can use the plugin after install without a
 Shell CLI alternative:
 
 ```sh
-claude plugin marketplace add --scope user knowledge-bridge-labs/llmwiki-plugins
-claude plugin install --scope user llmwiki-bridge@knowledge-bridge-labs
+claude plugin marketplace add knowledge-bridge-labs/llmwiki-plugins --scope user
+claude plugin install llmwiki-bridge@knowledge-bridge-labs --scope user
 ```
 
 To update the marketplace snapshot and installed plugin from an active Claude
@@ -77,7 +80,7 @@ Shell CLI alternatives:
 
 ```sh
 claude plugin marketplace update knowledge-bridge-labs
-claude plugin update --scope user llmwiki-bridge@knowledge-bridge-labs
+claude plugin update llmwiki-bridge@knowledge-bridge-labs --scope user
 ```
 
 After a shell update, reload any already-running Claude Code session with
@@ -86,8 +89,8 @@ After a shell update, reload any already-running Claude Code session with
 ## Install In Codex
 
 Install from the public GitHub repository-backed plugin marketplace. This is
-not an npm or PyPI install. Codex CLI `0.146.0` or newer is required for the
-documented marketplace flow and recommended for new installs:
+not an npm or PyPI install. The CLI must expose `codex plugin`. This flow was
+verified with Codex CLI `0.146.0`.
 
 ```sh
 codex plugin marketplace add knowledge-bridge-labs/llmwiki-plugins --ref main
@@ -120,8 +123,8 @@ Claude Code:
 OpenAI and Codex:
 
 - [Plugin directory in Codex CLI](https://learn.chatgpt.com/docs/plugins#plugin-directory-in-codex-cli)
-- [`codex plugin`](https://learn.chatgpt.com/docs/developer-commands#codex-plugin)
-- [`codex plugin marketplace`](https://learn.chatgpt.com/docs/developer-commands#codex-plugin-marketplace)
+- [`codex plugin`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#codex-plugin)
+- [`codex plugin marketplace`](https://learn.chatgpt.com/docs/developer-commands?surface=cli#codex-plugin-marketplace)
 - [Add a marketplace from the CLI](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli)
 
 ## Start Using The Plugin
@@ -134,9 +137,11 @@ Check llmwiki-bridge status for this workspace, but do not start processes.
 Run a read-only llmwiki-bridge doctor check and explain any blockers.
 ```
 
-The host UI may show namespace labels such as `llmwiki-bridge:setup`,
-`llmwiki-bridge:status`, or `llmwiki-bridge:doctor`; use the natural-language
-prompt path rather than relying on undocumented slash syntax.
+Claude Code supports documented namespaced commands
+`/llmwiki-bridge:setup`, `/llmwiki-bridge:status`, and
+`/llmwiki-bridge:doctor` after installation, reload, or a new session. Codex
+should start a new session after installation or update, then use
+natural-language prompts or explicitly name the installed skill.
 
 ## Skill Usage
 
