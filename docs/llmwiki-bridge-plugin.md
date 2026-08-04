@@ -38,40 +38,105 @@ runtime-backed cited artifact.
 ## Install In Claude Code
 
 Install from the public GitHub repository-backed plugin marketplace. This is
-not an npm or PyPI install:
+not an npm or PyPI install.
+
+Run these as slash commands inside an active Claude Code session:
 
 ```text
 /plugin marketplace add knowledge-bridge-labs/llmwiki-plugins
 /plugin install llmwiki-bridge@knowledge-bridge-labs
-/reload-plugins
-/llmwiki-bridge:setup
 ```
 
-Useful follow-up skills:
+If the Claude Code session was already running when you installed the plugin,
+reload plugins before use:
 
 ```text
-/llmwiki-bridge:status
-/llmwiki-bridge:doctor
+/reload-plugins
 ```
+
+A newly started Claude Code session can use the plugin after install without a
+`/reload-plugins` step.
+
+Shell CLI alternative:
+
+```sh
+claude plugin marketplace add --scope user knowledge-bridge-labs/llmwiki-plugins
+claude plugin install --scope user llmwiki-bridge@knowledge-bridge-labs
+```
+
+To update the marketplace snapshot and installed plugin from an active Claude
+Code session:
+
+```text
+/plugin marketplace update knowledge-bridge-labs
+/plugin update llmwiki-bridge@knowledge-bridge-labs
+/reload-plugins
+```
+
+Shell CLI alternatives:
+
+```sh
+claude plugin marketplace update knowledge-bridge-labs
+claude plugin update --scope user llmwiki-bridge@knowledge-bridge-labs
+```
+
+After a shell update, reload any already-running Claude Code session with
+`/reload-plugins`; a freshly started session loads the updated plugin.
 
 ## Install In Codex
 
 Install from the public GitHub repository-backed plugin marketplace. This is
-not an npm or PyPI install:
+not an npm or PyPI install. Codex CLI `0.146.0` or newer is required for the
+documented marketplace flow and recommended for new installs:
 
 ```sh
 codex plugin marketplace add knowledge-bridge-labs/llmwiki-plugins --ref main
 codex plugin add llmwiki-bridge@knowledge-bridge-labs
 ```
 
-Start a new Codex thread after installation so the skills load. Then use
-explicit skill prompts:
+After adding the marketplace, `/plugins` inside Codex CLI is the interactive
+alternative for browsing and installing the plugin.
+
+Start a new Codex CLI session or chat after installation so the skills load.
+
+To update the marketplace snapshot:
+
+```sh
+codex plugin marketplace upgrade knowledge-bridge-labs
+```
+
+Then start a new Codex CLI session or chat. This Codex flow has no
+`codex plugin update` command and no `/reload-plugins` step.
+
+## Official Installation References
+
+Claude Code:
+
+- [Discover and install prebuilt plugins](https://code.claude.com/docs/en/discover-plugins)
+- [Plugins reference](https://code.claude.com/docs/en/plugins-reference)
+- [Create and distribute a plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces)
+- [Create plugins](https://code.claude.com/docs/en/plugins)
+
+OpenAI and Codex:
+
+- [Plugin directory in Codex CLI](https://learn.chatgpt.com/docs/plugins#plugin-directory-in-codex-cli)
+- [`codex plugin`](https://learn.chatgpt.com/docs/developer-commands#codex-plugin)
+- [`codex plugin marketplace`](https://learn.chatgpt.com/docs/developer-commands#codex-plugin-marketplace)
+- [Add a marketplace from the CLI](https://developers.openai.com/plugins/build/plugins#add-a-marketplace-from-the-cli)
+
+## Start Using The Plugin
+
+Use natural-language prompts to start the plugin-guided workflows:
 
 ```text
-Use the llmwiki-bridge:setup skill to connect ./wiki.
-Use the llmwiki-bridge:status skill and do not start any processes.
-Use the llmwiki-bridge:doctor skill for a read-only readiness check.
+Set up llmwiki-bridge for ./wiki using the direct local source path.
+Check llmwiki-bridge status for this workspace, but do not start processes.
+Run a read-only llmwiki-bridge doctor check and explain any blockers.
 ```
+
+The host UI may show namespace labels such as `llmwiki-bridge:setup`,
+`llmwiki-bridge:status`, or `llmwiki-bridge:doctor`; use the natural-language
+prompt path rather than relying on undocumented slash syntax.
 
 ## Skill Usage
 
