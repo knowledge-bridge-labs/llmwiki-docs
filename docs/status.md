@@ -10,7 +10,7 @@ installs.
 discovery, source startup, optional bridge registration, and smoke checks.
 `llmwiki-agent-bridge@0.4.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
-Registry verification is current: PyPI reports `llmwiki-serve==0.2.9`, and npm
+Registry verification is current: PyPI reports `llmwiki-serve==0.2.10`, and npm
 reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
 `llmwiki-chat@0.1.6`.
 Compatibility-smoke and deterministic benchmark summaries are recorded in
@@ -30,7 +30,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported development path | You want bundled fixtures, source-level development scripts, screenshot refreshes, or release verification. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.9`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6`. |
 
 ## Package Roles
 
@@ -45,7 +45,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
-| `llmwiki-serve` | Python package 0.2.9, Apache-2.0, CLI entrypoint | PyPI latest 0.2.9 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
+| `llmwiki-serve` | Python package 0.2.10, Apache-2.0, CLI entrypoint | PyPI latest 0.2.10 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-bridge-start` | npm package 0.0.3, Apache-2.0, CLI entrypoint | npm published 0.0.3 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --help` or repository `npm run check` |
 | `llmwiki-agent-bridge` | npm package 0.4.0, Apache-2.0, CLI entrypoint | npm published 0.4.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package 0.1.6, Apache-2.0, static Vite browser workbench artifact, no CLI `bin` | npm published 0.1.6 | Package `dist/` static hosting or source checkout for UI development | Node.js 22.12+ | package install-smoke for `dist/`, or repository `npm run check` |
@@ -63,16 +63,14 @@ heuristic probing. Use `--no-processes` for registry-only output,
 only for a manual loopback diagnostic. JSON output can include
 `discovery_source` and `root_source`.
 
-The `llmwiki-serve==0.2.9`, `llmwiki-bridge-start@0.0.3`,
+The `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6` packages are
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
 
-## Planned `llmwiki-serve` 0.2.10 SQLite GraphStore
+## Optional `llmwiki-serve` SQLite GraphStore
 
-This portal keeps `llmwiki-serve==0.2.9` as the current published baseline
-until a release-status update verifies a newer PyPI version. The following is
-planned 0.2.10 behavior, not a published-version claim:
+`llmwiki-serve==0.2.10` includes optional SQLite GraphStore support:
 
 - The base `llmwiki-serve` install contains the SQLite GraphStore code; no
   `[sqlite]` or `[graph]` extra is needed.
@@ -80,7 +78,7 @@ planned 0.2.10 behavior, not a published-version claim:
   use the in-memory derived graph projection unless explicitly configured.
 - Operators enable SQLite with
   `--graph-store sqlite --graph-store-path <outside-root.sqlite>` or the
-  planned `LLMWIKI_GRAPH_STORE=sqlite` and
+  `LLMWIKI_GRAPH_STORE=sqlite` and
   `LLMWIKI_GRAPH_STORE_PATH=<outside-root.sqlite>` environment variables.
 - The SQLite file should live outside the served source root and generated
   public assets. It is a disposable derived cache, but it can contain sensitive

@@ -32,7 +32,7 @@ implementation details in the owning repo README or docs directory.
 
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
-installs are also available for `llmwiki-serve==0.2.9`,
+installs are also available for `llmwiki-serve==0.2.10`,
 `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
 `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
@@ -46,14 +46,11 @@ CLI for `npx`/`npm exec` runs, including `sources`, `ls`, and `status`
 registry checks. `llmwiki-chat@0.1.6` is a static browser artifact with no CLI
 `bin`; install it when you want to host the packaged `dist/` directory.
 
-Forward-looking serve note: the planned `llmwiki-serve` 0.2.10 release adds an
-opt-in SQLite GraphStore as a derived cache for graph responses. This page does
-not claim that 0.2.10 is already published; the current public package baseline
-remains `llmwiki-serve==0.2.9` until the release-status page is updated from
-registry evidence. When a 0.2.10-or-newer package is installed, the base install
-contains the SQLite GraphStore code and no `[sqlite]` or `[graph]` extra is
-needed. The default remains off. Enable it only with
-`--graph-store sqlite --graph-store-path <outside-root.sqlite>` or the planned
+Serve note: `llmwiki-serve==0.2.10` adds an opt-in SQLite GraphStore as a
+derived cache for graph responses. The base install contains the SQLite
+GraphStore code and no `[sqlite]` or `[graph]` extra is needed. The default
+remains off. Enable it only with
+`--graph-store sqlite --graph-store-path <outside-root.sqlite>` or the
 `LLMWIKI_GRAPH_STORE` and `LLMWIKI_GRAPH_STORE_PATH` environment variables, and
 keep that SQLite file outside the served source root because it is sensitive
 derived cache data.
