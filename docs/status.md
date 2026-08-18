@@ -68,6 +68,28 @@ The `llmwiki-serve==0.2.9`, `llmwiki-bridge-start@0.0.3`,
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
 
+## Planned `llmwiki-serve` 0.2.10 SQLite GraphStore
+
+This portal keeps `llmwiki-serve==0.2.9` as the current published baseline
+until a release-status update verifies a newer PyPI version. The following is
+planned 0.2.10 behavior, not a published-version claim:
+
+- The base `llmwiki-serve` install contains the SQLite GraphStore code; no
+  `[sqlite]` or `[graph]` extra is needed.
+- GraphStore remains disabled by default. Ordinary package installs continue to
+  use the in-memory derived graph projection unless explicitly configured.
+- Operators enable SQLite with
+  `--graph-store sqlite --graph-store-path <outside-root.sqlite>` or the
+  planned `LLMWIKI_GRAPH_STORE=sqlite` and
+  `LLMWIKI_GRAPH_STORE_PATH=<outside-root.sqlite>` environment variables.
+- The SQLite file should live outside the served source root and generated
+  public assets. It is a disposable derived cache, but it can contain sensitive
+  graph nodes, edges, labels, paths, and metadata from the source.
+- Startup should fail for invalid GraphStore configuration, such as selecting
+  `sqlite` without a usable path. Runtime cache failures use the configured
+  failure policy: default fallback recomputes from the current source
+  projection, while fail-fast reports a GraphStore failure.
+
 ::: warning Publication caveat
 Version `0.0.1` of `llmwiki-bridge-start` was the manually published first
 release. The current package baseline is `llmwiki-bridge-start@0.0.3`; do not

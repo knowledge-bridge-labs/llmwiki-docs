@@ -207,6 +207,39 @@ llmwiki-serve serve $SourcePath --host 127.0.0.1 --port 8765
 llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765
 ```
 
+This default keeps GraphStore disabled. The current public package baseline is
+still `llmwiki-serve==0.2.9`; the following SQLite GraphStore path describes
+planned 0.2.10-or-newer behavior and should not be treated as published-release
+evidence until [Release Status & Compatibility](/status) is updated.
+
+When you are using a server version that includes the planned 0.2.10 behavior,
+the base install includes the SQLite GraphStore code. Do not add a `[sqlite]` or
+`[graph]` extra. Keep the SQLite file outside `SOURCE_PATH`; it is a sensitive
+derived graph cache and should not be committed, served, or synced with the
+source folder.
+
+```powershell
+$GraphStorePath = "C:\path\to\llmwiki-cache\quickstart-graph-store.sqlite"
+llmwiki-serve serve $SourcePath --host 127.0.0.1 --port 8765 `
+  --graph-store sqlite `
+  --graph-store-path $GraphStorePath
+```
+
+```sh
+GRAPH_STORE_PATH=/path/to/llmwiki-cache/quickstart-graph-store.sqlite
+llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765 \
+  --graph-store sqlite \
+  --graph-store-path "$GRAPH_STORE_PATH"
+```
+
+The planned environment-variable equivalent is:
+
+```sh
+LLMWIKI_GRAPH_STORE=sqlite \
+LLMWIKI_GRAPH_STORE_PATH="$GRAPH_STORE_PATH" \
+llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765
+```
+
 Leave that terminal running. In another terminal, set the source URL:
 
 ```powershell
@@ -377,6 +410,7 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Inspect refs | `llmwiki-serve source-refs "$SOURCE_PATH"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$SOURCE_PATH"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765` | Loopback server starts. |
+| Optionally enable planned SQLite GraphStore | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765 --graph-store sqlite --graph-store-path "$GRAPH_STORE_PATH"` | With a 0.2.10-or-newer server, graph responses can use an opt-in derived SQLite cache outside the source root. |
 | Inspect discovery | `llmwiki-serve ls` or `llmwiki-serve status --json` | Running instances report health, stale state, and registry/process discovery source. |
 | Verify HTTP | `/health`, `/manifest`, `/query`, `/source-refs`, `/source-bundle` | Endpoints return source data. |
 | Optionally verify MCP | `/mcp/stream` `initialize`, `tools/list`, and `llmwiki_context` | MCP source smoke passes where supported. |

@@ -20,6 +20,7 @@ metadata it writes.
 - link, tag, source-ref, and graph hints derived from the files
 - query, search, read, source-ref, source-bundle, and graph responses
 - local process discovery for running source servers
+- optional derived graph-cache rows when GraphStore is explicitly enabled
 
 It does not write back into the source folder, compile upstream material, run
 ingestion jobs, call a model, or synthesize final answers.
@@ -98,6 +99,38 @@ marker after every source-changing compile.
 Projection signatures and bundle IDs are derived from the served projection, so
 clients should treat them as source-owned coordination metadata instead of
 trying to infer local file paths.
+
+## Planned SQLite GraphStore Cache
+
+The current public package baseline documented here remains
+`llmwiki-serve==0.2.9`. The SQLite GraphStore behavior below is planned for
+`llmwiki-serve` 0.2.10 and newer; it is not a claim that 0.2.10 has already been
+published.
+
+In the planned 0.2.10 package, the base install contains the SQLite GraphStore
+code. There is no `[sqlite]` or `[graph]` extra for the built-in SQLite cache.
+The default remains off, so ordinary quickstart and package-installed runs keep
+the current in-memory graph projection unless the operator enables a store:
+
+```sh
+llmwiki-serve serve /path/to/wiki \
+  --graph-store sqlite \
+  --graph-store-path <outside-root.sqlite>
+```
+
+The planned environment-variable equivalents are `LLMWIKI_GRAPH_STORE=sqlite`
+and `LLMWIKI_GRAPH_STORE_PATH=<outside-root.sqlite>`.
+
+Use a path outside the served source root. The SQLite file is disposable cache,
+but it is still sensitive derived data because it can contain graph nodes,
+edges, labels, paths, and metadata derived from private source files. Do not
+commit it, serve it as a public asset, or store it inside the wiki folder.
+
+Startup should fail early when `sqlite` is selected without a usable
+`--graph-store-path` or `LLMWIKI_GRAPH_STORE_PATH`. Runtime cache failures use
+the configured failure policy: the default `fallback-local` recomputes graph
+payloads from the current projection, while `fail-fast` reports the GraphStore
+failure instead of serving a recomputed graph.
 
 ## Protocol Posture
 

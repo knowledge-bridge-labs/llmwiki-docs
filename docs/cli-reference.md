@@ -351,12 +351,40 @@ Options:
 | `--producer-manifest` | unset | Optional producer-owned freshness marker. When the non-symlink marker exists inside the served root, strict refresh checks use it instead of rescanning every source file. |
 | `--io-log` | `.runtime-logs/llmwiki-serve-io.jsonl` | Local request/response JSONL logging for `serve`. Set `off` to disable or pass a path to choose a different sink. `LLMWIKI_SERVE_IO_LOG` accepts the same values. |
 
-The default `0.0` is the strict freshness path for local authoring and exact
-tests: edits are checked before each served response. A positive refresh
-interval can improve repeated requests against larger local graphs, but updates
-may be invisible until the interval expires. Use the default, wait for the
-interval, or restart the process when you need immediate visibility of a source
-change.
+### Planned 0.2.10 SQLite GraphStore Options
+
+The current published package baseline on this portal remains
+`llmwiki-serve==0.2.9`. The SQLite GraphStore settings below describe planned
+0.2.10-or-newer `serve` behavior and should not be cited as published-release
+support until the release-status matrix is updated from registry evidence.
+
+The planned 0.2.10 base install contains the SQLite GraphStore code. Operators
+should not install a separate `[sqlite]` or `[graph]` extra for this path. The
+default remains no graph store.
+
+```sh
+llmwiki-serve serve <wiki-path> \
+  --graph-store sqlite \
+  --graph-store-path <outside-root.sqlite>
+```
+
+| Setting | Default | Planned behavior |
+| --- | --- | --- |
+| `--graph-store` / `LLMWIKI_GRAPH_STORE` | `none` | Selects the derived graph-cache backend. Use `sqlite` only when the operator wants a local GraphStore for repeated graph inspection. |
+| `--graph-store-path` / `LLMWIKI_GRAPH_STORE_PATH` | unset | Required when the selected backend is `sqlite`. Use a database path outside the served source root, for example a per-user state or cache directory. |
+| `--graph-store-failure-policy` | `fallback-local` | `fallback-local` recomputes graph payloads from the current projection if the cache cannot be read or written at runtime. `fail-fast` turns GraphStore runtime failures into request failures. Startup configuration failures, including a missing SQLite path for `sqlite` or an unopened database path, stop startup. |
+
+The SQLite file is not source data, but it is still sensitive derived cache
+data: it can contain page, edge, label, path, and metadata rows derived from the
+served wiki. Do not put it under `<wiki-path>`, commit it, publish it, or store
+it in generated public assets.
+
+For `--refresh-interval-seconds`, the default `0.0` is the strict freshness path
+for local authoring and exact tests: edits are checked before each served
+response. A positive refresh interval can improve repeated requests against
+larger local graphs, but updates may be invisible until the interval expires.
+Use the default, wait for the interval, or restart the process when you need
+immediate visibility of a source change.
 
 Use `--producer-manifest` only for generated wiki outputs whose producer
 updates the marker after every source-changing compile. If the marker is
