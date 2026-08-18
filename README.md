@@ -46,6 +46,18 @@ CLI for `npx`/`npm exec` runs, including `sources`, `ls`, and `status`
 registry checks. `llmwiki-chat@0.1.6` is a static browser artifact with no CLI
 `bin`; install it when you want to host the packaged `dist/` directory.
 
+Forward-looking serve note: the planned `llmwiki-serve` 0.2.10 release adds an
+opt-in SQLite GraphStore as a derived cache for graph responses. This page does
+not claim that 0.2.10 is already published; the current public package baseline
+remains `llmwiki-serve==0.2.9` until the release-status page is updated from
+registry evidence. When a 0.2.10-or-newer package is installed, the base install
+contains the SQLite GraphStore code and no `[sqlite]` or `[graph]` extra is
+needed. The default remains off. Enable it only with
+`--graph-store sqlite --graph-store-path <outside-root.sqlite>` or the planned
+`LLMWIKI_GRAPH_STORE` and `LLMWIKI_GRAPH_STORE_PATH` environment variables, and
+keep that SQLite file outside the served source root because it is sensitive
+derived cache data.
+
 Shortest local path:
 
 1. Install `llmwiki-serve` from PyPI with `uv tool install llmwiki-serve`.
