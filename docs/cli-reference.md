@@ -6,7 +6,7 @@ successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.9`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
@@ -24,7 +24,7 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.9`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.10`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the guided handoff for discovery, source startup, optional bridge registration, and smoke checks after the source layer works. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.4.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
@@ -351,16 +351,12 @@ Options:
 | `--producer-manifest` | unset | Optional producer-owned freshness marker. When the non-symlink marker exists inside the served root, strict refresh checks use it instead of rescanning every source file. |
 | `--io-log` | `.runtime-logs/llmwiki-serve-io.jsonl` | Local request/response JSONL logging for `serve`. Set `off` to disable or pass a path to choose a different sink. `LLMWIKI_SERVE_IO_LOG` accepts the same values. |
 
-### Planned 0.2.10 SQLite GraphStore Options
+### Optional SQLite GraphStore Options
 
-The current published package baseline on this portal remains
-`llmwiki-serve==0.2.9`. The SQLite GraphStore settings below describe planned
-0.2.10-or-newer `serve` behavior and should not be cited as published-release
-support until the release-status matrix is updated from registry evidence.
-
-The planned 0.2.10 base install contains the SQLite GraphStore code. Operators
-should not install a separate `[sqlite]` or `[graph]` extra for this path. The
-default remains no graph store.
+`llmwiki-serve==0.2.10` includes optional SQLite GraphStore settings for
+`serve`. The base install contains the SQLite GraphStore code. Operators should
+not install a separate `[sqlite]` or `[graph]` extra for this path. The default
+remains no graph store.
 
 ```sh
 llmwiki-serve serve <wiki-path> \
@@ -368,7 +364,7 @@ llmwiki-serve serve <wiki-path> \
   --graph-store-path <outside-root.sqlite>
 ```
 
-| Setting | Default | Planned behavior |
+| Setting | Default | Behavior |
 | --- | --- | --- |
 | `--graph-store` / `LLMWIKI_GRAPH_STORE` | `none` | Selects the derived graph-cache backend. Use `sqlite` only when the operator wants a local GraphStore for repeated graph inspection. |
 | `--graph-store-path` / `LLMWIKI_GRAPH_STORE_PATH` | unset | Required when the selected backend is `sqlite`. Use a database path outside the served source root, for example a per-user state or cache directory. |

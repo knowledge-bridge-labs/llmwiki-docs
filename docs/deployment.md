@@ -17,14 +17,9 @@ from other machines.
 
 ## SQLite GraphStore Placement
 
-The current published `llmwiki-serve` package baseline remains 0.2.9. The
-SQLite GraphStore deployment guidance in this section is for planned
-0.2.10-or-newer server behavior and should not be treated as a claim that
-0.2.10 is already published.
-
-The planned 0.2.10 base install includes the SQLite GraphStore code with no
-`[sqlite]` or `[graph]` extra. It is still disabled by default. Enable it only
-when repeated graph inspection needs a local derived cache:
+`llmwiki-serve==0.2.10` includes the SQLite GraphStore code with no `[sqlite]`
+or `[graph]` extra. It is still disabled by default. Enable it only when
+repeated graph inspection needs a local derived cache:
 
 ```sh
 llmwiki-serve serve /path/to/wiki --host 127.0.0.1 --port 18765 \
@@ -32,7 +27,7 @@ llmwiki-serve serve /path/to/wiki --host 127.0.0.1 --port 18765 \
   --graph-store-path /path/outside/wiki/llmwiki-graph-store.sqlite
 ```
 
-For config-driven launches, the planned equivalents are
+For config-driven launches, the equivalents are
 `LLMWIKI_GRAPH_STORE=sqlite` and
 `LLMWIKI_GRAPH_STORE_PATH=/path/outside/wiki/llmwiki-graph-store.sqlite`.
 
@@ -43,9 +38,9 @@ local source data, do not commit it, and avoid placing it in synced or hosted
 folders unless that is an intentional operator decision.
 
 Startup should stop when `sqlite` is selected without a usable database path.
-At runtime, the default planned failure policy is to fall back to recomputing
-the graph from the current projection; a fail-fast policy should be reserved
-for environments where cache correctness is more important than source-serving
+At runtime, the default failure policy is to fall back to recomputing the graph
+from the current projection; a fail-fast policy should be reserved for
+environments where cache correctness is more important than source-serving
 availability.
 
 ## Private Network
