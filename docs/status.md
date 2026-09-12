@@ -13,6 +13,12 @@ runtime profile configuration, and normalized answer artifacts.
 Registry verification is current: PyPI reports `llmwiki-serve==0.2.10`, and npm
 reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
 `llmwiki-chat@0.1.6`.
+`llmwiki-agent-bridge@0.5.0` is prepared as the next release candidate for the
+Knowledge Gateway roadmap, including gateway target metadata, bridge MCP
+`2026-07-28` discovery, graph-context retrieval, and external gateway placement
+docs. It is not the published npm baseline until the branch is merged to
+`main`, Trusted Publishing completes, and a clean install-smoke verifies the
+registry artifact.
 External gateway placement docs now cover using `llmwiki-agent-bridge` as an
 LLMWiki evidence target or companion behind Docker MCP Gateway, agentgateway,
 AWS AgentCore Gateway, or another operator-managed gateway. Those notes are
@@ -72,6 +78,9 @@ The `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6` packages are
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
+The next bridge release candidate is `llmwiki-agent-bridge@0.5.0`; keep package
+install guidance on `0.4.0` until npm registry verification and install-smoke
+complete for `0.5.0`.
 
 ## Optional `llmwiki-serve` SQLite GraphStore
 
