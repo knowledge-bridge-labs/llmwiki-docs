@@ -52,7 +52,7 @@ when you want to connect optional tools such as the bridge or chat workbench.
 Source checkouts remain supported because they include fixtures, development
 scripts, and release-smoke commands. Package installs are now available for the
 current public-preview baseline: `llmwiki-serve==0.2.10`,
-`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
+`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.5.0`, and
 `llmwiki-chat@0.1.6`.
 
 If you are working from an offline or mirrored environment, use local sibling
@@ -76,7 +76,7 @@ Yes. Use `uv tool install llmwiki-serve` or
 `uvx --from llmwiki-serve==0.2.10 llmwiki-serve ...` for the source server. Use
 `npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --path /path/to/your/wiki`
 when you want the guided first-run entrypoint. Use
-`npm exec --package llmwiki-agent-bridge@0.4.0 -- llmwiki-agent-bridge` when
+`npm exec --package llmwiki-agent-bridge@0.5.0 -- llmwiki-agent-bridge` when
 you want to run the bridge directly for source fan-out or runtime-backed
 answers. Use `llmwiki-chat@0.1.6` for package install or static artifact
 verification. Source checkouts remain the most convenient path when you want
