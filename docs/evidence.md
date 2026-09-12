@@ -14,7 +14,7 @@ remain strict quality-gate records and do not create a public quality claim.
 
 ## 0.2.9 Lexical-Default Regression Gate
 
-Before `llmwiki-serve==0.2.9` was published, the default lexical retrieval path
+Before the 0.2.9 release, the default lexical retrieval path
 was compared against released version 0.2.6 with no vector, hybrid, or
 agent-guided mode enabled. The adoption signal is practical: users can upgrade
 to 0.2.9 for the new integration surface while preserving default lexical

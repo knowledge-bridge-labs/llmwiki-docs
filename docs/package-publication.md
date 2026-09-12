@@ -8,19 +8,13 @@ release-train public package baseline is:
 | --- | --- | --- | --- |
 | `llmwiki-serve` | `0.2.10` | PyPI | Public registry version check, GitHub Release [`v0.2.10`](https://github.com/knowledge-bridge-labs/llmwiki-serve/releases/tag/v0.2.10), publish workflow [`32140050979`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/32140050979). Historical first public PyPI baseline: `0.2.5`, release PR [`#31`](https://github.com/knowledge-bridge-labs/llmwiki-serve/pull/31), merge `af48100d627bd9bbda9ee0860b72ceb1be5051aa`, publish workflow [`30371543484`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30371543484) |
 | `llmwiki-bridge-start` | `0.0.3` | npm | Public registry version check; publish workflow [`30357056742`](https://github.com/knowledge-bridge-labs/llmwiki-bridge-start/actions/runs/30357056742) |
-| `llmwiki-agent-bridge` | `0.4.0` | npm | Public registry version and CLI metadata check. Historical npm baseline: `0.3.0`, publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
+| `llmwiki-agent-bridge` | `0.5.0` | npm | Public registry version and CLI metadata check, GitHub Release [`v0.5.0`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/releases/tag/v0.5.0), publish workflow [`34673447303`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/34673447303), and clean install-smoke. Historical npm baseline: `0.3.0`, publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
 | `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27; static artifact package with no CLI `bin` |
 
 The historical `llmwiki-serve` `0.2.5` and `llmwiki-agent-bridge` `0.3.0`
 evidence above preserves the earlier publication trail only. It is not current
 release-train evidence for `llmwiki-serve` `0.2.10` or
-`llmwiki-agent-bridge` `0.4.0`.
-
-`llmwiki-agent-bridge@0.5.0` is the next release candidate for the Knowledge
-Gateway roadmap. Keep the table above on `0.4.0` until npm registry
-verification confirms `0.5.0` is published. The candidate should be merged to
-`main` before a `v0.5.0` GitHub Release or Trusted Publishing
-`workflow_dispatch` is used; do not publish from an unmerged branch tag.
+`llmwiki-agent-bridge` `0.5.0`.
 
 Source checkouts remain supported for development, bundled fixtures, and
 release verification. Public-unpublished gates that expected PyPI `404` or npm
@@ -69,18 +63,15 @@ try {
 ```
 
 These checks should report `llmwiki-serve` `0.2.10`,
-`llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.4.0`, and
+`llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.5.0`, and
 `llmwiki-chat` `0.1.6`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
 unavailable from that registry view or the query failed.
-While `0.5.0` is pending, `npm view llmwiki-agent-bridge@0.5.0 version --json`
-should return npm `E404`; after publication it must return `"0.5.0"` before the
-status matrix is updated.
 
 The initial bridge-start release was manually first-published and remains
 historical first-publish evidence only. `llmwiki-bridge-start@0.0.3` is the
 current guided handoff package baseline. It uses
-`llmwiki-agent-bridge@0.4.0` as the default bridge package when bridge setup is
+`llmwiki-agent-bridge@0.5.0` as the default bridge package when bridge setup is
 selected.
 `llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
 on 2026-07-27.
@@ -234,7 +225,7 @@ Before publishing:
   `graphContext.enabled=true` through both bridge HTTP and bridge MCP paths.
 - Keep npm Trusted Publisher/OIDC configured for future owner-approved releases
   where available. The historical `0.3.0` baseline was confirmed by public npm
-  registry version check; the current release-train baseline is `0.4.0`.
+  registry version check; the current release-train baseline is `0.5.0`.
 - Keep npm tokens out of commits, logs, shell history, and CI variables unless a
   maintainer has explicitly approved that fallback.
 

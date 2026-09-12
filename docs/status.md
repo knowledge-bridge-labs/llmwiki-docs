@@ -8,17 +8,14 @@ release verification; use the package baseline below for package-manager
 installs.
 `llmwiki-bridge-start@0.0.3` is the current first-run entrypoint for local
 discovery, source startup, optional bridge registration, and smoke checks.
-`llmwiki-agent-bridge@0.4.0` is the current bridge package for source fan-out,
+`llmwiki-agent-bridge@0.5.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
 Registry verification is current: PyPI reports `llmwiki-serve==0.2.10`, and npm
-reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
+reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.5.0`, and
 `llmwiki-chat@0.1.6`.
-`llmwiki-agent-bridge@0.5.0` is prepared as the next release candidate for the
-Knowledge Gateway roadmap, including gateway target metadata, bridge MCP
-`2026-07-28` discovery, graph-context retrieval, and external gateway placement
-docs. It is not the published npm baseline until the branch is merged to
-`main`, Trusted Publishing completes, and a clean install-smoke verifies the
-registry artifact.
+`llmwiki-agent-bridge@0.5.0` is the published Knowledge Gateway roadmap
+release, including gateway target metadata, bridge MCP `2026-07-28` discovery,
+graph-context retrieval, and external gateway placement docs.
 External gateway placement docs now cover using `llmwiki-agent-bridge` as an
 LLMWiki evidence target or companion behind Docker MCP Gateway, agentgateway,
 AWS AgentCore Gateway, or another operator-managed gateway. Those notes are
@@ -41,7 +38,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported development path | You want bundled fixtures, source-level development scripts, screenshot refreshes, or release verification. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.5.0`, and `llmwiki-chat@0.1.6`. |
 
 ## Package Roles
 
@@ -58,7 +55,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- | --- | --- | --- |
 | `llmwiki-serve` | Python package 0.2.10, Apache-2.0, CLI entrypoint | PyPI latest 0.2.10 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-bridge-start` | npm package 0.0.3, Apache-2.0, CLI entrypoint | npm published 0.0.3 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --help` or repository `npm run check` |
-| `llmwiki-agent-bridge` | npm package 0.4.0, Apache-2.0, CLI entrypoint | npm published 0.4.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
+| `llmwiki-agent-bridge` | npm package 0.5.0, Apache-2.0, CLI entrypoint | npm published 0.5.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package 0.1.6, Apache-2.0, static Vite browser workbench artifact, no CLI `bin` | npm published 0.1.6 | Package `dist/` static hosting or source checkout for UI development | Node.js 22.12+ | package install-smoke for `dist/`, or repository `npm run check` |
 | `llmwiki-docs` | VitePress docs portal, Apache-2.0 | GitHub Pages live | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 
@@ -75,12 +72,9 @@ only for a manual loopback diagnostic. JSON output can include
 `discovery_source` and `root_source`.
 
 The `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`,
-`llmwiki-agent-bridge@0.4.0`, and `llmwiki-chat@0.1.6` packages are
+`llmwiki-agent-bridge@0.5.0`, and `llmwiki-chat@0.1.6` packages are
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
-The next bridge release candidate is `llmwiki-agent-bridge@0.5.0`; keep package
-install guidance on `0.4.0` until npm registry verification and install-smoke
-complete for `0.5.0`.
 
 ## Optional `llmwiki-serve` SQLite GraphStore
 
