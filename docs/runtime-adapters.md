@@ -106,6 +106,20 @@ If a delegated runtime returns citations but the answer markdown contains no
 fallback anchor list. Treat that as runtime output normalization only; source
 evidence still belongs to the selected Knowledge Source.
 
+## External Gateway In Front Of Bridge
+
+An external gateway can sit in front of `llmwiki-agent-bridge` when it already
+owns ingress, identity, policy, routing, TLS, scaling, hosted operations, and
+observability. In that shape, keep the bridge focused on LLMWiki evidence
+assembly: selected-source fan-out, graph context, citations, trace steps, and
+the normalized `llmwiki_agent_result` artifact.
+
+Use MCP fronting when the gateway should call `llmwiki_agent_run` or read-only
+source tools through `/mcp`. Use HTTP passthrough only when the gateway should
+front bridge routes such as `/message:send`. See
+[External Gateways](/external-gateways) for Docker MCP Gateway, agentgateway,
+and AWS AgentCore Gateway placement notes.
+
 ## Local Development Runtime
 
 Use Local Development Runtime when you need deterministic browser behavior

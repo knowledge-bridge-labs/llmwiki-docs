@@ -113,7 +113,7 @@ An Agent Runtime is the external system that plans, calls tools, and writes an
 answer. Hermes, DeepAgents, generic OpenAI-compatible local gateways, IDE
 agents, Codex, Claude Code, and scripts can all be runtime or client paths
 depending on their environment. Bridge profiles describe integration paths, not
-vendor-certified support.
+vendor validation claims.
 
 Host agents own the direct search loop when they call `llmwiki-serve`
 themselves. In that mode, the host decides which search, read, context, and

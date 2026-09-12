@@ -30,7 +30,7 @@ runtime-backed cited artifact.
 - You are looking for an npm package, PyPI package, importable module, CLI
   executable, `lb` alias, MCP server, background service, model runtime,
   crawler, compiler, or source authoring tool.
-- You need vendor-certified MCP, A2A, Claude Code, Codex, IDE, runtime, or
+- You need vendor validation for MCP, A2A, Claude Code, Codex, IDE, runtime, or
   model-answer quality claims.
 - You cannot approve the network and privacy posture for the source you are
   about to probe.

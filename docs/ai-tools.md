@@ -29,7 +29,7 @@ runtime synthesis.
 | DeepAgents-compatible runtime | Bridge profile. | Set `LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=deepagents` and use the same `llmwiki_agent_result` artifact shape. |
 | OpenAI-compatible local runtime | Generic bridge profile. | Set `LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic` with the runtime `BASE_URL` and `MODEL`. |
 
-These are integration paths, not vendor-certified integrations. Keep product
+These are integration paths, not vendor validation claims. Keep product
 names in docs tied to the path being exercised: direct source call, MCP tool,
 Agent Bridge A2A/MCP, or bridge runtime profile.
 
@@ -395,7 +395,7 @@ Public preview language should stay conservative:
   MCP-style JSON-RPC and A2A compatibility surfaces are public-preview
   compatibility paths, not certified conformance claims.
 - Hermes, DeepAgents, Copilot, Codex, Claude Code, Cursor, and IDE agent names
-  describe integration paths or runtime profiles, not vendor-certified support.
+  describe integration paths or runtime profiles, not vendor validation claims.
 - The server is read-only. Authoring, ingestion, and compilation remain owned
   by the wiki variant or upstream workflow.
 - Operators choose the network, authentication, CORS, TLS, and logging posture
