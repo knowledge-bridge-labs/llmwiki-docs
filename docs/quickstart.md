@@ -31,10 +31,10 @@ llmwiki-serve --help
 For a reproducible check against the current public baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.10 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.11 llmwiki-serve --help
 ```
 
-Pin `llmwiki-serve==0.2.10` only when you need to reproduce the current
+Pin `llmwiki-serve==0.2.11` only when you need to reproduce the current
 released baseline exactly. Use [Release Status & Compatibility](/status) before
 publishing docs or release notes.
 
@@ -207,11 +207,11 @@ llmwiki-serve serve $SourcePath --host 127.0.0.1 --port 8765
 llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765
 ```
 
-This default keeps GraphStore disabled. In `llmwiki-serve==0.2.10`, the base
-install includes the optional SQLite GraphStore code. Do not add a `[sqlite]` or
-`[graph]` extra. Keep the SQLite file outside `SOURCE_PATH`; it is a sensitive
-derived graph cache and should not be committed, served, or synced with the
-source folder.
+This default keeps GraphStore disabled. The current `llmwiki-serve==0.2.11`
+package includes the optional SQLite GraphStore code introduced in Serve
+0.2.10. Do not add a `[sqlite]` or `[graph]` extra. Keep the SQLite file
+outside `SOURCE_PATH`; it is a sensitive derived graph cache and should not be
+committed, served, or synced with the source folder.
 
 ```powershell
 $GraphStorePath = "C:\path\to\llmwiki-cache\quickstart-graph-store.sqlite"
@@ -304,24 +304,32 @@ registering it:
 ```sh
 curl -s "$SOURCE_URL/mcp/stream" \
   -H 'accept: application/json, text/event-stream' \
+  -H 'mcp-protocol-version: 2026-07-28' \
   -H 'content-type: application/json' \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"llmwiki-quickstart-smoke","version":"0.0.0"}}}'
+  -d '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/clientInfo":{"name":"llmwiki-quickstart-smoke","version":"0.0.0"}}}}'
 
 curl -s "$SOURCE_URL/mcp/stream" \
   -H 'accept: application/json, text/event-stream' \
+  -H 'mcp-protocol-version: 2026-07-28' \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
 
 curl -s "$SOURCE_URL/mcp/stream" \
   -H 'accept: application/json, text/event-stream' \
+  -H 'mcp-protocol-version: 2026-07-28' \
   -H 'content-type: application/json' \
   -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness required copy","limit":4}}}'
 ```
 
-The smoke passes when `tools/list` includes `llmwiki_context` and the tool call
-returns approved evidence. This is an SDK-backed source surface where supported
-by the installed server and client; it is not a certification claim for every
-MCP client or runtime.
+The smoke passes when `server/discover` returns `resultType: "complete"` with
+private cache hints, `tools/list` includes `llmwiki_context` with output schema
+and read-only annotations, and the tool call returns approved evidence in
+`structuredContent`. Modern `/mcp/stream` source calls are sessionless and
+should not require an `Mcp-Session-Id`.
+
+Older JSON-RPC clients can still use `/mcp` or initialize `/mcp/stream` with a
+legacy protocol version such as `2025-06-18`. That compatibility path keeps the
+same source tools but does not exercise the 2026-07-28 discovery envelope.
 
 ## 7. Connect An Agent Directly
 
@@ -380,6 +388,12 @@ If you add a next source later, repeat the same pattern with another source
 path and port, then use `llmwiki-bridge-start status --json` or
 `llmwiki-serve ls` to inspect what is running.
 
+Bridge-start caveat: `llmwiki-bridge-start@0.0.3` is still useful for source
+discovery and handoff, but its detached bridge-start helper defaults to the
+earlier built-in bridge package. Start `llmwiki-agent-bridge@0.6.0` directly
+when you need progressive MCP gateway exposure or the current bridge feature
+set.
+
 Use `llmwiki-agent-bridge` only when one local companion endpoint should fan
 out across selected sources or call a configured runtime for a normalized cited
 artifact. Keep the bridge URL distinct from runtime endpoint variables:
@@ -398,14 +412,14 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.10 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.11 llmwiki-serve --help` | Help prints. |
 | Choose source | Existing folder or tiny local sample above | `SOURCE_PATH` points at Markdown content. |
 | Inspect source | `llmwiki-serve manifest "$SOURCE_PATH"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --limit 4` | Approved evidence returns. |
 | Inspect refs | `llmwiki-serve source-refs "$SOURCE_PATH"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$SOURCE_PATH"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765` | Loopback server starts. |
-| Optionally enable SQLite GraphStore | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765 --graph-store sqlite --graph-store-path "$GRAPH_STORE_PATH"` | With `llmwiki-serve==0.2.10` or newer, graph responses can use an opt-in derived SQLite cache outside the source root. |
+| Optionally enable SQLite GraphStore | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765 --graph-store sqlite --graph-store-path "$GRAPH_STORE_PATH"` | Graph responses can use an opt-in derived SQLite cache outside the source root. |
 | Inspect discovery | `llmwiki-serve ls` or `llmwiki-serve status --json` | Running instances report health, stale state, and registry/process discovery source. |
 | Verify HTTP | `/health`, `/manifest`, `/query`, `/source-refs`, `/source-bundle` | Endpoints return source data. |
 | Optionally verify MCP | `/mcp/stream` `initialize`, `tools/list`, and `llmwiki_context` | MCP source smoke passes where supported. |

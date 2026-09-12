@@ -8,14 +8,17 @@ release verification; use the package baseline below for package-manager
 installs.
 `llmwiki-bridge-start@0.0.3` is the current first-run entrypoint for local
 discovery, source startup, optional bridge registration, and smoke checks.
-`llmwiki-agent-bridge@0.5.0` is the current bridge package for source fan-out,
+`llmwiki-agent-bridge@0.6.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
-Registry verification is current: PyPI reports `llmwiki-serve==0.2.10`, and npm
-reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.5.0`, and
+Registry verification is current: PyPI reports `llmwiki-serve==0.2.11`, and npm
+reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and
 `llmwiki-chat@0.1.6`.
-`llmwiki-agent-bridge@0.5.0` is the published Knowledge Gateway roadmap
-release, including gateway target metadata, bridge MCP `2026-07-28` discovery,
-graph-context retrieval, and external gateway placement docs.
+Bridge 0.5.0 introduced the Knowledge Gateway roadmap release,
+including gateway target metadata, graph-context retrieval, and external
+gateway placement docs. `llmwiki-agent-bridge@0.6.0` extends that bridge line
+with progressive MCP gateway tool exposure. `llmwiki-serve==0.2.11` adds MCP
+`2026-07-28` Streamable HTTP discovery metadata on top of the SQLite GraphStore
+work introduced in `0.2.10`.
 External gateway placement docs now cover using `llmwiki-agent-bridge` as an
 LLMWiki evidence target or companion behind Docker MCP Gateway, agentgateway,
 AWS AgentCore Gateway, or another operator-managed gateway. Those notes are
@@ -38,7 +41,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported development path | You want bundled fixtures, source-level development scripts, screenshot refreshes, or release verification. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.5.0`, and `llmwiki-chat@0.1.6`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.11`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6`. |
 
 ## Package Roles
 
@@ -53,9 +56,9 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
-| `llmwiki-serve` | Python package 0.2.10, Apache-2.0, CLI entrypoint | PyPI latest 0.2.10 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
+| `llmwiki-serve` | Python package 0.2.11, Apache-2.0, CLI entrypoint | PyPI latest 0.2.11 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-bridge-start` | npm package 0.0.3, Apache-2.0, CLI entrypoint | npm published 0.0.3 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --help` or repository `npm run check` |
-| `llmwiki-agent-bridge` | npm package 0.5.0, Apache-2.0, CLI entrypoint | npm published 0.5.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
+| `llmwiki-agent-bridge` | npm package 0.6.0, Apache-2.0, CLI entrypoint | npm published 0.6.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package 0.1.6, Apache-2.0, static Vite browser workbench artifact, no CLI `bin` | npm published 0.1.6 | Package `dist/` static hosting or source checkout for UI development | Node.js 22.12+ | package install-smoke for `dist/`, or repository `npm run check` |
 | `llmwiki-docs` | VitePress docs portal, Apache-2.0 | GitHub Pages live | Source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 
@@ -71,14 +74,15 @@ heuristic probing. Use `--no-processes` for registry-only output,
 only for a manual loopback diagnostic. JSON output can include
 `discovery_source` and `root_source`.
 
-The `llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`,
-`llmwiki-agent-bridge@0.5.0`, and `llmwiki-chat@0.1.6` packages are
+The `llmwiki-serve==0.2.11`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6` packages are
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
 
 ## Optional `llmwiki-serve` SQLite GraphStore
 
-`llmwiki-serve==0.2.10` includes optional SQLite GraphStore support:
+The current `llmwiki-serve==0.2.11` package includes optional SQLite GraphStore
+support, introduced in Serve 0.2.10:
 
 - The base `llmwiki-serve` install contains the SQLite GraphStore code; no
   `[sqlite]` or `[graph]` extra is needed.
@@ -100,6 +104,9 @@ checkouts remain supported for development and release verification.
 Version `0.0.1` of `llmwiki-bridge-start` was the manually published first
 release. The current package baseline is `llmwiki-bridge-start@0.0.3`; do not
 treat the 0.0.1 publication as Trusted Publisher/OIDC validation evidence.
+The `0.0.3` detached bridge-start helper still defaults to an earlier built-in
+bridge package; start `llmwiki-agent-bridge@0.6.0` directly when you need the
+current bridge feature set.
 :::
 
 ## Protocol Surfaces
@@ -108,9 +115,9 @@ treat the 0.0.1 publication as Trusted Publisher/OIDC validation evidence.
 | --- | --- | --- | --- | --- |
 | HTTP Knowledge Source | `llmwiki-serve` | Public-preview contract | Local HTTP endpoints for health discovery, manifest, context query, search, read, graph projection, and graph neighborhoods. | `llmwiki-serve` release smoke and `llmwiki-chat` `npm run test:e2e:live` smoke. |
 | MCP JSON-RPC compatibility | `llmwiki-serve` | Compatibility surface | Legacy JSON-RPC tool calls for local integration testing, including `llmwiki_graph_neighbors`. | `llmwiki-serve` MCP smoke coverage. |
-| MCP Streamable HTTP | `llmwiki-serve` | SDK-backed source surface where implemented | Official MCP SDK-backed tool calls for source retrieval. | `llmwiki-serve` MCP SDK smoke coverage. |
+| MCP Streamable HTTP | `llmwiki-serve` | SDK-backed source surface with `2026-07-28` discovery in `0.2.11` | MCP source retrieval on `/mcp/stream`; `0.2.11` adds `server/discover`, version metadata, private cache hints, read-only tool annotations, output schemas, and structured tool results. | `llmwiki-serve` MCP SDK smoke coverage. |
 | A2A source compatibility | `llmwiki-serve` | Opt-in compatibility surface | Agent-card discovery and `message:send` for A2A-native source discovery. | A2A source smoke coverage when enabled. |
-| Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract | A2A and MCP bridge endpoints that gather source evidence, expose read-only source exploration tools, return a grounded answer artifact when `llmwiki_agent_run` or `message:send` is used, and expose redacted source registry views through `GET /sources`. | `npm run check` in `llmwiki-agent-bridge`. |
+| Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract with progressive gateway exposure in `0.6.0` | A2A and MCP bridge endpoints that gather source evidence, expose read-only source exploration tools, optionally use progressive MCP gateway meta-tools, return a grounded answer artifact when `llmwiki_agent_run` or `message:send` is used, and expose redacted source registry views through `GET /sources`. | `npm run check` in `llmwiki-agent-bridge`. |
 | Browser workbench | `llmwiki-chat` | Public-preview UI | Source selection, graph inspection, bridge selection, trace display, citations, and answer review. | `llmwiki-chat` lint, typecheck, unit, E2E, build, and pack gates. |
 
 ## Runtime Adapter Status
@@ -118,7 +125,7 @@ treat the 0.0.1 publication as Trusted Publisher/OIDC validation evidence.
 | Runtime path | Status | What works | What is not claimed | Validation gate |
 | --- | --- | --- | --- | --- |
 | Agent Bridge A2A | Public-preview path | Connects chat or clients to a bridge agent card and `message:send` endpoint. | Certified A2A conformance or hosted runtime operation. | Bridge and chat A2A smoke tests. |
-| Agent Bridge MCP | Public-preview path | Connects chat or MCP clients to `llmwiki_agent_run` for full bridge answers, or to read-only source tools for progressive exploration of registered or inline Knowledge Sources. | Certified MCP conformance or hosted runtime operation. | Bridge and chat MCP smoke tests. |
+| Agent Bridge MCP | Public-preview path | Connects chat or MCP clients to `llmwiki_agent_run` for full bridge answers, to direct read-only source tools, or to progressive gateway meta-tools when `LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE=gateway` is configured. | Certified MCP conformance or hosted runtime operation. | Bridge and chat MCP smoke tests. |
 | Local Development Runtime | Supported for development | Deterministic UI flow, tool-call trace, citation rendering, and graph continuity. | Production answer quality. | `npm run test` and `npm run test:e2e` in `llmwiki-chat`. |
 | Hermes profile | Supported bridge profile | Uses the bridge runtime profile for Hermes-compatible gateways. | Product validation for Hermes integration. | Bridge profile tests plus operator smoke against a real Hermes-compatible gateway. |
 | DeepAgents profile | Supported bridge profile | Uses the bridge runtime profile for DeepAgents-compatible gateways. | Product validation for DeepAgents integration. | Bridge profile tests plus operator smoke against a real DeepAgents runtime. |

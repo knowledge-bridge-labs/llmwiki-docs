@@ -102,10 +102,11 @@ trying to infer local file paths.
 
 ## Optional SQLite GraphStore Cache
 
-`llmwiki-serve==0.2.10` includes the SQLite GraphStore code in the base
-install. There is no `[sqlite]` or `[graph]` extra for the built-in SQLite
-cache. The default remains off, so ordinary quickstart and package-installed
-runs keep the in-memory graph projection unless the operator enables a store:
+The current `llmwiki-serve==0.2.11` package includes the SQLite GraphStore code
+in the base install. There is no `[sqlite]` or `[graph]` extra for the built-in
+SQLite cache. The default remains off, so ordinary quickstart and
+package-installed runs keep the in-memory graph projection unless the operator
+enables a store:
 
 ```sh
 llmwiki-serve serve /path/to/wiki \

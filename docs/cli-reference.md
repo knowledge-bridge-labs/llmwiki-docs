@@ -6,8 +6,8 @@ successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.10`, `llmwiki-bridge-start@0.0.3`,
-`llmwiki-agent-bridge@0.5.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
+`llmwiki-serve==0.2.11`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
 
@@ -24,9 +24,9 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.10`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.11`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the guided handoff for discovery, source startup, optional bridge registration, and smoke checks after the source layer works. |
-| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.5.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
+| `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.6.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
 | `llmwiki-docs` | `npm ci` from `llmwiki-docs` | GitHub Pages is live for the public docs portal. |
 
@@ -353,10 +353,10 @@ Options:
 
 ### Optional SQLite GraphStore Options
 
-`llmwiki-serve==0.2.10` includes optional SQLite GraphStore settings for
-`serve`. The base install contains the SQLite GraphStore code. Operators should
-not install a separate `[sqlite]` or `[graph]` extra for this path. The default
-remains no graph store.
+The current `llmwiki-serve==0.2.11` package includes optional SQLite
+GraphStore settings for `serve`. The base install contains the SQLite
+GraphStore code. Operators should not install a separate `[sqlite]` or
+`[graph]` extra for this path. The default remains no graph store.
 
 ```sh
 llmwiki-serve serve <wiki-path> \
@@ -479,7 +479,7 @@ Minimum success is a healthy loopback source endpoint and a handoff URL that a
 coding agent or script can use directly. When bridge setup is skipped, the
 handoff can be a direct source URL or an MCP Streamable HTTP URL such as
 `http://127.0.0.1:<port>/mcp/stream`. Optional bridge setup starts or uses
-`llmwiki-agent-bridge@0.5.0`; configure a runtime only when you need
+`llmwiki-agent-bridge@0.6.0`; configure a runtime only when you need
 runtime-backed synthesis. Interactive runtime installer steps require explicit
 approval, and `--yes` automation does not install runtimes unless
 `--install-runtime` is also supplied.
@@ -510,13 +510,13 @@ runtime when synthesis is configured.
 Minimal local start for evidence-only mode:
 
 ```sh
-npm exec --package llmwiki-agent-bridge@0.5.0 -- llmwiki-agent-bridge
+npm exec --package llmwiki-agent-bridge@0.6.0 -- llmwiki-agent-bridge
 ```
 
 Pin the current public-preview package when reproducibility matters:
 
 ```sh
-npm exec --package llmwiki-agent-bridge@0.5.0 -- llmwiki-agent-bridge
+npm exec --package llmwiki-agent-bridge@0.6.0 -- llmwiki-agent-bridge
 ```
 
 Source-checkout development equivalent:
@@ -532,7 +532,7 @@ Runtime-backed start when an OpenAI-compatible local endpoint is available:
 LLMWIKI_AGENT_BRIDGE_BASE_URL=http://127.0.0.1:8642/v1 \
 LLMWIKI_AGENT_BRIDGE_MODEL=local-model \
 LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE=generic \
-npm exec --package llmwiki-agent-bridge@0.5.0 -- llmwiki-agent-bridge
+npm exec --package llmwiki-agent-bridge@0.6.0 -- llmwiki-agent-bridge
 ```
 
 From a source checkout, replace the final `npx ...` command with
@@ -553,6 +553,7 @@ Core environment variables:
 | `LLMWIKI_AGENT_BRIDGE_ALLOWED_ORIGINS` | unset | Comma-separated browser CORS origins allowed in addition to loopback origins. |
 | `LLMWIKI_AGENT_BRIDGE_SOURCE_POLICY` | `private-http` | Outbound Knowledge Source URL policy: `private-http`, `allowlist`, or `public-https`. |
 | `LLMWIKI_AGENT_BRIDGE_ALLOWED_SOURCE_ORIGINS` | unset | Comma-separated exact source origins for `allowlist` or stricter policies. |
+| `LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE` | `direct` | MCP tool listing mode: `direct` lists bridge and source tools directly, `gateway` lists only progressive gateway meta-tools, and `both` lists both sets for clients that can handle the larger catalog. |
 | `LLMWIKI_AGENT_BRIDGE_ALLOW_PUBLIC_BIND` | unset | Set to `1` before binding to a non-loopback host. |
 | `LLMWIKI_AGENT_BRIDGE_CONFIG_PATH` | CLI user config file | Persistent settings file for `/settings/config.json` and `/settings/sources.json`; embedded callers can pass `configPath`. |
 | `LLMWIKI_AGENT_BRIDGE_AUDIT_LOG` | unset | Opt-in safe request audit JSON lines through the bridge logger. Audit events include route patterns, counts, status, and redaction flags, not raw prompts, answers, URLs, model names, credentials, query strings, or local paths. |

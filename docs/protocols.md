@@ -60,6 +60,19 @@ Example:
 }
 ```
 
+## MCP Streamable HTTP
+
+`llmwiki-serve==0.2.11` extends `/mcp/stream` for SDK-backed MCP Streamable
+HTTP source access. For MCP `2026-07-28`, clients can call `server/discover`
+before `tools/list` and `tools/call`. Discovery and tool-list responses include
+supported protocol versions, private cache hints, server metadata, output
+schemas, and read-only tool annotations. Tool calls return the same source
+evidence under `structuredContent` and do not require a session id.
+
+Use `/mcp/stream` when the client supports current MCP discovery and wants the
+source server to advertise progressive metadata. Use `/mcp` for older
+JSON-RPC-only clients that already know the source tool names.
+
 ## A2A-Style Message Surface
 
 The A2A-style path exposes discovery through `/.well-known/agent-card.json` and
@@ -78,7 +91,7 @@ descriptors and receive a completed task containing text plus a
 | Source MCP | `llmwiki-serve` | Tool calls for context/search/read/graph/source-bundle/source-refs. | Tool result content from the selected source. |
 | Source A2A compatibility | `llmwiki-serve`, opt-in | A2A-native source discovery. | `llmwiki_context` artifact. |
 | Bridge A2A | `llmwiki-agent-bridge` | Answer synthesis over selected sources. | `llmwiki_agent_result` artifact. |
-| Bridge MCP | `llmwiki-agent-bridge` | One MCP tool for grounded answering. | `structuredContent.llmwiki_agent_result`. |
+| Bridge MCP | `llmwiki-agent-bridge` | `llmwiki_agent_run` for full grounded answers plus read-only source tools for progressive exploration. | `structuredContent.llmwiki_agent_result` for full runs, or structured source-tool results such as `structuredContent.llmwiki_context`. |
 
 External gateways may front the bridge MCP or HTTP surfaces when the operator
 owns ingress, identity, policy, routing, TLS, scaling, and hosted operations.
@@ -90,7 +103,7 @@ The bridge remains the LLMWiki evidence target behind that boundary. See
 | Source protocol | Bridge behavior |
 | --- | --- |
 | `llmwiki-http` | Calls `GET /source-bundle` for discovery when available, falls back to `GET /manifest`, then calls `POST /query` on the selected Knowledge Source. |
-| `mcp` | Calls `llmwiki_context` through the source `/mcp` endpoint. |
+| `mcp` | Calls `llmwiki_source_bundle` for discovery when available, then calls `llmwiki_context` through the source `/mcp` endpoint. |
 | `a2a` | Discovers the agent card, posts a message, and prefers a context artifact. |
 
 Bridge MCP source-tool results may carry the closed camelCase guidance shape
@@ -141,9 +154,10 @@ behavior.
 `llmwiki-agent-bridge` documents a conservative MCP `2026-07-28` bridge
 compatibility slice: `server/discover`, version advertising, sessionless
 `tools/list`, and sessionless `tools/call` for `llmwiki_agent_run` and
-read-only source tools. Operators should validate external gateways against the
-exact methods they expose, including request `_meta`, `resultType` handling,
-caching behavior, and transport policy.
+read-only source tools. Version `0.6.0` adds progressive gateway tool exposure
+on top of that bridge surface. Operators should validate external gateways
+against the exact methods they expose, including request `_meta`, `resultType`
+handling, caching behavior, and transport policy.
 
 ## Versioning Guidance
 

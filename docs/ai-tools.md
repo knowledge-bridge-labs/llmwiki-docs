@@ -71,9 +71,51 @@ cite page title and path, mention limitations that affect the answer, and do
 not infer facts that are not present in the returned context.
 ```
 
-## MCP-Style Template
+## MCP Templates
 
-Use this when the client prefers JSON-RPC tool calls.
+Use Streamable HTTP when the client supports it. The MCP `2026-07-28`
+discovery examples below apply to `llmwiki-serve==0.2.11` and later. Use legacy
+JSON-RPC `/mcp` for older clients that do not understand the discovery shape.
+
+### Streamable HTTP Source
+
+Discover the source:
+
+```sh
+curl -s http://127.0.0.1:8765/mcp/stream \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'mcp-protocol-version: 2026-07-28' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{"io.modelcontextprotocol/clientInfo":{"name":"llmwiki-agent","version":"0.0.0"}}}}'
+```
+
+List source tools:
+
+```sh
+curl -s http://127.0.0.1:8765/mcp/stream \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'mcp-protocol-version: 2026-07-28' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
+```
+
+Call the primary context tool:
+
+```sh
+curl -s http://127.0.0.1:8765/mcp/stream \
+  -H 'accept: application/json, text/event-stream' \
+  -H 'mcp-protocol-version: 2026-07-28' \
+  -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"llmwiki_context","arguments":{"query":"release readiness","limit":6}}}'
+```
+
+The Streamable HTTP source endpoint returns private discovery metadata,
+read-only tool annotations, output schemas, and `structuredContent` without
+requiring a session id.
+
+### Legacy JSON-RPC Source
+
+Use this when the client prefers simple JSON-RPC tool calls.
 
 List tools:
 
@@ -99,6 +141,7 @@ Available tool names:
 | `llmwiki_search` | no | Follow-up search when the first context points to a narrower topic. |
 | `llmwiki_read` | no | Read a specific returned `page_id`. |
 | `llmwiki_graph` | no | Inspect graph nodes and edges for trace or UI context. |
+| `llmwiki_graph_neighbors` | no | Inspect a bounded graph neighborhood around returned page or node ids. |
 | `llmwiki_source_bundle` | no | Discover source identity, projection metadata, raw-origin metadata, and source refs. |
 | `llmwiki_source_refs` | no | Inspect typed source-reference handles linked from approved pages. |
 
@@ -127,6 +170,20 @@ Start the bridge for evidence-only source fan-out:
 ```sh
 npx llmwiki-agent-bridge@latest
 ```
+
+For MCP clients or external gateways that should discover source tools
+progressively instead of receiving every registered source-tool schema during
+`tools/list`, `llmwiki-agent-bridge@0.6.0` and later can start the bridge with
+gateway exposure:
+
+```sh
+LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE=gateway npx llmwiki-agent-bridge@latest
+```
+
+In gateway mode, `tools/list` returns only the gateway meta-tools. The client
+searches the catalog, fetches one selected tool detail, then calls it through
+`llmwiki_gateway_call_tool`. Direct `tools/call` remains available for clients
+that already know the bridge or source tool name.
 
 Send a message with `mode: "evidence-only"`:
 

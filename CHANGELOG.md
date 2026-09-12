@@ -4,11 +4,12 @@ All notable changes to the documentation portal will be recorded here.
 
 ## Unreleased
 
+- Updated the published package baseline and publication evidence after
+  `llmwiki-serve==0.2.11` and `llmwiki-agent-bridge@0.6.0` completed Trusted
+  Publishing and install-smoke.
 - Added external gateway placement guidance for using `llmwiki-agent-bridge` as
   an LLMWiki Knowledge Gateway target or companion behind Docker MCP Gateway,
   agentgateway, AWS AgentCore Gateway, or another operator-managed gateway.
-- Recorded the pending `llmwiki-agent-bridge@0.5.0` Knowledge Gateway release
-  candidate without changing the published `0.4.0` package baseline.
 - Updated the published package baseline and publication evidence after
   `llmwiki-agent-bridge@0.5.0` completed Trusted Publishing and install-smoke.
 - Updated the public docs baseline to `llmwiki-serve==0.2.4` and documented
