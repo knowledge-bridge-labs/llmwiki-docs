@@ -58,7 +58,7 @@ The public preview should keep these claims conservative:
   implemented; they are not certified conformance claims until a separate
   conformance process is documented.
 - Hermes, DeepAgents, Copilot, Codex, Claude Code, and IDE agent names describe
-  integration paths or runtime profiles, not vendor-certified integrations.
+  integration paths or runtime profiles, not vendor validation claims.
 - The server is read-only. Ingestion, compilation, and authoring remain owned by
   the wiki variant or upstream workflow that creates the Markdown folder.
 - Public deployment security belongs to the operator. The defaults are

@@ -4,6 +4,9 @@ All notable changes to the documentation portal will be recorded here.
 
 ## Unreleased
 
+- Added external gateway placement guidance for using `llmwiki-agent-bridge` as
+  an LLMWiki Knowledge Gateway target or companion behind Docker MCP Gateway,
+  agentgateway, AWS AgentCore Gateway, or another operator-managed gateway.
 - Updated the public docs baseline to `llmwiki-serve==0.2.4` and documented
   literal search, search/query payload controls, and read field projection.
 - Aligned public release docs with the PyPI `llmwiki-serve==0.2.2` baseline

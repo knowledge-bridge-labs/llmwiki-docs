@@ -80,6 +80,11 @@ descriptors and receive a completed task containing text plus a
 | Bridge A2A | `llmwiki-agent-bridge` | Answer synthesis over selected sources. | `llmwiki_agent_result` artifact. |
 | Bridge MCP | `llmwiki-agent-bridge` | One MCP tool for grounded answering. | `structuredContent.llmwiki_agent_result`. |
 
+External gateways may front the bridge MCP or HTTP surfaces when the operator
+owns ingress, identity, policy, routing, TLS, scaling, and hosted operations.
+The bridge remains the LLMWiki evidence target behind that boundary. See
+[External Gateways](/external-gateways).
+
 ## Source Protocols Accepted by the Bridge
 
 | Source protocol | Bridge behavior |
@@ -130,6 +135,15 @@ Search intent is a separate bridge source-tool argument:
 The bridge forwards variants only when the source advertises
 `llmwiki_agent_guided_lexical_v1` exactly. Older sources keep query-only
 behavior.
+
+## Bridge MCP 2026-07-28 Compatibility Slice
+
+`llmwiki-agent-bridge` documents a conservative MCP `2026-07-28` bridge
+compatibility slice: `server/discover`, version advertising, sessionless
+`tools/list`, and sessionless `tools/call` for `llmwiki_agent_run` and
+read-only source tools. Operators should validate external gateways against the
+exact methods they expose, including request `_meta`, `resultType` handling,
+caching behavior, and transport policy.
 
 ## Versioning Guidance
 

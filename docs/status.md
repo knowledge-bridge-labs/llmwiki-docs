@@ -13,6 +13,11 @@ runtime profile configuration, and normalized answer artifacts.
 Registry verification is current: PyPI reports `llmwiki-serve==0.2.10`, and npm
 reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.4.0`, and
 `llmwiki-chat@0.1.6`.
+External gateway placement docs now cover using `llmwiki-agent-bridge` as an
+LLMWiki evidence target or companion behind Docker MCP Gateway, agentgateway,
+AWS AgentCore Gateway, or another operator-managed gateway. Those notes are
+placement guides; operator validation is required for the deployed gateway and
+protocol version.
 Compatibility-smoke and deterministic benchmark summaries are recorded in
 [Evidence](/evidence). Treat compatibility-smoke evidence as projection
 compatibility only. Windows and Ubuntu/DGX deterministic retrieval metrics are
@@ -112,9 +117,10 @@ treat the 0.0.1 publication as Trusted Publisher/OIDC validation evidence.
 | Agent Bridge A2A | Public-preview path | Connects chat or clients to a bridge agent card and `message:send` endpoint. | Certified A2A conformance or hosted runtime operation. | Bridge and chat A2A smoke tests. |
 | Agent Bridge MCP | Public-preview path | Connects chat or MCP clients to `llmwiki_agent_run` for full bridge answers, or to read-only source tools for progressive exploration of registered or inline Knowledge Sources. | Certified MCP conformance or hosted runtime operation. | Bridge and chat MCP smoke tests. |
 | Local Development Runtime | Supported for development | Deterministic UI flow, tool-call trace, citation rendering, and graph continuity. | Production answer quality. | `npm run test` and `npm run test:e2e` in `llmwiki-chat`. |
-| Hermes profile | Supported bridge profile | Uses the bridge runtime profile for Hermes-compatible gateways. | Product-certified Hermes integration. | Bridge profile tests plus operator smoke against a real Hermes-compatible gateway. |
-| DeepAgents profile | Supported bridge profile | Uses the bridge runtime profile for DeepAgents-compatible gateways. | Product-certified DeepAgents integration. | Bridge profile tests plus operator smoke against a real DeepAgents runtime. |
+| Hermes profile | Supported bridge profile | Uses the bridge runtime profile for Hermes-compatible gateways. | Product validation for Hermes integration. | Bridge profile tests plus operator smoke against a real Hermes-compatible gateway. |
+| DeepAgents profile | Supported bridge profile | Uses the bridge runtime profile for DeepAgents-compatible gateways. | Product validation for DeepAgents integration. | Bridge profile tests plus operator smoke against a real DeepAgents runtime. |
 | Generic OpenAI-compatible profile | Supported bridge profile | Calls `/v1/chat/completions` with source evidence and normalizes an answer artifact. | Any provider-specific model quality or hosted runtime SLA. | `npm run check` in `llmwiki-agent-bridge`. |
+| External gateway fronting bridge | Placement guide | Lets an operator-managed gateway call bridge MCP or HTTP surfaces while the bridge stays focused on LLMWiki evidence assembly. | Product validation for Docker MCP Gateway, agentgateway, AWS AgentCore Gateway, or another gateway deployment. | Direct bridge smoke first, then gateway-specific operator smoke. |
 | Copilot or IDE agents | Direct-client candidate | Can use direct HTTP, MCP-style, or skill/command integrations when the agent environment supports them. | Built-in Copilot adapter or product validation. | Integration-specific manual smoke. |
 
 Validation evidence should be read from the current repository checks rather
@@ -140,8 +146,10 @@ do not claim a public quality pass.
 
 - Not certified MCP conformance.
 - Not certified A2A conformance.
-- Not product-certified Hermes, DeepAgents, Copilot, or IDE integration.
+- Not product-validated Hermes, DeepAgents, Copilot, or IDE integration.
 - Not a hosted production runtime.
+- Not an API gateway, agent gateway platform, runtime host, deployment
+  platform, or managed operations plane.
 - Not a vector database, crawler, ingestion pipeline, or full-stack RAG app.
 - Not a promise that private wiki content is safe to expose without operator
   review, network controls, authentication, and logging policy.

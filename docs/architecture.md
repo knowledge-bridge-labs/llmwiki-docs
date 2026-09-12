@@ -100,6 +100,9 @@ synthesis is optional and only happens in runtime-backed bridge modes.
 Bridge MCP clients can also use read-only source tools to list, search, read,
 inspect graph neighborhoods, and fetch source-bundle metadata from registered
 or inline Knowledge Sources without calling the configured runtime.
+An external gateway can front the bridge when it owns ingress, policy, routing,
+TLS, scaling, and hosted operations; the bridge remains the LLMWiki evidence
+target behind that boundary. See [External Gateways](/external-gateways).
 
 Use `llmwiki-chat` when a human needs to inspect sources, choose a bridge, ask
 questions, review trace steps, and view cited answers in a browser.
@@ -150,6 +153,7 @@ on undocumented parser behavior.
 | Shared source endpoint | Team wiki or internal service | Put TLS, authentication, monitoring, and explicit CORS policy in front of the source. |
 | Browser console with public source | Demos and read-only public knowledge | Prefer HTTPS source URLs and avoid private network assumptions. |
 | Bridge-backed runtime | Local Hermes, DeepAgents, or compatible runtime | Configure the bridge process explicitly, keep runtime credentials out of browser storage, and choose A2A or MCP at the bridge boundary. |
+| Gateway-fronted bridge | Operator-managed gateway plus LLMWiki evidence target | Keep auth, policy, routing, TLS, scaling, and hosted operations in the external gateway; keep source fan-out, graph context, citations, and artifacts in the bridge. |
 
 ## Protocol Posture
 

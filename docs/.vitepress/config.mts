@@ -83,6 +83,7 @@ export default defineConfig({
           { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' },
           { text: 'LLMWiki Bridge Plugin', link: '/llmwiki-bridge-plugin' },
           { text: 'Runtime Adapters', link: '/runtime-adapters' },
+          { text: 'External Gateways', link: '/external-gateways' },
           { text: 'AI Tool Support', link: '/ai-tools' }
         ]
       },
@@ -149,6 +150,7 @@ export default defineConfig({
           { text: 'Direct Agent Integrations', link: '/direct-agent-integrations' },
           { text: 'LLMWiki Bridge Plugin', link: '/llmwiki-bridge-plugin' },
           { text: 'Runtime Adapters', link: '/runtime-adapters' },
+          { text: 'External Gateways', link: '/external-gateways' },
           { text: 'AI Tool Support', link: '/ai-tools' }
         ]
       },
