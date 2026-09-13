@@ -76,11 +76,11 @@ import { withBase } from 'vitepress'
   </div>
   <div>
     <strong>Public-preview install</strong>
-    <span>Use the published, registry-verified packages first: <code>llmwiki-serve==0.2.10</code>, <code>npx llmwiki-bridge-start@latest</code> resolving to <code>0.0.3</code>, <code>npx llmwiki-agent-bridge@latest</code> resolving to <code>0.5.0</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
+    <span>Use the published, registry-verified packages first: <code>llmwiki-serve==0.2.11</code>, <code>npx llmwiki-bridge-start@latest</code> resolving to <code>0.0.3</code>, <code>npx llmwiki-agent-bridge@latest</code> resolving to <code>0.6.0</code>, and the static <code>llmwiki-chat@0.1.6</code> artifact. Source checkouts are for bundled fixtures and development.</span>
   </div>
   <div>
     <strong>Protocol posture</strong>
-    <span>Source access is HTTP/MCP first. A2A source compatibility is opt-in, and bridge runtime surfaces are described as A2A-style and MCP-style compatibility.</span>
+    <span>Source access is HTTP/MCP first. The current source and bridge release train adds MCP 2026-07-28 discovery metadata and progressive gateway tool exposure, while A2A source compatibility remains opt-in and bridge runtime surfaces remain public-preview compatibility paths.</span>
   </div>
 </div>
 

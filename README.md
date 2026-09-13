@@ -32,8 +32,8 @@ implementation details in the owning repo README or docs directory.
 
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
-installs are also available for `llmwiki-serve==0.2.10`,
-`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.5.0`, and
+installs are also available for `llmwiki-serve==0.2.11`,
+`llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and
 `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
 Compatibility-smoke and deterministic benchmark summaries are recorded in
@@ -41,15 +41,20 @@ Compatibility-smoke and deterministic benchmark summaries are recorded in
 metrics are summarized there, no quality pass is claimed, and Qwen agent-tier
 validation remains pending. Version `0.0.1` of `llmwiki-bridge-start` was the
 manually published first release, and the current package baseline is
-`llmwiki-bridge-start@0.0.3`. `llmwiki-agent-bridge@0.5.0` exposes the bridge
+`llmwiki-bridge-start@0.0.3`. `llmwiki-agent-bridge@0.6.0` exposes the bridge
 CLI for `npx`/`npm exec` runs, including `sources`, `ls`, and `status`
 registry checks. `llmwiki-chat@0.1.6` is a static browser artifact with no CLI
 `bin`; install it when you want to host the packaged `dist/` directory.
 
-Serve note: `llmwiki-serve==0.2.10` adds an opt-in SQLite GraphStore as a
-derived cache for graph responses. The base install contains the SQLite
-GraphStore code and no `[sqlite]` or `[graph]` extra is needed. The default
-remains off. Enable it only with
+`llmwiki-serve==0.2.11` adds MCP `2026-07-28` Streamable HTTP discovery
+metadata on top of the SQLite GraphStore work introduced in `0.2.10`.
+`llmwiki-agent-bridge@0.6.0` adds progressive MCP gateway tool discovery for
+large source catalogs and external gateway fronting.
+
+Serve note: `llmwiki-serve==0.2.11` includes an opt-in SQLite GraphStore as a
+derived cache for graph responses. The feature was introduced in Serve 0.2.10.
+The base install contains the SQLite GraphStore code and no `[sqlite]` or
+`[graph]` extra is needed. The default remains off. Enable it only with
 `--graph-store sqlite --graph-store-path <outside-root.sqlite>` or the
 `LLMWIKI_GRAPH_STORE` and `LLMWIKI_GRAPH_STORE_PATH` environment variables, and
 keep that SQLite file outside the served source root because it is sensitive
@@ -80,6 +85,11 @@ Shortest local path:
    to inspect registered source readiness. Install `llmwiki-chat@0.1.6` only
    when you need to host the static browser workbench. Source checkouts remain
    development paths.
+
+Bridge-start caveat: `llmwiki-bridge-start@0.0.3` is still useful for source
+discovery and handoff, but its detached bridge-start helper defaults to the
+earlier built-in bridge package. Start `llmwiki-agent-bridge@0.6.0` directly
+when you need the current bridge feature set.
 
 ## Develop
 

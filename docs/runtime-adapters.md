@@ -43,7 +43,7 @@ Can the component doing retrieval reach the selected Knowledge Source URLs?
 | Adapter or profile | Lives in | Purpose | Readiness signal | Status posture |
 | --- | --- | --- | --- | --- |
 | Agent Bridge A2A | `llmwiki-chat` + `llmwiki-agent-bridge` | Connect to a bridge that exposes an A2A-compatible agent card and `message:send`. | Bridge agent card loads, message URL passes policy, `Test bridge` marks it ready. | Primary browser-to-bridge path for evidence-only or runtime-backed runs; not a vendor certification claim. |
-| Agent Bridge MCP | `llmwiki-chat` + `llmwiki-agent-bridge` | Connect to a bridge that exposes MCP `llmwiki_agent_run` for the same grounded artifact. | `/mcp tools/list` exposes `llmwiki_agent_run`, `Test bridge` marks it ready. | Primary tool-oriented bridge path for evidence-only or runtime-backed MCP clients. |
+| Agent Bridge MCP | `llmwiki-chat` + `llmwiki-agent-bridge` | Connect to a bridge that exposes MCP `llmwiki_agent_run`, read-only source tools, or progressive gateway meta-tools for the same grounded source layer. | `/mcp tools/list` exposes `llmwiki_agent_run` in direct mode, or `llmwiki_gateway_search_tools` in gateway mode; `Test bridge` marks it ready. | Primary tool-oriented bridge path for evidence-only or runtime-backed MCP clients. |
 | Local Development Runtime | `llmwiki-chat` | Deterministic UI exercise path using the development mock adapter while still calling selected sources. | Runtime is ready by default; selected source is ready; trace shows source tool calls. | Testing and UI checks only, not answer quality validation. |
 | Hermes profile | `llmwiki-agent-bridge` | Runtime profile for Hermes-compatible local gateways. | Bridge `/health` reports `runtimeProfile: "hermes"` and `modelConfigured: true`. | Compatibility path, not product certification. |
 | DeepAgents profile | `llmwiki-agent-bridge` | Runtime profile for DeepAgents-compatible local gateways. | Bridge `/health` reports `runtimeProfile: "deepagents"` and `modelConfigured: true`. | Compatibility path, not product certification. |
@@ -64,7 +64,7 @@ Chat should present A2A and MCP as connection modes on a bridge card:
 | Mode | Discovery | Run call |
 | --- | --- | --- |
 | A2A | `GET /.well-known/agent-card.json` | `POST /message:send` |
-| MCP | `POST /mcp` `tools/list` | `POST /mcp` `tools/call` with `llmwiki_agent_run` |
+| MCP | `POST /mcp` `tools/list` | `POST /mcp` `tools/call` with `llmwiki_agent_run`, direct read-only source tools, or gateway meta-tools |
 
 Each bridge card may expose an `Open bridge settings` link. The link points to
 the bridge's advertised settings URL when present, otherwise to `/settings` on
@@ -221,7 +221,7 @@ Minimum readiness checks:
 | Profile | `LLMWIKI_AGENT_BRIDGE_RUNTIME_PROFILE` is `hermes`, `deepagents`, or `generic`. |
 | Bridge health | `/health` returns `status: "ok"`, `modelConfigured: true`, and the expected `runtimeProfile`. |
 | Agent card | `/.well-known/agent-card.json` returns the expected runtime identity. |
-| MCP tools | `/mcp` `tools/list` returns `llmwiki_agent_run` when MCP bridge mode is enabled. |
+| MCP tools | `/mcp` `tools/list` returns `llmwiki_agent_run` in direct exposure mode, or `llmwiki_gateway_search_tools` when `LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE=gateway` is configured. |
 | Source policy | Selected Knowledge Source URLs pass `LLMWIKI_AGENT_BRIDGE_SOURCE_POLICY`. |
 | Settings verify | Step 3 of `/settings` sends `POST /message:send` and returns `llmwiki_agent_result` with answer, citations, graph, and steps. |
 
@@ -236,7 +236,7 @@ Source protocols accepted by the bridge:
 | Source protocol | Bridge behavior |
 | --- | --- |
 | `llmwiki-http` | Calls `POST /query` on the selected Knowledge Source and may augment with compact `/search` calls. |
-| `mcp` | Calls `llmwiki_context` through JSON-RPC. |
+| `mcp` | Calls `llmwiki_source_bundle` for discovery when available, then calls `llmwiki_context` through JSON-RPC. |
 | `a2a` | Discovers the agent card, posts a message, and prefers a `llmwiki_context` artifact. |
 
 The bridge uses these protocols to retrieve served projections. It must not

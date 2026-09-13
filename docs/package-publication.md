@@ -2,19 +2,19 @@
 
 Use this runbook when a maintainer is preparing a future package release or
 verifying the current public-preview package baseline. The current
-release-train public package baseline is:
+published public package baseline is:
 
-| Package | Release-train baseline | Registry | Publication evidence |
+| Package | Current published baseline | Registry | Publication evidence |
 | --- | --- | --- | --- |
-| `llmwiki-serve` | `0.2.10` | PyPI | Public registry version check, GitHub Release [`v0.2.10`](https://github.com/knowledge-bridge-labs/llmwiki-serve/releases/tag/v0.2.10), publish workflow [`32140050979`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/32140050979). Historical first public PyPI baseline: `0.2.5`, release PR [`#31`](https://github.com/knowledge-bridge-labs/llmwiki-serve/pull/31), merge `af48100d627bd9bbda9ee0860b72ceb1be5051aa`, publish workflow [`30371543484`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30371543484) |
+| `llmwiki-serve` | `0.2.11` | PyPI | Public registry version check, GitHub Release [`v0.2.11`](https://github.com/knowledge-bridge-labs/llmwiki-serve/releases/tag/v0.2.11), publish workflow [`34756200723`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/34756200723), and clean install-smoke. Historical first public PyPI baseline: `0.2.5`, release PR [`#31`](https://github.com/knowledge-bridge-labs/llmwiki-serve/pull/31), merge `af48100d627bd9bbda9ee0860b72ceb1be5051aa`, publish workflow [`30371543484`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/30371543484) |
 | `llmwiki-bridge-start` | `0.0.3` | npm | Public registry version check; publish workflow [`30357056742`](https://github.com/knowledge-bridge-labs/llmwiki-bridge-start/actions/runs/30357056742) |
-| `llmwiki-agent-bridge` | `0.5.0` | npm | Public registry version and CLI metadata check, GitHub Release [`v0.5.0`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/releases/tag/v0.5.0), publish workflow [`34673447303`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/34673447303), and clean install-smoke. Historical npm baseline: `0.3.0`, publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
+| `llmwiki-agent-bridge` | `0.6.0` | npm | Public registry version and CLI metadata check, GitHub Release [`v0.6.0`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/releases/tag/v0.6.0), publish workflow [`34756200600`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/34756200600), and clean install-smoke. Historical npm baseline: `0.3.0`, publish workflow [`30356422156`](https://github.com/knowledge-bridge-labs/llmwiki-agent-bridge/actions/runs/30356422156) |
 | `llmwiki-chat` | `0.1.6` | npm | Trusted Publisher/OIDC verified via workflow_dispatch on 2026-07-27; static artifact package with no CLI `bin` |
 
 The historical `llmwiki-serve` `0.2.5` and `llmwiki-agent-bridge` `0.3.0`
 evidence above preserves the earlier publication trail only. It is not current
-release-train evidence for `llmwiki-serve` `0.2.10` or
-`llmwiki-agent-bridge` `0.5.0`.
+release-train evidence for `llmwiki-serve` `0.2.11` or
+`llmwiki-agent-bridge` `0.6.0`.
 
 Source checkouts remain supported for development, bundled fixtures, and
 release verification. Public-unpublished gates that expected PyPI `404` or npm
@@ -62,17 +62,18 @@ try {
 }
 ```
 
-These checks should report `llmwiki-serve` `0.2.10`,
-`llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.5.0`, and
+These checks should report `llmwiki-serve` `0.2.11`,
+`llmwiki-bridge-start` `0.0.3`, `llmwiki-agent-bridge` `0.6.0`, and
 `llmwiki-chat` `0.1.6`. A PyPI HTTP `404` or npm `E404` is no longer a
 successful current-state result for these packages; it means the package is
 unavailable from that registry view or the query failed.
 
 The initial bridge-start release was manually first-published and remains
 historical first-publish evidence only. `llmwiki-bridge-start@0.0.3` is the
-current guided handoff package baseline. It uses
-`llmwiki-agent-bridge@0.5.0` as the default bridge package when bridge setup is
-selected.
+current guided handoff package baseline. Its detached bridge-start helper still
+defaults to `llmwiki-agent-bridge@0.3.0`; start
+`llmwiki-agent-bridge@0.6.0` directly or register an already running bridge
+when you need the current bridge feature set.
 `llmwiki-chat@0.1.6` was verified through the same Trusted Publisher/OIDC path
 on 2026-07-27.
 
@@ -148,6 +149,7 @@ Run from the `llmwiki-serve` repository:
 uv run ruff format --check .
 uv run ruff check .
 uv run mypy src
+uv run pytest -q tests/test_mcp_protocol_2026_07_28.py tests/test_service.py::test_mcp_streamable_http_tools_list_and_call_smoke
 PYTHONDONTWRITEBYTECODE=1 uv run pytest -p no:cacheprovider
 uv build
 uv run python scripts/release_smoke.py --wheel dist/*.whl --sdist dist/*.tar.gz
@@ -212,6 +214,7 @@ Run from the `llmwiki-agent-bridge` repository:
 ```sh
 npm ci
 npm run check
+npm test -- --test-name-pattern "compact MCP gateway tool discovery"
 npm run audit
 ```
 
@@ -223,11 +226,18 @@ Before publishing:
 - For the `0.5.0` Knowledge Gateway release, confirm Windows and Ubuntu/DGX
   loopback source smokes exercised `llmwiki-serve==0.2.10` with
   `graphContext.enabled=true` through both bridge HTTP and bridge MCP paths.
+- For the `0.6.0` progressive MCP gateway release, confirm direct
+  bridge MCP smoke passes with `LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE=gateway`
+  and an `llmwiki-serve==0.2.11` source smoke exercises MCP `2026-07-28`
+  `server/discover`.
 - Keep npm Trusted Publisher/OIDC configured for future owner-approved releases
   where available. The historical `0.3.0` baseline was confirmed by public npm
-  registry version check; the current release-train baseline is `0.5.0`.
+  registry version check; the current published baseline is `0.6.0`.
 - Keep npm tokens out of commits, logs, shell history, and CI variables unless a
   maintainer has explicitly approved that fallback.
+- Confirm `LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE=gateway` lists only gateway
+  meta-tools and that `llmwiki_gateway_get_tool_details` returns one selected
+  read-only source-tool schema.
 
 After publishing, verify from a clean directory:
 

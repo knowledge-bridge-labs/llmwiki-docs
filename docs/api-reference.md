@@ -395,6 +395,49 @@ Available tools:
 Unsupported methods return JSON-RPC error `-32601`. Unknown tools return
 `-32602`. Internal errors are sanitized as `-32000`.
 
+## MCP 2026-07-28 Streamable HTTP
+
+`llmwiki-serve==0.2.11` extends `/mcp/stream`, the SDK-backed Streamable HTTP
+source endpoint, for MCP `2026-07-28` requests without issuing a session id.
+Clients can pass
+`MCP-Protocol-Version: 2026-07-28`; `Mcp-Method` and `Mcp-Name` headers are
+optional mirrors and are rejected only when they conflict with the JSON-RPC
+body.
+
+Modern discovery starts with `server/discover`:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "server/discover",
+  "params": {
+    "_meta": {
+      "io.modelcontextprotocol/clientInfo": {
+        "name": "source-client",
+        "version": "0.0.0"
+      }
+    }
+  }
+}
+```
+
+Successful discovery and tool-list responses return `resultType: "complete"`,
+`ttlMs: 0`, `cacheScope: "private"`, supported protocol versions, source
+capabilities, and server identity under
+`_meta["io.modelcontextprotocol/serverInfo"]`. Tool descriptors include
+`inputSchema`, `outputSchema`, and read-only annotations. Tool calls return
+approved source evidence under `structuredContent` plus text content for
+clients that still render message parts.
+
+The same seven source tools remain available on `/mcp/stream`:
+`llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`,
+`llmwiki_graph_neighbors`, `llmwiki_source_refs`, and
+`llmwiki_source_bundle`. Use `llmwiki_context` first for a context pack, then
+use search/read/graph tools for focused follow-up. This surface is an
+additive source compatibility path over the same read-only projection used by
+HTTP and legacy `/mcp`.
+
 ## A2A-Style Knowledge Source Compatibility
 
 This surface is for A2A-native clients that require an agent-card-shaped source
@@ -556,6 +599,18 @@ The bridge MCP surface has two layers:
 | --- | --- | --- | --- |
 | Full grounded answer path | `llmwiki_agent_run` | Evidence-only mode skips the runtime; delegated-runtime and hybrid modes call the configured runtime. | The client wants the bridge to gather evidence, assemble trace steps, and return one `llmwiki_agent_result`. |
 | Progressive source exploration | `llmwiki_list_sources`, `llmwiki_context`, `llmwiki_search`, `llmwiki_read`, `llmwiki_graph`, `llmwiki_graph_neighbors`, `llmwiki_source_bundle` | No runtime call. | The host agent wants to list registered or inline Knowledge Sources, inspect context/search/read/graph/source-bundle data, then decide whether to keep exploring or call `llmwiki_agent_run`. |
+
+By default, bridge MCP `tools/list` exposes the direct bridge and source tools.
+`llmwiki-agent-bridge@0.6.0` adds a progressive exposure mode for large
+registered source catalogs or MCP gateways that should discover schemas lazily.
+Set `LLMWIKI_AGENT_BRIDGE_MCP_TOOL_EXPOSURE=gateway`; in that
+mode, `tools/list` returns only `llmwiki_gateway_search_tools`,
+`llmwiki_gateway_get_tool_details`, and `llmwiki_gateway_call_tool`.
+`llmwiki_gateway_search_tools` returns a compact catalog without every input
+schema, `llmwiki_gateway_get_tool_details` returns one selected read-only
+source-tool schema, and `llmwiki_gateway_call_tool` dispatches to the same
+source tool handlers. Direct `tools/call` support for bridge/source tools is
+preserved for clients that already know the tool name.
 
 MCP-style clients can send `initialize`, `notifications/initialized`, and
 `ping` before tool calls:
