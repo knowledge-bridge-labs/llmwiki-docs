@@ -26,6 +26,7 @@ implementation details in the owning repo README or docs directory.
 - [Data Flow](docs/data-flow.md)
 - [Architecture](docs/architecture.md)
 - [Runtime Adapters](docs/runtime-adapters.md)
+- [External Judgment Gates](docs/external-judgment-gates.md)
 - [Network & Security](docs/network-security.md)
 - [Release Status & Compatibility](docs/status.md)
 - [Evidence](docs/evidence.md)
@@ -143,7 +144,7 @@ public-preview docs entrypoint.
 | --- | --- |
 | Start | `docs/index.md`, `docs/demo.md`, `docs/quickstart.md`, `docs/examples.md` |
 | Understand | `docs/core-concepts.md`, `docs/llmwiki-serve.md`, `docs/data-flow.md`, `docs/architecture.md`, `docs/positioning.md` |
-| Connect | `docs/runtime-adapters.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
+| Connect | `docs/runtime-adapters.md`, `docs/external-judgment-gates.md`, `docs/direct-agent-integrations.md`, `docs/ai-tools.md` |
 | Reference | `docs/knowledge-source-format.md`, `docs/protocols.md`, `docs/api-reference.md`, `docs/cli-reference.md` |
 | Operate | `docs/network-security.md`, `docs/deployment.md`, `docs/troubleshooting.md`, `docs/faq.md` |
 | Status | `docs/status.md`, `docs/evidence.md`, `docs/package-publication.md`, `docs/faq.md` |

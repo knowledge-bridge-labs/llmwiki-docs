@@ -19,6 +19,9 @@ gateway placement docs. `llmwiki-agent-bridge@0.6.0` extends that bridge line
 with progressive MCP gateway tool exposure. `llmwiki-serve==0.2.11` adds MCP
 `2026-07-28` Streamable HTTP discovery metadata on top of the SQLite GraphStore
 work introduced in `0.2.10`.
+`llmwiki-agent-bridge@0.6.1` is prepared as a source-checkout release candidate
+with opt-in System-One/Jev external judgment gates. It is not the published npm
+baseline until registry publication and install-smoke verification complete.
 External gateway placement docs now cover using `llmwiki-agent-bridge` as an
 LLMWiki evidence target or companion behind Docker MCP Gateway, agentgateway,
 AWS AgentCore Gateway, or another operator-managed gateway. Those notes are
@@ -79,6 +82,10 @@ The `llmwiki-serve==0.2.11`, `llmwiki-bridge-start@0.0.3`,
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
 
+The `llmwiki-agent-bridge` 0.6.1 source-checkout release candidate adds
+disabled-by-default System-One/Jev judgment gates. Use source checkout testing
+until the npm registry reports `0.6.1`.
+
 ## Optional `llmwiki-serve` SQLite GraphStore
 
 The current `llmwiki-serve==0.2.11` package includes optional SQLite GraphStore
@@ -117,7 +124,7 @@ current bridge feature set.
 | MCP JSON-RPC compatibility | `llmwiki-serve` | Compatibility surface | Legacy JSON-RPC tool calls for local integration testing, including `llmwiki_graph_neighbors`. | `llmwiki-serve` MCP smoke coverage. |
 | MCP Streamable HTTP | `llmwiki-serve` | SDK-backed source surface with `2026-07-28` discovery in `0.2.11` | MCP source retrieval on `/mcp/stream`; `0.2.11` adds `server/discover`, version metadata, private cache hints, read-only tool annotations, output schemas, and structured tool results. | `llmwiki-serve` MCP SDK smoke coverage. |
 | A2A source compatibility | `llmwiki-serve` | Opt-in compatibility surface | Agent-card discovery and `message:send` for A2A-native source discovery. | A2A source smoke coverage when enabled. |
-| Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract with progressive gateway exposure in `0.6.0` | A2A and MCP bridge endpoints that gather source evidence, expose read-only source exploration tools, optionally use progressive MCP gateway meta-tools, return a grounded answer artifact when `llmwiki_agent_run` or `message:send` is used, and expose redacted source registry views through `GET /sources`. | `npm run check` in `llmwiki-agent-bridge`. |
+| Bridge runtime endpoints | `llmwiki-agent-bridge` | Public-preview contract with progressive gateway exposure in published `0.6.0`; opt-in System-One/Jev gates in the 0.6.1 source release candidate | A2A and MCP bridge endpoints that gather source evidence, expose read-only source exploration tools, optionally use progressive MCP gateway meta-tools, optionally record redacted external-judgment diagnostics, return a grounded answer artifact when `llmwiki_agent_run` or `message:send` is used, and expose redacted source registry views through `GET /sources`. | `npm run check` in `llmwiki-agent-bridge`. |
 | Browser workbench | `llmwiki-chat` | Public-preview UI | Source selection, graph inspection, bridge selection, trace display, citations, and answer review. | `llmwiki-chat` lint, typecheck, unit, E2E, build, and pack gates. |
 
 ## Runtime Adapter Status

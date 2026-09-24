@@ -4,6 +4,10 @@ All notable changes to the documentation portal will be recorded here.
 
 ## Unreleased
 
+- Added external judgment gate guidance for the
+  `llmwiki-agent-bridge@0.6.1` release candidate while keeping the published
+  package baseline at the registry-verified `0.6.0` until npm publication
+  completes.
 - Updated the published package baseline and publication evidence after
   `llmwiki-serve==0.2.11` and `llmwiki-agent-bridge@0.6.0` completed Trusted
   Publishing and install-smoke.

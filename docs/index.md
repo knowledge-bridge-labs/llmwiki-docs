@@ -176,6 +176,7 @@ import { withBase } from 'vitepress'
 | One coding agent should read one wiki folder while it works | Run `llmwiki-serve` and connect the agent directly. |
 | You want guided handoff after the source smoke passes | Run `npx llmwiki-bridge-start@latest --path /path/to/your/wiki`, then keep the direct source URLs or add the bridge. Use `status` or `ls` for started-source and bridge-registration state. |
 | Several wiki folders must be searched together | Run one `llmwiki-serve` per folder and connect them through `npx llmwiki-agent-bridge@latest`; inspect registered sources with `sources --probe --json`. |
+| You want a fast first-stage typed judgment before runtime synthesis | Test the opt-in [external judgment gate](./external-judgment-gates) in the `llmwiki-agent-bridge@0.6.1` source checkout or release candidate; keep package installs on the registry-verified baseline until publication completes. |
 | A service should gather evidence and call a model runtime for a cited answer | Use `npx llmwiki-agent-bridge@latest` in delegated-runtime or hybrid mode. |
 | A human needs to test setup, inspect evidence, or debug traces | Host the static `llmwiki-chat@0.1.6` artifact as the browser workbench. |
 | You only need package status, release support, or protocol details | Read [Release Status](/status), [Protocols](/protocols), and [API Reference](/api-reference). |
