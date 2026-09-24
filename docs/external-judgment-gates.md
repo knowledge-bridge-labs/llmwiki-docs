@@ -41,6 +41,13 @@ can run in `report-only` or explicit `enforce` mode. Source-routing,
 evidence-relevance, citation-support, MCP progressive-disclosure, and
 graph-expansion judgments are report-only diagnostics.
 
+The release-candidate bridge sends structural provider state by default. Source
+names and descriptions, page titles and snippets, graph labels and relations,
+answer text, and cited claim snippets are reduced to counts and shape signals
+before the provider call. Graph-expansion and citation-support report-only gates
+also skip the provider call when there is no graph, multi-source, source-bundle,
+or cited-anchor state to evaluate.
+
 ## Mask Before Calling
 
 Served context is not declassified data. Even approved network responses can
@@ -52,6 +59,8 @@ the bridge or host should:
 - mask credentials, bearer tokens, API keys, URLs, private endpoints, local
   roots, email addresses, phone numbers, source ids, page ids, bundle ids,
   source refs, and graph node ids;
+- reduce source/page/graph/answer wording to structural signals unless the
+  operator has made a separate explicit decision to share text with a provider;
 - preserve graph/source shape with stable placeholders inside one request;
 - log only model version, question schema, thresholds, redaction counts, input
   hashes, and route decisions;
@@ -77,9 +86,10 @@ retention, network path, and account policy before enabling live calls.
 Start with report-only gates before changing runtime behavior:
 
 1. Evidence usefulness: decide whether each retrieved passage should be kept,
-   dropped, or reviewed.
+   dropped, or reviewed using minimized source/citation shape first.
 2. Source routing: choose a small set of source bundles before fan-out.
-3. Citation support: check whether cited snippets support the generated claim.
+3. Citation support: start with cited-anchor coverage and structural support
+   signals before considering any text-sharing policy.
 4. Tool/runtime risk: block or review risky proposed actions before execution.
 
 Keep free-form answer generation with a runtime model. Use the judgment model
@@ -100,4 +110,6 @@ llmwiki-agent-bridge
 Only `LLMWIKI_AGENT_BRIDGE_SYSTEM_ONE_MODE=enforce` can skip runtime synthesis,
 and only for the runtime-route gate. Other System-One modes preserve source
 selection, source calls, runtime prompts, answer text, citations, graph payloads,
-and artifacts.
+and artifacts. Report-only graph-expansion and citation-support modes skip
+provider calls when the request has no evaluable structural graph/multi-source
+or cited-anchor state.

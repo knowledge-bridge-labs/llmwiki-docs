@@ -8,6 +8,10 @@ All notable changes to the documentation portal will be recorded here.
   `llmwiki-agent-bridge@0.6.1` release candidate while keeping the published
   package baseline at the registry-verified `0.6.0` until npm publication
   completes.
+- Clarified that the 0.6.1 external judgment release candidate uses structural
+  provider state for source/page/graph/answer wording and skips report-only
+  graph-expansion or citation-support provider calls when no evaluable state is
+  present.
 - Updated the published package baseline and publication evidence after
   `llmwiki-serve==0.2.11` and `llmwiki-agent-bridge@0.6.0` completed Trusted
   Publishing and install-smoke.
