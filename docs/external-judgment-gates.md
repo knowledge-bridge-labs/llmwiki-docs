@@ -13,7 +13,7 @@ front of expensive runtime synthesis. They are best used for narrow decisions:
 They should not own source truth, authorization, draft visibility, projection
 freshness, or destructive action approval.
 
-`llmwiki-serve==0.2.13` includes a default-off System-One/Jev query-action
+`llmwiki-serve==0.2.14` includes a default-off System-One/Jev query-action
 judgment gate after normal context assembly. `llmwiki-agent-bridge@0.6.1` adds
 the bridge-side opt-in System-One/Jev integration as a release candidate. The
 current published bridge npm baseline remains `llmwiki-agent-bridge@0.6.0`

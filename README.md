@@ -33,7 +33,7 @@ implementation details in the owning repo README or docs directory.
 
 The docs are intentionally local-first. Source checkouts remain supported for
 bundled samples, development scripts, and release verification. Package
-installs are also available for `llmwiki-serve==0.2.13`,
+installs are also available for `llmwiki-serve==0.2.14`,
 `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and
 `llmwiki-chat@0.1.6`; see
 [Release Status & Compatibility](docs/status.md) for the current baseline.
@@ -47,13 +47,13 @@ CLI for `npx`/`npm exec` runs, including `sources`, `ls`, and `status`
 registry checks. `llmwiki-chat@0.1.6` is a static browser artifact with no CLI
 `bin`; install it when you want to host the packaged `dist/` directory.
 
-`llmwiki-serve==0.2.13` includes MCP `2026-07-28` Streamable HTTP discovery,
+`llmwiki-serve==0.2.14` includes MCP `2026-07-28` Streamable HTTP discovery,
 OKF v0.2 read-only input support, SQLite GraphStore, and optional
 System-One/Jev query-action judgment.
 `llmwiki-agent-bridge@0.6.0` adds progressive MCP gateway tool discovery for
 large source catalogs and external gateway fronting.
 
-Serve note: `llmwiki-serve==0.2.13` includes an opt-in SQLite GraphStore as a
+Serve note: `llmwiki-serve==0.2.14` includes an opt-in SQLite GraphStore as a
 derived cache for graph responses. The feature was introduced in Serve 0.2.10.
 The base install contains the SQLite GraphStore code and no `[sqlite]` or
 `[graph]` extra is needed. The default remains off. Enable it only with
@@ -74,7 +74,8 @@ search, inspect graph context, or ask for clarification.
 
 Shortest local path:
 
-1. Install `llmwiki-serve` from PyPI with `uv tool install llmwiki-serve`.
+1. Install `llmwiki-serve` from PyPI with `uv tool install llmwiki-serve`,
+   then verify `llmwiki-serve --version`.
 2. Point it at an existing Markdown, Obsidian-style, or LLMWiki folder, or
    create the tiny sample in [QuickStart](docs/quickstart.md).
 3. Run `llmwiki-serve manifest`, `query`, `source-refs`, and `source-bundle`

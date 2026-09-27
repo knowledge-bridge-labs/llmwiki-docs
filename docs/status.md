@@ -10,13 +10,13 @@ installs.
 discovery, source startup, optional bridge registration, and smoke checks.
 `llmwiki-agent-bridge@0.6.0` is the current bridge package for source fan-out,
 runtime profile configuration, and normalized answer artifacts.
-Registry verification is current: PyPI reports `llmwiki-serve==0.2.13`, and npm
+Registry verification is current: PyPI reports `llmwiki-serve==0.2.14`, and npm
 reports `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and
 `llmwiki-chat@0.1.6`.
 Bridge 0.5.0 introduced the Knowledge Gateway roadmap release,
 including gateway target metadata, graph-context retrieval, and external
 gateway placement docs. `llmwiki-agent-bridge@0.6.0` extends that bridge line
-with progressive MCP gateway tool exposure. `llmwiki-serve==0.2.13` includes
+with progressive MCP gateway tool exposure. `llmwiki-serve==0.2.14` includes
 MCP `2026-07-28` Streamable HTTP discovery metadata, OKF v0.2 read-only input
 support, SQLite GraphStore, and default-off System-One/Jev query-action
 judgment.
@@ -45,7 +45,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 | --- | --- | --- |
 | Source checkouts | Supported development path | You want bundled fixtures, source-level development scripts, screenshot refreshes, or release verification. |
 | GitHub Pages docs | Live at `https://knowledge-bridge-labs.github.io/llmwiki-docs/` | You want the rendered docs site for quickstart, architecture, protocol, and release-status references. |
-| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.13`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6`. |
+| PyPI/npm packages | Published | Use package-manager installs for `llmwiki-serve==0.2.14`, `llmwiki-bridge-start@0.0.3`, `llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6`. |
 
 ## Package Roles
 
@@ -60,7 +60,7 @@ from Andrej Karpathy or any upstream producer named in compatibility examples.
 
 | Repository | Package metadata | Registry status | Supported path today | Runtime baseline | Primary gate |
 | --- | --- | --- | --- | --- | --- |
-| `llmwiki-serve` | Python package 0.2.13, Apache-2.0, CLI entrypoint | PyPI latest 0.2.13 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
+| `llmwiki-serve` | Python package 0.2.14, Apache-2.0, CLI entrypoint | PyPI latest 0.2.14 | Package install or source checkout with `uv sync --extra dev` | Python 3.11+ | `uv run python scripts/release_smoke.py` |
 | `llmwiki-bridge-start` | npm package 0.0.3, Apache-2.0, CLI entrypoint | npm published 0.0.3 | Package install for first-run onboarding or source checkout with `npm ci` | Node.js 22.12+ | `npm exec --package llmwiki-bridge-start@0.0.3 -- llmwiki-bridge-start --help` or repository `npm run check` |
 | `llmwiki-agent-bridge` | npm package 0.6.0, Apache-2.0, CLI entrypoint | npm published 0.6.0 | Package install or source checkout with `npm ci` | Node.js 22.12+ | `npm run check` |
 | `llmwiki-chat` | npm package 0.1.6, Apache-2.0, static Vite browser workbench artifact, no CLI `bin` | npm published 0.1.6 | Package `dist/` static hosting or source checkout for UI development | Node.js 22.12+ | package install-smoke for `dist/`, or repository `npm run check` |
@@ -78,7 +78,7 @@ heuristic probing. Use `--no-processes` for registry-only output,
 only for a manual loopback diagnostic. JSON output can include
 `discovery_source` and `root_source`.
 
-The `llmwiki-serve==0.2.13`, `llmwiki-bridge-start@0.0.3`,
+The `llmwiki-serve==0.2.14`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6` packages are
 published and registry-verified for this public-preview baseline. Source
 checkouts remain supported for development and release verification.
@@ -89,7 +89,7 @@ until the npm registry reports `0.6.1`.
 
 ## Optional `llmwiki-serve` SQLite GraphStore
 
-The current `llmwiki-serve==0.2.13` package includes optional SQLite GraphStore
+The current `llmwiki-serve==0.2.14` package includes optional SQLite GraphStore
 support, introduced in Serve 0.2.10:
 
 - The base `llmwiki-serve` install contains the SQLite GraphStore code; no
@@ -124,6 +124,16 @@ aliases.
 | Output | Existing `ContextPack` shape; no `retrieval_action_guidance`. | Optional `retrieval_action_guidance` recommending `stop`, `read`, `search`, `graph`, or `ask_clarification`. |
 | Export policy | No provider export. | Masked query text plus structural state; raw page text, snippets, source-ref labels, raw paths, local roots, private URLs, and obvious credentials are omitted. |
 | Failure behavior | Baseline retrieval output. | Missing key or provider failure fails open and preserves normal evidence. |
+
+The 0.2.14 patch release adds root CLI `--version` / `-v` diagnostics. Public
+evidence includes GitHub Release
+[`v0.2.14`](https://github.com/knowledge-bridge-labs/llmwiki-serve/releases/tag/v0.2.14),
+publish workflow
+[`36323255131`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/36323255131),
+main CI
+[`36323000756`](https://github.com/knowledge-bridge-labs/llmwiki-serve/actions/runs/36323000756),
+PyPI reporting `0.2.14`, and a clean `uvx --from llmwiki-serve==0.2.14
+llmwiki-serve --version` smoke returning `0.2.14`.
 
 The 0.2.13 public release evidence records `733 passed, 10 skipped`, artifact
 smoke, PyPI publish workflow success, and a public sample payload check where
