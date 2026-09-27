@@ -114,8 +114,10 @@ parameters select the starting nodes and relation filter.
 
 Serve 0.2.13 can also add `retrieval_action_guidance` to `ContextPack` when
 the operator starts `query` or `serve` with System-One/Jev query-action
-judgment enabled. The field is omitted by default. It is a bounded next-tool
-hint for the caller, not answer synthesis or ranking:
+judgment enabled. Use `LLMWIKI_QUERY_ACTION_JUDGE_API_KEY` for the provider key;
+`TYPESAFE_API_KEY` and `JEV_API_KEY` are accepted as compatibility aliases. The
+field is omitted by default. It is a bounded next-tool hint for the caller, not
+answer synthesis or ranking:
 
 ```json
 {

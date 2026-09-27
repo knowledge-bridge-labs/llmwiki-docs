@@ -65,6 +65,9 @@ derived cache data.
 Serve 0.2.13 also adds default-off System-One/Jev query-action judgment. Enable
 it only after approving provider export with
 `--query-action-judge system-one` or `LLMWIKI_QUERY_ACTION_JUDGE=system-one`.
+Use `LLMWIKI_QUERY_ACTION_JUDGE_API_KEY` for the provider key; `TYPESAFE_API_KEY`
+and `JEV_API_KEY` are accepted as compatibility aliases. Keep real provider keys
+in environment variables, not CLI arguments or public logs.
 When enabled, `/query`, MCP `llmwiki_context`, and CLI `query` can return
 `retrieval_action_guidance` so the caller can choose whether to stop, read,
 search, inspect graph context, or ask for clarification.

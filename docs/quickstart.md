@@ -416,7 +416,7 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Choose source | Existing folder or tiny local sample above | `SOURCE_PATH` points at Markdown content. |
 | Inspect source | `llmwiki-serve manifest "$SOURCE_PATH"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --limit 4` | Approved evidence returns. |
-| Optionally test System-One/Jev guidance | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --query-action-judge system-one` | Returns `retrieval_action_guidance` only when provider configuration is approved and present. |
+| Optionally test System-One/Jev guidance | `LLMWIKI_QUERY_ACTION_JUDGE_API_KEY=... llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --query-action-judge system-one` | Returns `retrieval_action_guidance` only when provider configuration is approved and present. |
 | Inspect refs | `llmwiki-serve source-refs "$SOURCE_PATH"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$SOURCE_PATH"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765` | Loopback server starts. |

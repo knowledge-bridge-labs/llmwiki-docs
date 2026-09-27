@@ -114,7 +114,9 @@ Serve 0.2.13 adds an operator-enabled query-action judgment gate after normal
 context assembly. It is off by default and can be enabled with
 `--query-action-judge system-one` or
 `LLMWIKI_QUERY_ACTION_JUDGE=system-one` only after the operator approves the
-external provider boundary.
+external provider boundary. Use `LLMWIKI_QUERY_ACTION_JUDGE_API_KEY` for the
+provider key; `TYPESAFE_API_KEY` and `JEV_API_KEY` are accepted as compatibility
+aliases.
 
 | Area | Default off | System-One/Jev on |
 | --- | --- | --- |
@@ -125,9 +127,10 @@ external provider boundary.
 
 The 0.2.13 public release evidence records `733 passed, 10 skipped`, artifact
 smoke, PyPI publish workflow success, and a public sample payload check where
-the structural provider payload was `2,948` bytes versus a `7,095` byte context
-pack for `"release readiness required copy"` (`58.4%` smaller). This is an
-external decision-payload efficiency signal, not a live-provider latency claim.
+the next-action decision input changed from a `7,095` byte context pack to a
+`3,124` byte masked structural provider request body for
+`"release readiness required copy"` (`56.0%` smaller). This is an external
+decision-input efficiency signal, not a live-provider latency claim.
 
 ::: warning Publication caveat
 Version `0.0.1` of `llmwiki-bridge-start` was the manually published first

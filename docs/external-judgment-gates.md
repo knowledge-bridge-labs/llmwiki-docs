@@ -49,7 +49,10 @@ In Serve 0.2.13, query-action judgment is also off by default. When enabled, it
 returns additive `retrieval_action_guidance` with a recommended next retrieval
 action such as `stop`, `read`, `search`, `graph`, or `ask_clarification`. It
 does not rerank evidence, synthesize answers, change draft visibility, or
-rewrite the source.
+rewrite the source. Use `LLMWIKI_QUERY_ACTION_JUDGE_API_KEY` for the provider
+key; `TYPESAFE_API_KEY` and `JEV_API_KEY` are accepted as compatibility aliases.
+Provider keys stay in environment variables, not CLI arguments or public issue
+logs.
 
 The release-candidate bridge sends structural provider state by default. Source
 names and descriptions, page titles and snippets, graph labels and relations,

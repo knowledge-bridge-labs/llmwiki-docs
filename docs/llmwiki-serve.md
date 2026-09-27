@@ -137,13 +137,21 @@ use `/query` or MCP `llmwiki_context`. The feature is disabled by default. An
 operator enables it explicitly:
 
 ```sh
+export LLMWIKI_QUERY_ACTION_JUDGE_API_KEY="<your-provider-key>"
+
 llmwiki-serve serve /path/to/wiki \
   --query-action-judge system-one
 ```
 
 The same setting is available through `LLMWIKI_QUERY_ACTION_JUDGE=system-one`.
-Provider keys are environment-only; do not put them in public docs, shell
-history examples, or shared issue logs.
+`LLMWIKI_QUERY_ACTION_JUDGE_API_KEY` is the preferred key environment variable;
+`TYPESAFE_API_KEY` and `JEV_API_KEY` are accepted as compatibility aliases.
+Provider keys are environment-only; do not put real keys in public docs, shell
+history examples, CLI arguments, or shared issue logs. Optional provider
+settings are `LLMWIKI_QUERY_ACTION_JUDGE_MODEL`,
+`LLMWIKI_QUERY_ACTION_JUDGE_ENDPOINT`,
+`LLMWIKI_QUERY_ACTION_JUDGE_BASE_URL`, and
+`LLMWIKI_QUERY_ACTION_JUDGE_TIMEOUT_MS`.
 
 When enabled, context packs can include `retrieval_action_guidance`, an
 additive field that recommends one next retrieval action: `stop`, `read`,
@@ -161,7 +169,7 @@ URLs, or obvious credentials.
 | --- | --- | --- |
 | Provider calls | `0`; retrieval stays local. | One post-query judgment call when configured. |
 | Agent next step | The caller decides from the full context pack. | The caller gets a bounded next-action recommendation. |
-| Provider payload | None. | Public sample check: `2,948` byte structural payload instead of a `7,095` byte full context pack (`58.4%` smaller). |
+| Decision input | Full `7,095` byte public-sample `ContextPack`. | `3,124` byte masked structural provider request body (`56.0%` smaller). |
 | Failure behavior | Baseline output. | Missing key reports `unconfigured`; provider failure reports `failed`; evidence is preserved. |
 
 This is not a live-provider speed claim. A provider round trip can make the

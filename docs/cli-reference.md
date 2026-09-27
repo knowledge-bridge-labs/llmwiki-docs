@@ -171,7 +171,13 @@ Important behavior:
 - `--query-action-judge system-one` enables optional System-One/Jev
   next-action guidance after normal context assembly. Use it only after
   approving provider export. Provider keys are configured through environment
-  variables, not CLI arguments.
+  variables, not CLI arguments. Use
+  `LLMWIKI_QUERY_ACTION_JUDGE_API_KEY` for the provider key; `TYPESAFE_API_KEY`
+  and `JEV_API_KEY` are accepted as compatibility aliases. Optional provider
+  settings are `LLMWIKI_QUERY_ACTION_JUDGE_MODEL`,
+  `LLMWIKI_QUERY_ACTION_JUDGE_ENDPOINT`,
+  `LLMWIKI_QUERY_ACTION_JUDGE_BASE_URL`, and
+  `LLMWIKI_QUERY_ACTION_JUDGE_TIMEOUT_MS`.
 - `--query-action-judge-timeout-ms` controls the optional judgment request
   timeout.
 - `orientation` gives hot, index, or overview pages before query-ranked
