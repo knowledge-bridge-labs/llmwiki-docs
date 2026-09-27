@@ -17,7 +17,7 @@ from other machines.
 
 ## SQLite GraphStore Placement
 
-The current `llmwiki-serve==0.2.11` package includes the SQLite GraphStore code
+The current `llmwiki-serve==0.2.13` package includes the SQLite GraphStore code
 with no `[sqlite]` or `[graph]` extra. It is still disabled by default. Enable
 it only when repeated graph inspection needs a local derived cache:
 

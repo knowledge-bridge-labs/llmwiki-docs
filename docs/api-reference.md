@@ -112,6 +112,32 @@ parameters select the starting nodes and relation filter.
 `include_drafts` only has effect when the server operator started
 `llmwiki-serve` with draft access enabled.
 
+Serve 0.2.13 can also add `retrieval_action_guidance` to `ContextPack` when
+the operator starts `query` or `serve` with System-One/Jev query-action
+judgment enabled. The field is omitted by default. It is a bounded next-tool
+hint for the caller, not answer synthesis or ranking:
+
+```json
+{
+  "retrieval_action_guidance": {
+    "schema_version": "llmwiki.retrieval_action_guidance.v1",
+    "mode": "system_one",
+    "status": "ok",
+    "recommended_action": "read",
+    "confidence": 0.91,
+    "evidence_sufficiency_score": 0.82,
+    "read_page_ids": ["hot"],
+    "search_queries": [],
+    "graph_seeds": [],
+    "reasons": ["System-One selected read from masked query-action judgment."],
+    "diagnostics": []
+  }
+}
+```
+
+Missing provider keys return `status: "unconfigured"`, provider failures
+return `status: "failed"`, and normal evidence is preserved.
+
 Search and query controls are opt-in. Defaults preserve the full response
 shape. Use `mode: "literal"` for exact case-folded substring checks, including
 Korean/numeric phrases such as `3차 계약`. Use `snippet_chars` to cap snippets
@@ -397,7 +423,7 @@ Unsupported methods return JSON-RPC error `-32601`. Unknown tools return
 
 ## MCP 2026-07-28 Streamable HTTP
 
-`llmwiki-serve==0.2.11` extends `/mcp/stream`, the SDK-backed Streamable HTTP
+`llmwiki-serve==0.2.11+` extends `/mcp/stream`, the SDK-backed Streamable HTTP
 source endpoint, for MCP `2026-07-28` requests without issuing a session id.
 Clients can pass
 `MCP-Protocol-Version: 2026-07-28`; `Mcp-Method` and `Mcp-Name` headers are

@@ -21,9 +21,11 @@ metadata it writes.
 - query, search, read, source-ref, source-bundle, and graph responses
 - local process discovery for running source servers
 - optional derived graph-cache rows when GraphStore is explicitly enabled
+- optional post-query action guidance when a System-One/Jev provider is
+  explicitly enabled by the operator
 
 It does not write back into the source folder, compile upstream material, run
-ingestion jobs, call a model, or synthesize final answers.
+ingestion jobs, call a model by default, or synthesize final answers.
 
 ## What It Reads
 
@@ -102,7 +104,7 @@ trying to infer local file paths.
 
 ## Optional SQLite GraphStore Cache
 
-The current `llmwiki-serve==0.2.11` package includes the SQLite GraphStore code
+The current `llmwiki-serve==0.2.13` package includes the SQLite GraphStore code
 in the base install. There is no `[sqlite]` or `[graph]` extra for the built-in
 SQLite cache. The default remains off, so ordinary quickstart and
 package-installed runs keep the in-memory graph projection unless the operator
@@ -127,6 +129,44 @@ Startup should fail early when `sqlite` is selected without a usable
 the configured failure policy: the default `fallback-local` recomputes graph
 payloads from the current projection, while `fail-fast` reports the GraphStore
 failure instead of serving a recomputed graph.
+
+## Optional System-One/Jev Query-Action Judgment
+
+Serve 0.2.13 can add a post-query action hint for direct agents that already
+use `/query` or MCP `llmwiki_context`. The feature is disabled by default. An
+operator enables it explicitly:
+
+```sh
+llmwiki-serve serve /path/to/wiki \
+  --query-action-judge system-one
+```
+
+The same setting is available through `LLMWIKI_QUERY_ACTION_JUDGE=system-one`.
+Provider keys are environment-only; do not put them in public docs, shell
+history examples, or shared issue logs.
+
+When enabled, context packs can include `retrieval_action_guidance`, an
+additive field that recommends one next retrieval action: `stop`, `read`,
+`search`, `graph`, or `ask_clarification`. The guidance is not an answer, does
+not rerank evidence, and does not change source parsing, GraphStore, OKF, MCP,
+or draft-visibility behavior.
+
+The provider receives masked query text plus structural state such as evidence
+counts, route labels, score buckets, snippet lengths, source-ref counts, path
+depth, graph counts, and overlap ratios. It does not receive raw page text,
+raw snippets, page ids, source-ref labels, raw paths, local roots, private
+URLs, or obvious credentials.
+
+| Comparison area | Default off | System-One/Jev on |
+| --- | --- | --- |
+| Provider calls | `0`; retrieval stays local. | One post-query judgment call when configured. |
+| Agent next step | The caller decides from the full context pack. | The caller gets a bounded next-action recommendation. |
+| Provider payload | None. | Public sample check: `2,948` byte structural payload instead of a `7,095` byte full context pack (`58.4%` smaller). |
+| Failure behavior | Baseline output. | Missing key reports `unconfigured`; provider failure reports `failed`; evidence is preserved. |
+
+This is not a live-provider speed claim. A provider round trip can make the
+current query slower. The intended benefit is fewer unnecessary follow-up tool
+calls and a smaller, masked external decision payload.
 
 ## Protocol Posture
 

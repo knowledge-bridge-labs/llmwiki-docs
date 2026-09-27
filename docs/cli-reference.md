@@ -6,7 +6,7 @@ successful source path, then use this page when you need exact command shapes,
 expected output, and failure behavior.
 
 Published package commands are the public first-run path:
-`llmwiki-serve==0.2.11`, `llmwiki-bridge-start@0.0.3`,
+`llmwiki-serve==0.2.13`, `llmwiki-bridge-start@0.0.3`,
 `llmwiki-agent-bridge@0.6.0`, and `llmwiki-chat@0.1.6`. Source checkout usage
 remains supported for local development, bundled fixtures, and release
 verification.
@@ -24,7 +24,7 @@ Use these runtime baselines:
 
 | Component | Development setup | Package status |
 | --- | --- | --- |
-| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.11`; package commands are available. |
+| `llmwiki-serve` | Source checkout: `uv sync --extra dev` | PyPI published as `llmwiki-serve==0.2.13`; package commands are available. |
 | `llmwiki-bridge-start` | `npm ci` from `llmwiki-bridge-start` when developing the harness | npm published as `llmwiki-bridge-start@0.0.3`; use it as the guided handoff for discovery, source startup, optional bridge registration, and smoke checks after the source layer works. |
 | `llmwiki-agent-bridge` | `npm ci` from `llmwiki-agent-bridge` when developing the bridge | npm published as `llmwiki-agent-bridge@0.6.0`; package CLI runs through `npx`/`npm exec`, with source checkout for development. |
 | `llmwiki-chat` | `npm ci` from `llmwiki-chat` when developing the UI | npm published as `llmwiki-chat@0.1.6`; package contains static `dist/` and no CLI `bin`, with source checkout for UI development. |
@@ -122,7 +122,7 @@ llmwiki-serve query /path/to/your/wiki "release readiness" --limit 4
 Command shape:
 
 ```text
-llmwiki-serve query <wiki-path> <text> [--limit <1-30>] [--mode lexical|literal] [--fields <result-fields>] [--snippet-chars <0-2000>] [--min-score <score>] [--exclude-page-id <page-id> ...]
+llmwiki-serve query <wiki-path> <text> [--limit <1-30>] [--mode lexical|literal|vector|hybrid] [--fields <result-fields>] [--snippet-chars <0-2000>] [--min-score <score>] [--exclude-page-id <page-id> ...] [--query-action-judge off|system-one] [--query-action-judge-timeout-ms <ms>]
 ```
 
 Expected output is a `ContextPack` JSON object. This example is abbreviated;
@@ -168,6 +168,12 @@ Important behavior:
   length.
 - `--min-score` drops lower-scoring results.
 - `--exclude-page-id` omits already-seen page IDs or paths from query evidence.
+- `--query-action-judge system-one` enables optional System-One/Jev
+  next-action guidance after normal context assembly. Use it only after
+  approving provider export. Provider keys are configured through environment
+  variables, not CLI arguments.
+- `--query-action-judge-timeout-ms` controls the optional judgment request
+  timeout.
 - `orientation` gives hot, index, or overview pages before query-ranked
   evidence when those pages exist.
 - `answerable: false` with an empty `evidence` array is a valid response when
@@ -334,7 +340,7 @@ llmwiki-serve serve /path/to/your/wiki --host 127.0.0.1 --port 8765
 Command shape:
 
 ```text
-llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--enable-a2a-compat] [--refresh-interval-seconds <seconds>] [--producer-manifest <path>] [--io-log <path|off>]
+llmwiki-serve serve <wiki-path> [--host <host>] [--port <1-65535>] [--allow-drafts] [--cors-origin <origin> ...] [--enable-a2a-compat] [--refresh-interval-seconds <seconds>] [--producer-manifest <path>] [--io-log <path|off>] [--query-action-judge off|system-one] [--query-action-judge-timeout-ms <ms>]
 ```
 
 Options:
@@ -350,10 +356,12 @@ Options:
 | `--refresh-interval-seconds` | `0.0` | Local-performance knob for projection freshness. `0.0` checks the source signature on every request. Positive values reuse the in-memory projection between checks. |
 | `--producer-manifest` | unset | Optional producer-owned freshness marker. When the non-symlink marker exists inside the served root, strict refresh checks use it instead of rescanning every source file. |
 | `--io-log` | `.runtime-logs/llmwiki-serve-io.jsonl` | Local request/response JSONL logging for `serve`. Set `off` to disable or pass a path to choose a different sink. `LLMWIKI_SERVE_IO_LOG` accepts the same values. |
+| `--query-action-judge` | `off` | Optional System-One/Jev post-query judgment. Use `system-one` only when provider export is approved. |
+| `--query-action-judge-timeout-ms` | `3000` | Timeout for the System-One/Jev judgment request. |
 
 ### Optional SQLite GraphStore Options
 
-The current `llmwiki-serve==0.2.11` package includes optional SQLite
+The current `llmwiki-serve==0.2.13` package includes optional SQLite
 GraphStore settings for `serve`. The base install contains the SQLite
 GraphStore code. Operators should not install a separate `[sqlite]` or
 `[graph]` extra for this path. The default remains no graph store.

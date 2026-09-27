@@ -31,10 +31,10 @@ llmwiki-serve --help
 For a reproducible check against the current public baseline:
 
 ```sh
-uvx --from llmwiki-serve==0.2.11 llmwiki-serve --help
+uvx --from llmwiki-serve==0.2.13 llmwiki-serve --help
 ```
 
-Pin `llmwiki-serve==0.2.11` only when you need to reproduce the current
+Pin `llmwiki-serve==0.2.13` only when you need to reproduce the current
 released baseline exactly. Use [Release Status & Compatibility](/status) before
 publishing docs or release notes.
 
@@ -207,7 +207,7 @@ llmwiki-serve serve $SourcePath --host 127.0.0.1 --port 8765
 llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765
 ```
 
-This default keeps GraphStore disabled. The current `llmwiki-serve==0.2.11`
+This default keeps GraphStore disabled. The current `llmwiki-serve==0.2.13`
 package includes the optional SQLite GraphStore code introduced in Serve
 0.2.10. Do not add a `[sqlite]` or `[graph]` extra. Keep the SQLite file
 outside `SOURCE_PATH`; it is a sensitive derived graph cache and should not be
@@ -412,10 +412,11 @@ bridge in runtime-backed modes. It is not the bridge URL.
 | Check | Command or action | Expected result |
 | --- | --- | --- |
 | Install source CLI | `uv tool install llmwiki-serve` | Command installs. |
-| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.11 llmwiki-serve --help` | Help prints. |
+| Reproduce pinned CLI help | `uvx --from llmwiki-serve==0.2.13 llmwiki-serve --help` | Help prints. |
 | Choose source | Existing folder or tiny local sample above | `SOURCE_PATH` points at Markdown content. |
 | Inspect source | `llmwiki-serve manifest "$SOURCE_PATH"` | Manifest prints source metadata. |
 | Query source | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --limit 4` | Approved evidence returns. |
+| Optionally test System-One/Jev guidance | `llmwiki-serve query "$SOURCE_PATH" "release readiness required copy" --query-action-judge system-one` | Returns `retrieval_action_guidance` only when provider configuration is approved and present. |
 | Inspect refs | `llmwiki-serve source-refs "$SOURCE_PATH"` | Visible source refs return. |
 | Inspect bundle | `llmwiki-serve source-bundle "$SOURCE_PATH"` | Source bundle returns. |
 | Serve source | `llmwiki-serve serve "$SOURCE_PATH" --host 127.0.0.1 --port 8765` | Loopback server starts. |

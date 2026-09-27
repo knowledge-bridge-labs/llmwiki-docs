@@ -13,17 +13,18 @@ front of expensive runtime synthesis. They are best used for narrow decisions:
 They should not own source truth, authorization, draft visibility, projection
 freshness, or destructive action approval.
 
-`llmwiki-agent-bridge@0.6.1` adds the first built-in opt-in System-One/Jev
-integration as a release candidate. The current published npm baseline remains
-`llmwiki-agent-bridge@0.6.0` until registry publication and install-smoke finish.
-Use the bridge source checkout for 0.6.1 testing before relying on package
-installs.
+`llmwiki-serve==0.2.13` includes a default-off System-One/Jev query-action
+judgment gate after normal context assembly. `llmwiki-agent-bridge@0.6.1` adds
+the bridge-side opt-in System-One/Jev integration as a release candidate. The
+current published bridge npm baseline remains `llmwiki-agent-bridge@0.6.0`
+until registry publication and install-smoke finish.
 
 ## Recommended Placement
 
 ```text
 raw wiki folder
   -> llmwiki-serve read-only projection
+  -> optional serve query-action judgment
   -> bridge or host retrieval narrowing
   -> deterministic masking and minimization
   -> external typed judgment gate
@@ -31,15 +32,24 @@ raw wiki folder
   -> runtime synthesis or abstain
 ```
 
-`llmwiki-serve` stays model-free. It projects local Markdown, Obsidian, or
-LLMWiki folders into context, search, read, graph, source refs, and source
-bundle responses. `llmwiki-agent-bridge`, a host agent, or an external gateway
-owns optional judgment-provider calls.
+By default, `llmwiki-serve` stays model-free. It projects local Markdown,
+Obsidian, or LLMWiki folders into context, search, read, graph, source refs,
+and source bundle responses. Serve 0.2.13 can optionally call System-One/Jev
+after `/query` only when the operator enables `--query-action-judge
+system-one` or `LLMWIKI_QUERY_ACTION_JUDGE=system-one`. `llmwiki-agent-bridge`,
+a host agent, or an external gateway can still own broader source-routing,
+runtime-route, evidence-relevance, and answer-support judgments.
 
 In the 0.6.1 bridge slice, System-One is off by default. Runtime-route judgment
 can run in `report-only` or explicit `enforce` mode. Source-routing,
 evidence-relevance, citation-support, MCP progressive-disclosure, and
 graph-expansion judgments are report-only diagnostics.
+
+In Serve 0.2.13, query-action judgment is also off by default. When enabled, it
+returns additive `retrieval_action_guidance` with a recommended next retrieval
+action such as `stop`, `read`, `search`, `graph`, or `ask_clarification`. It
+does not rerank evidence, synthesize answers, change draft visibility, or
+rewrite the source.
 
 The release-candidate bridge sends structural provider state by default. Source
 names and descriptions, page titles and snippets, graph labels and relations,
@@ -75,6 +85,7 @@ retention, network path, and account policy before enabling live calls.
 | Decision | Owner |
 | --- | --- |
 | Source folder projection and draft filtering | `llmwiki-serve` |
+| Optional post-query action hint | `llmwiki-serve` when explicitly enabled |
 | Source admission, auth, CORS, and URL policy | Bridge, gateway, or deployment |
 | External judgment masking/export policy | Bridge or host |
 | Typed judgment provider call | Bridge, host, or external gateway |
