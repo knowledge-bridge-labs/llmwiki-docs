@@ -36,7 +36,7 @@ jobs:
       LLMWIKI_TARGET_ORG: ${{ inputs.target_org }}
     steps:
       - name: Checkout docs
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: ${{ inputs.target_org }}/llmwiki-docs
           path: llmwiki-docs
@@ -44,7 +44,7 @@ jobs:
           persist-credentials: false
 
       - name: Checkout serve
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: ${{ inputs.target_org }}/llmwiki-serve
           path: llmwiki-serve
@@ -52,7 +52,7 @@ jobs:
           persist-credentials: false
 
       - name: Checkout agent bridge
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: ${{ inputs.target_org }}/llmwiki-agent-bridge
           path: llmwiki-agent-bridge
@@ -60,7 +60,7 @@ jobs:
           persist-credentials: false
 
       - name: Checkout bridge start
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: ${{ inputs.target_org }}/llmwiki-bridge-start
           path: llmwiki-bridge-start
@@ -68,7 +68,7 @@ jobs:
           persist-credentials: false
 
       - name: Checkout chat
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           repository: ${{ inputs.target_org }}/llmwiki-chat
           path: llmwiki-chat
